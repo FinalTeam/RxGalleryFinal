@@ -95,7 +95,6 @@ fabric.properties
 ### Intellij Patch ###
 *.iml
 
-
 ### OSX ###
 .DS_Store
 .AppleDouble
