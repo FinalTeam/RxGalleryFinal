@@ -1,7 +1,16 @@
 package cn.finalteam.rxgalleryfinal.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.os.Build;
+import android.text.TextUtils;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -16,41 +25,131 @@ public class BitmapUtils {
 
     /**
      * 创建缩略图
+     * @param thumbnailSaveDir 缩略图保存路径
      * @param originalPath
      * @return
      */
-    public static String[] createThumbnails(String originalPath) {
+    public static String[] createThumbnails(String thumbnailSaveDir, String originalPath) {
         String[] images = new String[2];
-        images[0] = getThumbnailBigPath(originalPath);
-        images[1] = getThumbnailSmallPath(originalPath);
+        images[0] = getThumbnailBigPath(thumbnailSaveDir, originalPath);
+        images[1] = getThumbnailSmallPath(thumbnailSaveDir, originalPath);
         return images;
     }
 
-    public static String getThumbnailBigPath(String originalPath) {
-        return compressAndSaveImage(originalPath, THUMBNAIL_BIG);
+    public static String getThumbnailBigPath(String thumbnailSaveDir, String originalPath) {
+        return compressAndSaveImage(thumbnailSaveDir, originalPath, THUMBNAIL_BIG);
     }
 
-    public static String getThumbnailSmallPath(String originalPath) {
-        return compressAndSaveImage(originalPath, THUMBNAIL_SMALL);
+    public static String getThumbnailSmallPath(String thumbnailSaveDir, String originalPath) {
+        return compressAndSaveImage(thumbnailSaveDir, originalPath, THUMBNAIL_SMALL);
     }
 
     /**
      * 图片压缩并且存储
-     * @param uri 图片地址
+     * @param thumbnailSaveDir 缩略图保存路径
+     * @param originalPath 图片地址
      * @param scale 图片缩放值
      * @return
      */
-    public static String compressAndSaveImage(String uri, int scale) {
+    public static String compressAndSaveImage(String thumbnailSaveDir, String originalPath, int scale) {
 
-        //1、得到图片的宽、高
+        Bitmap bitmap = null;
+        BufferedInputStream bufferedInputStream = null;
+        FileOutputStream fileOutputStream = null;
+        String thumbnailPath = null;
 
-        //2、获取图片方向
+        try {
+            //1、得到图片的宽、高
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            bufferedInputStream = new BufferedInputStream(new FileInputStream(originalPath));
+            bitmap = BitmapFactory.decodeStream(bufferedInputStream, null, options);
+            if (bitmap != null) {
+                bitmap.recycle();
+            }
+            bufferedInputStream.close();
 
-        //3、计算图片压缩inSampleSize
+            int originalImageWidth = options.outWidth;
+            int originalImageHeight = options.outHeight;
 
-        //4、保存图片
+            //2、获取图片方向
+            int orientation = getImageOrientation(originalPath);
+            int rotate = 0;
+            switch (orientation) {//判断是否需要旋转
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotate = -90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotate = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotate = 90;
+                    break;
+            }
 
-        return null;
+            //3、计算图片压缩inSampleSize
+            int maxValue = Math.max(originalImageWidth, originalImageHeight);
+            if (maxValue > 3000) {
+                options.inSampleSize = scale * 6;
+            } else if (maxValue > 2000 && maxValue <= 3000) {
+                options.inSampleSize = scale * 5;
+            } else if (maxValue > 1500 && maxValue <= 2000) {
+                options.inSampleSize = scale * 4;
+            } else if (maxValue > 1000 && maxValue <= 1500) {
+                options.inSampleSize = scale * 3;
+            } else if (maxValue > 400 && maxValue <= 1000) {
+                options.inSampleSize = scale * 2;
+            } else {
+                options.inSampleSize = scale;
+            }
+            options.inJustDecodeBounds = false;
+
+            //4、图片方向纠正和压缩(生成缩略图)
+            bufferedInputStream = new BufferedInputStream(new FileInputStream(originalPath));
+            bitmap = BitmapFactory.decodeStream(bufferedInputStream, null, options);
+            bufferedInputStream.close();
+
+            if(bitmap == null){
+                return null;
+            }
+
+            String extension = FilenameUtils.getExtension(originalPath);
+            File original = new File(originalPath);
+            File targetFile = new File(thumbnailSaveDir, original.getName().replace(".", scale + "." + extension));
+
+            fileOutputStream = new FileOutputStream(targetFile);
+            if (rotate != 0) {
+                Matrix matrix = new Matrix();
+                matrix.setRotate(rotate);
+                Bitmap bitmapOld = bitmap;
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                        bitmap.getHeight(), matrix, false);
+                bitmapOld.recycle();
+            }
+
+            //5、保存图片
+            if(TextUtils.equals(extension.toLowerCase(), "jpg")
+                    || TextUtils.equals(extension.toLowerCase(), "jpeg")) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            } else if(TextUtils.equals(extension.toLowerCase(), "webp")
+                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                bitmap.compress(Bitmap.CompressFormat.WEBP, 100, fileOutputStream);
+            } else {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+            }
+            thumbnailPath = targetFile.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.close(bufferedInputStream);
+            IOUtils.flush(fileOutputStream);
+            IOUtils.close(fileOutputStream);
+            if(bitmap != null && bitmap.isRecycled()){
+                bitmap.recycle();
+            }
+        }
+
+        return thumbnailPath;
     }
 
     /**
