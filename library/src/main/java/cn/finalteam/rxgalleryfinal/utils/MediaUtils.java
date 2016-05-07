@@ -116,6 +116,9 @@ public class MediaUtils {
                     mediaBean.setCreateDate(createDate);
                     long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));
                     mediaBean.setModifiedDate(modifiedDate);
+
+                    //获取缩略图
+
                     mediaBeanList.add(mediaBean);
                 } while (cursor.moveToNext());
             }
