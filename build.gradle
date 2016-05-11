@@ -3,10 +3,12 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0'
-
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
