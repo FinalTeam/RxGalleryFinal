@@ -1,1 +1,1 @@
-测试method count:./gradlew assembleDebug
+* 测试method count: `./gradlew assembleDebug`

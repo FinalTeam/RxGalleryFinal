@@ -5,12 +5,11 @@ import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 /**
  * Desction:
  * Author:pengjianbo
- * Date:16/5/7 上午10:02
+ * Date:16/5/14 下午10:02
  */
-public class VideoGridFragment extends BaseFragment {
-
-    public static VideoGridFragment newInstance(){
-        return new VideoGridFragment();
+public class MediaPageFragment extends BaseFragment {
+    public static MediaPageFragment newInstance(){
+        return new MediaPageFragment();
     }
 
     @Override
