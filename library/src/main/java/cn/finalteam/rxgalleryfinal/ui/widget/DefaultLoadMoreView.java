@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cn.finalteam.rxgalleryfinal.R;
@@ -14,30 +13,31 @@ import cn.finalteam.rxgalleryfinal.R;
  * Author:pengjianbo
  * Date:16/5/14 下午5:56
  */
-class DefaultLoadMoreView extends RelativeLayout implements ILoadMoreView {
+class DefaultLoadMoreView implements ILoadMoreView {
 
     private TextView mTvMessage;
     private ProgressBar mPbLoading;
 
     public DefaultLoadMoreView(Context context) {
-        super(context);
+//        super(context);
         init(context);
     }
 
     public DefaultLoadMoreView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+//        super(context, attrs);
         init(context);
     }
 
     public DefaultLoadMoreView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+//        super(context, attrs, defStyleAttr);
         init(context);
     }
 
+    View view;
     private void init(Context context) {
-        inflate(context, R.layout.loading_view_final_footer_default, this);;
-        mPbLoading = (ProgressBar) findViewById(R.id.pb_loading);
-        mTvMessage = (TextView) findViewById(R.id.tv_loading_msg);
+        view = View.inflate(context, R.layout.loading_view_final_footer_default, null);
+        mPbLoading = (ProgressBar) view.findViewById(R.id.pb_loading);
+        mTvMessage = (TextView) view.findViewById(R.id.tv_loading_msg);
     }
 
     @Override
@@ -60,7 +60,7 @@ class DefaultLoadMoreView extends RelativeLayout implements ILoadMoreView {
 
     @Override
     public View getFooterView() {
-        return this;
+        return view;
     }
 
 }

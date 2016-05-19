@@ -17,9 +17,9 @@ public interface MediaSrcFactoryInteractor {
 
     /**
      * 生产资源
-     * @param pageSize
-     * @param currentOffset
+     * @param page
+     * @param limit
      */
-    void generateMeidas(int pageSize, int currentOffset);
+    void generateMeidas(int page, int limit);
 
 }

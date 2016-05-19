@@ -67,7 +67,7 @@ public class RecyclerViewFinal extends RecyclerView{
         mHeaderAndFooterRecyclerViewAdapter = new HeaderAndFooterRecyclerViewAdapter();
         super.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
 
-        mLoadMoreView = new DefaultLoadMoreView(context);
+        mLoadMoreView = new DefaultLoadMoreView(context, attrs);
 
         mLoadMoreView.getFooterView().setOnClickListener(new OnMoreViewClickListener());
 

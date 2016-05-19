@@ -36,9 +36,24 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
         this.mediaGridView = mediaGridView;
     }
 
+    /**
+     * 分页获取media
+     * @param pageSize
+     * @param currentOffset
+     */
+    @Override
+    public void getMediaList(int pageSize, int currentOffset) {
+        mediaSrcFactoryInteractor.generateMeidas(pageSize, currentOffset);
+    }
 
+    /**
+     * Media获取事件回调
+     * @param pageSize
+     * @param currentOffset
+     * @param list
+     */
     @Override
     public void onFinished(int pageSize, int currentOffset, List<MediaBean> list) {
-
+        mediaGridView.onRequestMediaCallback(list);
     }
 }

@@ -1,5 +1,9 @@
 package cn.finalteam.rxgalleryfinal.di.module;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
+
 import javax.inject.Singleton;
 
 import cn.finalteam.rxgalleryfinal.Configuration;
@@ -26,6 +30,17 @@ public class RxGalleryFinalModule {
     @Singleton
     public Configuration provideConfiguration() {
         return configuration;
+    }
+
+    @Provides
+    @Singleton
+    public DisplayMetrics provideScreenPix() {
+        Context context = configuration.getContext();
+        DisplayMetrics displaysMetrics = new DisplayMetrics();
+        context.getResources().getDisplayMetrics();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(displaysMetrics);
+        return displaysMetrics;
     }
 
 }

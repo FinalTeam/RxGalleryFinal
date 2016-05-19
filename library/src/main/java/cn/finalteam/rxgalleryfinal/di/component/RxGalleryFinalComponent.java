@@ -1,9 +1,11 @@
 package cn.finalteam.rxgalleryfinal.di.component;
 
+import android.util.DisplayMetrics;
+
 import javax.inject.Singleton;
 
-import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.Configuration;
+import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.di.module.RxGalleryFinalModule;
 import dagger.Component;
 
@@ -21,4 +23,7 @@ public interface RxGalleryFinalComponent {
 
     //在这里要定义生成,再modules上要做相应的@provides
     Configuration provideConfiguration();
+
+    DisplayMetrics provideScreenPix();
+
 }

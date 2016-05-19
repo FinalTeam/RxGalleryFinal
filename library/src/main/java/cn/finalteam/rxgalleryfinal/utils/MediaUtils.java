@@ -20,11 +20,12 @@ public class MediaUtils {
     /**
      * 从数据库中读取图片
      * @param context
-     * @param pageSize
-     * @param currentOffset
+     * @param page
+     * @param limit
      * @return
      */
-    public static List<MediaBean> getMediaWithImageList(Context context, int pageSize, int currentOffset) {
+    public static List<MediaBean> getMediaWithImageList(Context context, int page, int limit) {
+        int offset = (page -1) * limit;
         List<MediaBean> mediaBeanList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         String[] projection = new String[] {
@@ -39,7 +40,7 @@ public class MediaUtils {
         };
         Cursor cursor = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
-                null, MediaStore.Images.Media.DATE_ADDED +" DESC LIMIT " + pageSize +" OFFSET " + currentOffset);
+                null, MediaStore.Images.Media.DATE_ADDED +" DESC LIMIT " + limit +" OFFSET " + offset);
         if(cursor != null) {
             int count = cursor.getCount();
             if(count > 0) {
@@ -63,7 +64,9 @@ public class MediaUtils {
                     long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED));
                     mediaBean.setModifiedDate(modifiedDate);
                     mediaBeanList.add(mediaBean);
-                    System.out.println(mediaBean.toString());
+                    for (int i =0; i < 10; i++) {
+                        mediaBeanList.add(mediaBean);
+                    }
                 } while (cursor.moveToNext());
             }
         }
@@ -74,11 +77,12 @@ public class MediaUtils {
     /**
      * 从数据库中读取视频
      * @param context
-     * @param pageSize
-     * @param currentOffset
+     * @param page
+     * @param limit
      * @return
      */
-    public static List<MediaBean> getMediaWithVideoList(Context context, int pageSize, int currentOffset) {
+    public static List<MediaBean> getMediaWithVideoList(Context context, int page, int limit) {
+        int offset = (page -1) * limit;
         List<MediaBean> mediaBeanList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         String[] projection = new String[] {
@@ -93,7 +97,7 @@ public class MediaUtils {
         };
         Cursor cursor = contentResolver.query(
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null,
-                null, MediaStore.Video.Media.DATE_ADDED +" DESC LIMIT " + pageSize +" OFFSET " + currentOffset);
+                null, MediaStore.Video.Media.DATE_ADDED +" DESC LIMIT " + limit +" OFFSET " + offset);
         if(cursor != null) {
             int count = cursor.getCount();
             if(count > 0) {

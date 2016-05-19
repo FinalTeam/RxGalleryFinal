@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".IApplication">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,7 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"/>
+        <activity android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

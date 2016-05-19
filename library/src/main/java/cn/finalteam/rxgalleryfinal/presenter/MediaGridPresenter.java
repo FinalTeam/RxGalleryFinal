@@ -10,4 +10,5 @@ import cn.finalteam.rxgalleryfinal.view.MediaGridView;
 public interface MediaGridPresenter {
 
     void setMediaGridView(MediaGridView mediaGridView);
+    void getMediaList(int pageSize, int currentOffset);
 }

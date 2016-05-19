@@ -1,5 +1,9 @@
 package cn.finalteam.rxgalleryfinal.view;
 
+import java.util.List;
+
+import cn.finalteam.rxgalleryfinal.bean.MediaBean;
+
 /**
  * Desction:
  * Author:pengjianbo
@@ -10,4 +14,5 @@ public interface MediaGridView {
     void showProgress();
     //显示empty
     void showEmptyView();
+    void onRequestMediaCallback(List<MediaBean> list);
 }
