@@ -7,19 +7,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import cn.finalteam.rxgalleryfinal.R;
+
 
 /**
  * Desction:
  * Author:pengjianbo
- * Date:16/5/14 下午5:53
+ * Date:16/3/7 下午6:40
  */
-public class RecyclerViewFinal extends RecyclerView{
-    /**
-     * 加载更多UI
-     */
-    ILoadMoreView mLoadMoreView;
+public class RecyclerViewFinal extends RecyclerView {
 
     /**
      * 加载更多lock
@@ -40,13 +42,11 @@ public class RecyclerViewFinal extends RecyclerView{
      */
     private View mEmptyView;
 
-    /**
-     * 没有更多了是否隐藏loadmoreview
-     */
-    private boolean mNoLoadMoreHideView;
+    private FooterAdapter mFooterViewAdapter;
 
-    private HeaderAndFooterRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter;
-    private boolean mAddLoadMoreFooterFlag;
+    private TextView mTvMessage;
+    private ProgressBar mPbLoading;
+    private View mFooterView;
 
     public RecyclerViewFinal(Context context) {
         super(context);
@@ -64,25 +64,36 @@ public class RecyclerViewFinal extends RecyclerView{
     }
 
     private void init(Context context, AttributeSet attrs) {
-        mHeaderAndFooterRecyclerViewAdapter = new HeaderAndFooterRecyclerViewAdapter();
-        super.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
+        mFooterView = LayoutInflater.from(context).inflate(R.layout.loading_view_final_footer_default, null);
+        mPbLoading = (ProgressBar) mFooterView.findViewById(R.id.pb_loading);
+        mTvMessage = (TextView) mFooterView.findViewById(R.id.tv_loading_msg);
 
-        mLoadMoreView = new DefaultLoadMoreView(context, attrs);
-
-        mLoadMoreView.getFooterView().setOnClickListener(new OnMoreViewClickListener());
-
-        setHasLoadMore(false);
+//        setHasLoadMore(false);
         addOnScrollListener(new RecyclerViewOnScrollListener());
     }
 
+    Adapter adapter;
     @Override
-    public void setAdapter(RecyclerView.Adapter adapter) {
+    public void setAdapter(Adapter adapter) {
+        this.adapter = adapter;
         try {
             adapter.unregisterAdapterDataObserver(mDataObserver);
         } catch (Exception e){}
 
         adapter.registerAdapterDataObserver(mDataObserver);
-        mHeaderAndFooterRecyclerViewAdapter.setAdapter(adapter);
+        mFooterViewAdapter = new FooterAdapter(adapter, mFooterView);
+
+        if(getLayoutManager() != null) {
+            GridLayoutManager manager = (GridLayoutManager) getLayoutManager();
+            manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return mFooterViewAdapter.isFooter(position) ? manager.getSpanCount() : 1;
+                }
+            });
+        }
+
+        super.setAdapter(mFooterViewAdapter);
     }
 
     /**
@@ -94,19 +105,12 @@ public class RecyclerViewFinal extends RecyclerView{
     }
 
     /**
-     * 设置没有更多数据了，是否隐藏fooler view
-     * @param hide
-     */
-    public void setNoLoadMoreHideView(boolean hide) {
-        this.mNoLoadMoreHideView = hide;
-    }
-
-    /**
      * 没有很多了
      */
     void showNoMoreUI() {
         mLoadMoreLock = false;
-        mLoadMoreView.showNoMore();
+        mPbLoading.setVisibility(View.GONE);
+        mTvMessage.setText(R.string.loading_view_no_more);
     }
 
     /**
@@ -114,14 +118,16 @@ public class RecyclerViewFinal extends RecyclerView{
      */
     void showNormalUI() {
         mLoadMoreLock = false;
-        mLoadMoreView.showNormal();
+        mPbLoading.setVisibility(View.GONE);
+        mTvMessage.setText(R.string.loading_view_click_loading_more);
     }
 
     /**
      * 显示加载中UI
      */
     void showLoadingUI(){
-        mLoadMoreView.showLoading();
+        mPbLoading.setVisibility(View.VISIBLE);
+        mTvMessage.setText(R.string.loading_view_loading);
     }
 
     /**
@@ -132,15 +138,7 @@ public class RecyclerViewFinal extends RecyclerView{
         mHasLoadMore = hasLoadMore;
         if (!mHasLoadMore) {
             showNoMoreUI();
-            if(mNoLoadMoreHideView) {
-                removeFooterView(mLoadMoreView.getFooterView());
-                mAddLoadMoreFooterFlag = false;
-            }
         } else {
-            if(!mAddLoadMoreFooterFlag) {
-                mAddLoadMoreFooterFlag = true;
-                addFooterView(mLoadMoreView.getFooterView());
-            }
             showNormalUI();
         }
     }
@@ -163,42 +161,6 @@ public class RecyclerViewFinal extends RecyclerView{
     }
 
     /**
-     * 添加footer view
-     * @param footerView
-     */
-    public void addFooterView(View footerView) {
-        mHeaderAndFooterRecyclerViewAdapter.addFooterView(footerView);
-    }
-
-    /**
-     * 添加header view
-     * @param headerView
-     */
-    public void addHeaderView(View headerView) {
-        mHeaderAndFooterRecyclerViewAdapter.addHeaderView(headerView);
-    }
-
-    public void removeFooterView(View footerView) {
-        mHeaderAndFooterRecyclerViewAdapter.removeFooter(footerView);
-    }
-
-    public void removeHeaderView(View headerView) {
-        mHeaderAndFooterRecyclerViewAdapter.removeHeader(headerView);
-    }
-
-    /**
-     * 点击more view加载更多
-     */
-    class OnMoreViewClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            if(mHasLoadMore) {
-                executeLoadMore();
-            }
-        }
-    }
-
-    /**
      * 加载更多
      */
     void executeLoadMore() {
@@ -211,26 +173,26 @@ public class RecyclerViewFinal extends RecyclerView{
         }
     }
 
+    public void setFooterViewHide(boolean footerViewHide) {
+        if(footerViewHide) {
+            mFooterView.setVisibility(View.GONE);
+        } else {
+            mFooterView.setVisibility(View.VISIBLE);
+        }
+    }
+
     /**
      * 设置OnItemClickListener
      * @param listener
      */
-    public void setOnItemClickListener(HeaderAndFooterRecyclerViewAdapter.OnItemClickListener listener) {
-        mHeaderAndFooterRecyclerViewAdapter.setOnItemClickListener(listener);
-    }
-
-    /**
-     * 设置OnItemLongClickListener
-     * @param listener
-     */
-    public void setOnItemLongClickListener(HeaderAndFooterRecyclerViewAdapter.OnItemLongClickListener listener) {
-        mHeaderAndFooterRecyclerViewAdapter.setOnItemLongClickListener(listener);
+    public void setOnItemClickListener(FooterAdapter.OnItemClickListener listener) {
+        mFooterViewAdapter.setOnItemClickListener(listener);
     }
 
     /**
      * 滚动到底部自动加载更多数据
      */
-    private class RecyclerViewOnScrollListener extends RecyclerView.OnScrollListener {
+    private class RecyclerViewOnScrollListener extends OnScrollListener {
 
         /**
          * 最后一个的位置
@@ -251,7 +213,7 @@ public class RecyclerViewFinal extends RecyclerView{
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
-            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            LayoutManager layoutManager = recyclerView.getLayoutManager();
 
             if (layoutManager instanceof LinearLayoutManager) {
                 lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
@@ -274,7 +236,7 @@ public class RecyclerViewFinal extends RecyclerView{
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
             currentScrollState = newState;
-            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            LayoutManager layoutManager = recyclerView.getLayoutManager();
             int visibleItemCount = layoutManager.getChildCount();
             int totalItemCount = layoutManager.getItemCount();
             if ((visibleItemCount > 0 && currentScrollState == RecyclerView.SCROLL_STATE_IDLE && (lastVisibleItemPosition) >= totalItemCount - 1)) {
@@ -302,10 +264,15 @@ public class RecyclerViewFinal extends RecyclerView{
         }
     }
 
+    public interface OnLoadMoreListener {
+        void loadMore();
+    }
+
+
     /**
      * 刷新数据时停止滑动,避免出现数组下标越界问题
      */
-    private RecyclerView.AdapterDataObserver mDataObserver = new RecyclerView.AdapterDataObserver() {
+    private AdapterDataObserver mDataObserver = new AdapterDataObserver() {
         @Override
         public void onChanged() {
             Adapter<?> adapter =  getAdapter();
@@ -322,8 +289,4 @@ public class RecyclerViewFinal extends RecyclerView{
             dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
         }
     };
-
-    public interface OnLoadMoreListener {
-        void loadMore();
-    }
 }

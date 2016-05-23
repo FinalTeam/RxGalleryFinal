@@ -1,0 +1,6 @@
+<resources>
+
+
+    <dimen name="grid_item_margin">4dp</dimen>
+
+</resources>

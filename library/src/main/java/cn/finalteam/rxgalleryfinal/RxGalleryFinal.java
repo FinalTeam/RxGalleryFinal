@@ -12,6 +12,7 @@ import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.module.RxGalleryFinalModule;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.utils.MediaType;
+import cn.finalteam.rxgalleryfinal.utils.ThumbnailsUtils;
 
 /**
  * Desction:
@@ -69,7 +70,8 @@ public class RxGalleryFinal {
     }
 
     public void openGallery(){
-        execute();
+        ThumbnailsUtils.createThumbnailsTask(configuration);
+//        execute();
     }
 
     public void openCamera() {

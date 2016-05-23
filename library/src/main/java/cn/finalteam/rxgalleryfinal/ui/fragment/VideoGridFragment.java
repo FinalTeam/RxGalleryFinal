@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui.fragment;
 
+import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 
 /**
@@ -11,6 +12,11 @@ public class VideoGridFragment extends BaseFragment {
 
     public static VideoGridFragment newInstance(){
         return new VideoGridFragment();
+    }
+
+    @Override
+    public int getContentView() {
+        return R.layout.fragment_media_grid;
     }
 
     @Override

@@ -64,9 +64,7 @@ public class MediaUtils {
                     long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED));
                     mediaBean.setModifiedDate(modifiedDate);
                     mediaBeanList.add(mediaBean);
-                    for (int i =0; i < 10; i++) {
-                        mediaBeanList.add(mediaBean);
-                    }
+
                 } while (cursor.moveToNext());
             }
         }

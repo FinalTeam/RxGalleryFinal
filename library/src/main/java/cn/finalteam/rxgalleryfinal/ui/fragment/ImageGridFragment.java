@@ -3,13 +3,9 @@ package cn.finalteam.rxgalleryfinal.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +22,9 @@ import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.module.MediaGridModule;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaGridAdapter;
-import cn.finalteam.rxgalleryfinal.ui.widget.RecycleViewDivider;
+import cn.finalteam.rxgalleryfinal.ui.widget.MarginDecoration;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerViewFinal;
+import cn.finalteam.rxgalleryfinal.utils.EmptyViewUtils;
 import cn.finalteam.rxgalleryfinal.view.MediaGridView;
 
 /**
@@ -58,10 +55,9 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         return new ImageGridFragment();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_media_grid, container, false);
+    public int getContentView() {
+        return R.layout.fragment_media_grid;
     }
 
     @Override
@@ -71,10 +67,16 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia = (RecyclerViewFinal) view.findViewById(R.id.rv_media);
         mLlEmptyView = (LinearLayout) view.findViewById(R.id.ll_empty_view);
         mRvMedia.setEmptyView(mLlEmptyView);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+        gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
+        mRvMedia.addItemDecoration(new MarginDecoration(getContext()));
         mRvMedia.setLayoutManager(gridLayoutManager);
-        mRvMedia.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL));
+        mRvMedia.setOnLoadMoreListener(this);
+
         mMediaBeanList = new ArrayList<>();
+        MediaBean takePhotoBean = new MediaBean();
+        takePhotoBean.setId(Integer.MIN_VALUE);
+        mMediaBeanList.add(takePhotoBean);
         mMediaGridAdapter = new MediaGridAdapter(getContext(), mMediaBeanList, mScreenSize.widthPixels);
         mRvMedia.setAdapter(mMediaGridAdapter);
 
@@ -92,16 +94,6 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     @Override
-    public void showProgress() {
-//        EmptyViewUtils.showLoading(mLlEmptyView);
-    }
-
-    @Override
-    public void showEmptyView() {
-//        EmptyViewUtils.showMessage(mLlEmptyView, "没有找到图片");
-    }
-
-    @Override
     public void loadMore() {
         mMediaGridPresenter.getMediaList(mPage, LIMIT);
     }
@@ -112,7 +104,6 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
             mMediaBeanList.addAll(list);
             mMediaGridAdapter.notifyDataSetChanged();
         }
-        Toast.makeText(getContext(), list.size() +"", Toast.LENGTH_SHORT).show();
 
         mPage++;
 
@@ -120,6 +111,11 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
             mRvMedia.setHasLoadMore(false);
         } else {
             mRvMedia.setHasLoadMore(true);
+        }
+
+        if(mMediaBeanList.size() == 0) {
+            mRvMedia.setFooterViewHide(true);
+            EmptyViewUtils.showMessage(mLlEmptyView, "没有找到图片");
         }
 
         mRvMedia.onLoadMoreComplete();

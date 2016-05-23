@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui.fragment;
 
+import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 
 /**
@@ -10,6 +11,11 @@ import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 public class MediaPageFragment extends BaseFragment {
     public static MediaPageFragment newInstance(){
         return new MediaPageFragment();
+    }
+
+    @Override
+    public int getContentView() {
+        return R.layout.fragment_media_grid;
     }
 
     @Override

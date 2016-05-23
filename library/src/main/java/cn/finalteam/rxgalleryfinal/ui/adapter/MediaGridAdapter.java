@@ -27,33 +27,38 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private Context mContext;
     private List<MediaBean> mMediaBeanList;
     private LayoutInflater mInflater;
-    private int mScreenWidth;
+    private int mRowHeight;
     private int mImageSize;
-
     public MediaGridAdapter(Context context, List<MediaBean> list, int screenWidth) {
         this.mContext = context;
         this.mMediaBeanList = list;
         this.mInflater = LayoutInflater.from(context);
-        this.mScreenWidth = screenWidth;
+        this.mRowHeight = screenWidth/3;
         this.mImageSize = screenWidth/4;
     }
 
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.adapter_media_grid_item, parent, false);
-        return new GridViewHolder(view, mScreenWidth);
+        return new GridViewHolder(view, mRowHeight);
     }
 
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
         MediaBean mediaBean = mMediaBeanList.get(position);
-        String path = mediaBean.getOriginalPath();
-        Picasso.with(mContext)
-                .load(new File(path))
-                .resize(mImageSize, mImageSize)
-                .centerInside()
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .into(holder.mIvMediaImage);
+        long id = mediaBean.getId();
+        if(id == Integer.MIN_VALUE) {
+            holder.mIvMediaImage.setImageResource(R.drawable.ic_action_switch_camera);
+            holder.mCbCheck.setVisibility(View.GONE);
+        } else {
+            String path = mediaBean.getOriginalPath();
+            Picasso.with(mContext)
+                    .load(new File(path))
+                    .resize(mImageSize, mImageSize)
+                    .centerInside()
+                    .memoryPolicy(MemoryPolicy.NO_STORE)
+                    .into(holder.mIvMediaImage);
+        }
     }
 
     @Override
@@ -66,9 +71,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         ImageView mIvMediaImage;
         CheckBox mCbCheck;
 
-        public GridViewHolder(View itemView, int screenWidth) {
+        public GridViewHolder(View itemView, int rowHeight) {
             super(itemView);
-            itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, screenWidth/2));
+            itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rowHeight));
             mIvMediaImage = (ImageView) itemView.findViewById(R.id.iv_media_image);
             mCbCheck = (CheckBox) itemView.findViewById(R.id.cb_check);
         }
