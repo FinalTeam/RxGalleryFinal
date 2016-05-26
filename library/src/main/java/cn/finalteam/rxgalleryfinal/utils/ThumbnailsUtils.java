@@ -2,6 +2,7 @@ package cn.finalteam.rxgalleryfinal.utils;
 
 import android.content.Context;
 
+import java.io.File;
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.Configuration;
@@ -20,6 +21,7 @@ public class ThumbnailsUtils {
     public static void createThumbnailsTask(Configuration configuration) {
         boolean isImage = configuration.isImage();
         Context context = configuration.getContext();
+        File storeFile = StorageUtils.getCacheDirectory(context);
 
         Observable.create((Observable.OnSubscribe<List<MediaBean>>) subscriber -> {
             int page = 1;
@@ -31,9 +33,16 @@ public class ThumbnailsUtils {
                 } else {
                     mediaBeanList = MediaUtils.getMediaWithVideoList(context, page, limit);
                 }
+
+                for (MediaBean mediaBean: mediaBeanList) {
+                    //创建缩略图
+                    //1、先判断缩略图是否存在
+                    BitmapUtils.createThumbnails(storeFile.getAbsolutePath(), mediaBean.getOriginalPath());
+                }
+
                 subscriber.onNext(mediaBeanList);
 
-                if(mediaBeanList == null || mediaBeanList.size() == 0) {
+                if(mediaBeanList.size() == 0) {
                     subscriber.onCompleted();
                     break;
                 } else {

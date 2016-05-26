@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +66,16 @@ public class MediaUtils {
                     mediaBean.setModifiedDate(modifiedDate);
                     mediaBeanList.add(mediaBean);
 
+                    File storeFile = StorageUtils.getCacheDirectory(context);
+                    File bigThumFile = new File(storeFile, "big_" + FilenameUtils.getName(originalPath));
+                    File smallThumFile = new File(storeFile, "small_" + FilenameUtils.getName(originalPath));
+                    if(bigThumFile.exists()){
+                        mediaBean.setThumbnailBigPath(bigThumFile.getAbsolutePath());
+                    }
+                    if(smallThumFile.exists()){
+                        mediaBean.setThumbnailSmallPath(bigThumFile.getAbsolutePath());
+                    }
+
                 } while (cursor.moveToNext());
             }
         }
@@ -120,6 +131,16 @@ public class MediaUtils {
                     mediaBean.setModifiedDate(modifiedDate);
 
                     //获取缩略图
+
+//                    File storeFile = StorageUtils.getCacheDirectory(context);
+//                    File bigThumFile = new File(storeFile, "big_" + FilenameUtils.getName(originalPath));
+//                    File smallThumFile = new File(storeFile, "small_" + FilenameUtils.getName(originalPath));
+//                    if(bigThumFile.exists()){
+//                        mediaBean.setThumbnailBigPath(bigThumFile.getAbsolutePath());
+//                    }
+//                    if(smallThumFile.exists()){
+//                        mediaBean.setThumbnailSmallPath(bigThumFile.getAbsolutePath());
+//                    }
 
                     mediaBeanList.add(mediaBean);
                 } while (cursor.moveToNext());

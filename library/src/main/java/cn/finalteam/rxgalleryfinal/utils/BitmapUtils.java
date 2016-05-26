@@ -113,9 +113,11 @@ public class BitmapUtils {
                 return null;
             }
 
+            String scaleStr = (scale == THUMBNAIL_BIG?"big":"small");
+
             String extension = FilenameUtils.getExtension(originalPath);
             File original = new File(originalPath);
-            File targetFile = new File(thumbnailSaveDir, original.getName().replace(".", scale + "." + extension));
+            File targetFile = new File(thumbnailSaveDir, scaleStr + "_" + original.getName());
 
             fileOutputStream = new FileOutputStream(targetFile);
             if (rotate != 0) {
