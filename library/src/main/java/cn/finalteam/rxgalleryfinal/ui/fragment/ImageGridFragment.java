@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -52,7 +53,7 @@ import cn.finalteam.rxgalleryfinal.view.MediaGridView;
  * Date:16/5/7 上午10:02
  */
 public class ImageGridFragment extends BaseFragment implements MediaGridView, RecyclerViewFinal.OnLoadMoreListener,
-        FooterAdapter.OnItemClickListener {
+        FooterAdapter.OnItemClickListener,View.OnClickListener {
 
     private final String IMAGE_STORE_FILE_NAME = "IMG_%s.jpg";
     private final int TAKE_IMAGE_REQUEST_CODE = 1001;
@@ -73,6 +74,8 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
     MediaGridAdapter mMediaGridAdapter;
     RecyclerViewFinal mRvMedia;
     LinearLayout mLlEmptyView;
+    TextView mTvFolderName;
+    TextView mTvPreview;
     MediaScanner mMediaScanner;
 
     private int mPage = 1;
@@ -121,6 +124,10 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
                 }
             }
         });
+        mTvFolderName = (TextView) view.findViewById(R.id.tv_folder_name);
+        mTvFolderName.setOnClickListener(this);
+        mTvPreview = (TextView) view.findViewById(R.id.tv_preview);
+        mTvPreview.setOnClickListener(this);
 
         mMediaBeanList = new ArrayList<>();
         MediaBean takePhotoBean = new MediaBean();
@@ -212,7 +219,6 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         }
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -234,5 +240,15 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
     public void onDestroy() {
         super.onDestroy();
         mMediaScanner.unScanFile();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if(id == R.id.tv_preview) {
+
+        } else if(id == R.id.tv_folder_name) {
+
+        }
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,6 +10,50 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="#00000000"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="#EF2B2C30">
+
+        <TextView
+            android:id="@+id/tv_folder_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="所有图片"
+            android:textColor="@color/text_color_selector"
+            android:textSize="13sp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:layout_centerVertical="true"
+            android:drawablePadding="3dp"
+            android:drawableRight="@drawable/ic_corner_selector"
+            />
+
+        <TextView
+            android:id="@+id/tv_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color_selector"
+            android:textSize="13sp"
+            android:layout_marginLeft="15dp"
+            android:text="预览"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="28dp"
+            android:background="#1F1F1F"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/tv_preview"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ll_empty_view"
@@ -30,4 +74,4 @@
             android:text="@string/loading_view_loading" />
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>

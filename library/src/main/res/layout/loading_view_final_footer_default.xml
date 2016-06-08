@@ -16,7 +16,7 @@
         android:id="@+id/tv_loading_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#666666"
+        android:textColor="#E2E2E2"
         android:textSize="16sp"
         android:text="加载中…"
         android:layout_marginLeft="8dp"/>
