@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import java.io.BufferedInputStream;
@@ -23,8 +25,88 @@ public class BitmapUtils {
     private final static int THUMBNAIL_BIG = 1;
     private final static int THUMBNAIL_SMALL = 2;
 
+    public static String getVideoThumbnailBigPath(String thumbnailSaveDir, String originalPath) {
+        return createVideoThumbnail(thumbnailSaveDir, originalPath, THUMBNAIL_BIG);
+    }
+
+    public static String getVideoThumbnailSmallPath(String thumbnailSaveDir, String originalPath) {
+        return createVideoThumbnail(thumbnailSaveDir, originalPath, THUMBNAIL_SMALL);
+    }
+
+    /**
+     * 创建视频缩略图
+     * @param thumbnailSaveDir
+     * @param originalPath
+     * @param scale
+     * @return
+     */
+    public static String createVideoThumbnail(String thumbnailSaveDir, String originalPath, int scale) {
+        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(originalPath, MediaStore.Video.Thumbnails.MINI_KIND);
+        if(bitmap == null){
+            return "";
+        }
+        int originalImageWidth = bitmap.getWidth();
+        int originalImageHeight = bitmap.getHeight();
+        int maxValue = Math.max(originalImageWidth, originalImageHeight);
+        BufferedInputStream bufferedInputStream = null;
+        FileOutputStream fileOutputStream = null;
+        File targetFile = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            if (maxValue > 3000) {
+                options.inSampleSize = scale * 6;
+            } else if (maxValue > 2000 && maxValue <= 3000) {
+                options.inSampleSize = scale * 5;
+            } else if (maxValue > 1500 && maxValue <= 2000) {
+                options.inSampleSize = scale * 4;
+            } else if (maxValue > 1000 && maxValue <= 1500) {
+                options.inSampleSize = scale * 3;
+            } else if (maxValue > 400 && maxValue <= 1000) {
+                options.inSampleSize = scale * 2;
+            } else {
+                options.inSampleSize = scale;
+            }
+            options.inJustDecodeBounds = false;
+
+            //4、图片方向纠正和压缩(生成缩略图)
+            bufferedInputStream = new BufferedInputStream(new FileInputStream(originalPath));
+            Bitmap bm = BitmapFactory.decodeStream(bufferedInputStream, null, options);
+            bufferedInputStream.close();
+            bitmap.recycle();
+            if (bm == null) {
+                return "";
+            }
+            bitmap = bm;
+
+            String scaleStr = (scale == THUMBNAIL_BIG ? "big" : "small");
+
+            String extension = FilenameUtils.getExtension(originalPath);
+            File original = new File(originalPath);
+            targetFile = new File(thumbnailSaveDir, scaleStr + "_" + original.getName().replace(extension, "jpg"));
+
+            fileOutputStream = new FileOutputStream(targetFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+        } catch (Exception e){
+            Logger.e(e);
+        } finally {
+            if(bitmap != null && !bitmap.isRecycled()){
+                bitmap.recycle();
+            }
+
+            IOUtils.close(bufferedInputStream);
+            IOUtils.flush(fileOutputStream);
+            IOUtils.close(fileOutputStream);
+        }
+        if(targetFile != null && targetFile.exists()){
+            return targetFile.getAbsolutePath();
+        }
+
+        return "";
+    }
+
     /**
      * 创建缩略图
+     *
      * @param thumbnailSaveDir 缩略图保存路径
      * @param originalPath
      * @return
@@ -110,7 +192,7 @@ public class BitmapUtils {
             bufferedInputStream.close();
 
             if(bitmap == null){
-                return null;
+                return "";
             }
 
             String scaleStr = (scale == THUMBNAIL_BIG?"big":"small");
