@@ -4,10 +4,19 @@
     android:layout_height="120dp">
 
     <ImageView
+        android:id="@+id/iv_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#050505"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_action_switch_camera"/>
+
+    <cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView
         android:id="@+id/iv_media_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:background="#050505"/>
 
     <CheckBox
         android:id="@+id/cb_check"

@@ -19,6 +19,18 @@ public class Logger {
         }
     }
 
+    public static void e(String value) {
+        if(BuildConfig.DEBUG) {
+            Log.e(TAG, value);
+        }
+    }
+
+    public static void e(Exception value) {
+        if(BuildConfig.DEBUG && value != null) {
+            Log.e(TAG, value.getMessage());
+        }
+    }
+
     public static void i(String value){
         if(BuildConfig.DEBUG) {
             Log.i(TAG, value);
