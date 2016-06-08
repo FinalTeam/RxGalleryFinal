@@ -1,6 +1,5 @@
 <resources>
 
-
-    <dimen name="grid_item_margin">2dp</dimen>
+    <dimen name="grid_item_margin">1dp</dimen>
 
 </resources>

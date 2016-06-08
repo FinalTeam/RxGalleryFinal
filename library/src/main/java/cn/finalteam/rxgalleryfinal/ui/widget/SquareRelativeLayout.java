@@ -2,30 +2,25 @@ package cn.finalteam.rxgalleryfinal.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 /**
  * Desction:
  * Author:pengjianbo
- * Date:16/6/3 下午8:10
+ * Date:16/6/8 下午4:07
  */
-public class RecyclerImageView extends ImageView {
-    public RecyclerImageView(Context context) {
+public class SquareRelativeLayout extends RelativeLayout {
+
+    public SquareRelativeLayout(Context context) {
         super(context);
     }
 
-    public RecyclerImageView(Context context, AttributeSet attrs) {
+    public SquareRelativeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public RecyclerImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SquareRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        setImageDrawable(null);
     }
 
     @Override
@@ -33,5 +28,4 @@ public class RecyclerImageView extends ImageView {
         super .onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth()); //Snap to width
     }
-
 }

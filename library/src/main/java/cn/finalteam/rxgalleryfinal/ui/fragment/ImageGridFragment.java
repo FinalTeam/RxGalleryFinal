@@ -59,7 +59,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
 
     private final String TAKE_URL_STORAGE_KEY = "take_url_storage_key";
 
-    private final int LIMIT = 24;
+    private final int LIMIT = 23;
 
     @Inject
     MediaGridPresenterImpl mMediaGridPresenter;

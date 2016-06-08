@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="120dp">
+    android:layout_height="120dp"
+    android:background="#050505">
 
-    <ImageView
-        android:id="@+id/iv_camera"
+    <LinearLayout
+        android:id="@+id/ll_camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#050505"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_action_switch_camera"/>
+        android:orientation="vertical"
+        android:background="@drawable/ic_default_image"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_camera"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="拍摄照片"
+            android:textColor="#E2E2E2"/>
+    </LinearLayout>
 
     <cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView
         android:id="@+id/iv_media_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:background="#050505"/>
+        android:background="@drawable/ic_default_image"/>
 
     <CheckBox
         android:id="@+id/cb_check"
@@ -25,5 +38,6 @@
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="4dp"/>
-</RelativeLayout>
+        android:layout_alignParentEnd="true"
+        android:layout_margin="2dp"/>
+</cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout>
