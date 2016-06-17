@@ -2,29 +2,21 @@ package cn.finalteam.rxgalleryfinal.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.LinearLayout;
 
 /**
  * Desction:
  * Author:pengjianbo
- * Date:16/6/3 下午8:10
+ * Date:16/6/17 下午1:48
  */
-public class RecyclerImageView extends FixImageView {
-    public RecyclerImageView(Context context) {
+public class SquareLinearLayout extends LinearLayout {
+
+    public SquareLinearLayout(Context context) {
         super(context);
     }
 
-    public RecyclerImageView(Context context, AttributeSet attrs) {
+    public SquareLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public RecyclerImageView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        setImageDrawable(null);
     }
 
     @Override
@@ -32,5 +24,4 @@ public class RecyclerImageView extends FixImageView {
         super .onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth()); //Snap to width
     }
-
 }

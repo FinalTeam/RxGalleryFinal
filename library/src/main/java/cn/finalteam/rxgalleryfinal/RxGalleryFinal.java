@@ -68,6 +68,16 @@ public class RxGalleryFinal {
         return this;
     }
 
+    public RxGalleryFinal imageLoader(AbsImageLoader imageLoader) {
+        configuration.setImageLoader(imageLoader);
+        return this;
+    }
+
+    public RxGalleryFinal pauseOnScrollListener(PauseOnScrollListener pauseOnScrollListener) {
+        configuration.setPauseOnScrollListener(pauseOnScrollListener);
+        return this;
+    }
+
     public void openGallery(){
 //        ThumbnailsUtils.createThumbnailsTask(configuration);
         execute();

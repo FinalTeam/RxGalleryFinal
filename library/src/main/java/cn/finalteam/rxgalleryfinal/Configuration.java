@@ -23,12 +23,14 @@ public class Configuration {
     private List<MediaBean> selectedList;
     private boolean radio;
     private int maxSize;
+    private AbsImageLoader imageLoader;
+    private PauseOnScrollListener pauseOnScrollListener;
 
     public boolean isImage() {
         return image;
     }
 
-    public void setImage(boolean image) {
+    protected void setImage(boolean image) {
         this.image = image;
     }
 
@@ -36,7 +38,7 @@ public class Configuration {
         return context;
     }
 
-    public void setContext(Context context) {
+    protected void setContext(Context context) {
         this.context = context;
     }
 
@@ -44,15 +46,23 @@ public class Configuration {
         return filterMimes;
     }
 
-    public void setFilterMimes(MediaType[] filterMimes) {
+    protected void setFilterMimes(MediaType[] filterMimes) {
         this.filterMimes = filterMimes;
+    }
+
+    public List<MediaBean> getSelectedList() {
+        return selectedList;
+    }
+
+    protected void setSelectedList(List<MediaBean> selectedList) {
+        this.selectedList = selectedList;
     }
 
     public boolean isRadio() {
         return radio;
     }
 
-    public void setRadio(boolean radio) {
+    protected void setRadio(boolean radio) {
         this.radio = radio;
     }
 
@@ -60,15 +70,23 @@ public class Configuration {
         return maxSize;
     }
 
-    public void setMaxSize(int maxSize) {
+    protected void setMaxSize(int maxSize) {
         this.maxSize = maxSize;
     }
 
-    public List<MediaBean> getSelectedList() {
-        return selectedList;
+    public AbsImageLoader getImageLoader() {
+        return imageLoader;
     }
 
-    public void setSelectedList(List<MediaBean> selectedList) {
-        this.selectedList = selectedList;
+    protected void setImageLoader(AbsImageLoader imageLoader) {
+        this.imageLoader = imageLoader;
+    }
+
+    public PauseOnScrollListener getPauseOnScrollListener() {
+        return pauseOnScrollListener;
+    }
+
+    protected void setPauseOnScrollListener(PauseOnScrollListener pauseOnScrollListener) {
+        this.pauseOnScrollListener = pauseOnScrollListener;
     }
 }

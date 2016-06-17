@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
                 .with(this)
                 .image()
                 .radio()
+                .imageLoader(new PicassoImageLoader())
+//                .pauseOnScrollListener()
                 .openGallery());
     }
 }

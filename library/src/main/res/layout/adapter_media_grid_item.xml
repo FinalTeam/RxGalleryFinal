@@ -4,7 +4,7 @@
     android:layout_height="120dp"
     android:background="#050505">
 
-    <LinearLayout
+    <cn.finalteam.rxgalleryfinal.ui.widget.SquareLinearLayout
         android:id="@+id/ll_camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="拍摄照片"
             android:textColor="#E2E2E2"/>
-    </LinearLayout>
+    </cn.finalteam.rxgalleryfinal.ui.widget.SquareLinearLayout>
 
     <cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView
         android:id="@+id/iv_media_image"

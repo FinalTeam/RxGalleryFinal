@@ -16,8 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,7 +62,6 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Inject
     MediaGridPresenterImpl mMediaGridPresenter;
-
     @Inject
     Configuration mConfiguration;
     @Inject
@@ -113,17 +110,10 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia.addItemDecoration(new MarginDecoration(getContext()));
         mRvMedia.setLayoutManager(gridLayoutManager);
         mRvMedia.setOnLoadMoreListener(this);
-        mRvMedia.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    Picasso.with(getContext()).resumeTag(mMediaGridAdapter);
-                } else {
-                    Picasso.with(getContext()).pauseTag(mMediaGridAdapter);
-                }
-            }
-        });
+        if(mConfiguration.getPauseOnScrollListener() != null) {
+            mRvMedia.addOnScrollListener(mConfiguration.getPauseOnScrollListener());
+        }
+
         mTvFolderName = (TextView) view.findViewById(R.id.tv_folder_name);
         mTvFolderName.setOnClickListener(this);
         mTvPreview = (TextView) view.findViewById(R.id.tv_preview);
@@ -133,7 +123,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         MediaBean takePhotoBean = new MediaBean();
         takePhotoBean.setId(Integer.MIN_VALUE);
         mMediaBeanList.add(takePhotoBean);
-        mMediaGridAdapter = new MediaGridAdapter(getContext(), mMediaBeanList, mScreenSize.widthPixels);
+        mMediaGridAdapter = new MediaGridAdapter(getContext(), mMediaBeanList, mScreenSize.widthPixels, mConfiguration);
 
         mMediaGridPresenter.setMediaGridView(this);
         mMediaGridPresenter.getMediaList(mPage, LIMIT);

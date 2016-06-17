@@ -1,6 +1,7 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -9,11 +10,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
 import java.util.List;
 
+import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView;
@@ -29,11 +28,16 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private List<MediaBean> mMediaBeanList;
     private LayoutInflater mInflater;
     private int mImageSize;
-    public MediaGridAdapter(Context context, List<MediaBean> list, int screenWidth) {
+    private Configuration mConfiguration;
+    private Drawable mDefaultImage;
+
+    public MediaGridAdapter(Context context, List<MediaBean> list, int screenWidth, Configuration configuration) {
         this.mContext = context;
         this.mMediaBeanList = list;
         this.mInflater = LayoutInflater.from(context);
         this.mImageSize = screenWidth/3;
+        this.mDefaultImage = context.getResources().getDrawable(R.drawable.ic_default_image);
+        this.mConfiguration = configuration;
     }
 
     @Override
@@ -61,15 +65,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if(TextUtils.isEmpty(path)) {
                 path = mediaBean.getOriginalPath();
             }
-
-            Picasso.with(mContext)
-                    .load(new File(path))
-                    .placeholder(R.drawable.ic_default_image)
-                    .error(R.drawable.ic_default_image)
-                    .resize(mImageSize, mImageSize)
-                    .tag(this)
-                    .centerCrop()
-                    .into(holder.mIvMediaImage);
+            mConfiguration.getImageLoader()
+                    .displayImage(mContext, path, holder.mIvMediaImage, mDefaultImage, mImageSize, mImageSize);
         }
     }
 
