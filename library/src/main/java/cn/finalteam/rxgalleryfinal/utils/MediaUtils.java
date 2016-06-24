@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.finalteam.rxgalleryfinal.bean.BucketBean;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
 /**
@@ -103,17 +104,17 @@ public class MediaUtils {
     public static MediaBean getMediaBeanWithImage(Context context, String originalPath) {
         ContentResolver contentResolver = context.getContentResolver();
         String[] projection = new String[] {
-                MediaStore.Video.Media._ID,
-                MediaStore.Video.Media.TITLE,
-                MediaStore.Video.Media.DATA,
-                MediaStore.Video.Media.BUCKET_ID,
-                MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
-                MediaStore.Video.Media.MIME_TYPE,
-                MediaStore.Video.Media.DATE_ADDED,//创建时间
-                MediaStore.Video.Media.DATE_MODIFIED//最后修改时间
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.TITLE,
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.BUCKET_ID,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.Media.MIME_TYPE,
+                MediaStore.Images.Media.DATE_ADDED,//创建时间
+                MediaStore.Images.Media.DATE_MODIFIED//最后修改时间
         };
         Cursor cursor = contentResolver.query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Video.Media.DATA +"=?",
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Images.Media.DATA +"=?",
                 new String[]{originalPath}, null);
         if(cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -211,7 +212,79 @@ public class MediaUtils {
         }
 
         return mediaBean;
-
     }
 
+    /**
+     * 获取所有的图片文件夹
+     * @param context
+     * @return
+     */
+    public static List<BucketBean> getAllBucketByImage(Context context) {
+        return getAllBucket(context, true);
+    }
+
+    /**
+     * 获取所以视频文件夹
+     * @param context
+     * @return
+     */
+    public static List<BucketBean> getAllBucketByVideo(Context context) {
+        return getAllBucket(context, false);
+    }
+
+    /**
+     * 获取所有的问media文件夹
+     * @param context
+     * @param hasImage
+     * @return
+     */
+    public static List<BucketBean> getAllBucket(Context context, boolean hasImage) {
+        List<BucketBean> bucketBeenList = new ArrayList<>();
+        ContentResolver contentResolver = context.getContentResolver();
+        String[] projection;
+        if(hasImage){
+            projection = new String[] {
+                    MediaStore.Images.Media.BUCKET_ID,
+                    MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            };
+        } else {
+            projection = new String[] {
+                    MediaStore.Video.Media.BUCKET_ID,
+                    MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
+            };
+        }
+        BucketBean allMediaBucket = new BucketBean();
+        allMediaBucket.setBucketId(String.valueOf(Integer.MIN_VALUE));
+        if(hasImage) {
+            allMediaBucket.setBucketName("所有图片");
+        } else {
+            allMediaBucket.setBucketName("所有视频");
+        }
+        bucketBeenList.add(allMediaBucket);
+        Cursor cursor = contentResolver.query(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+        if(cursor != null) {
+            int count = cursor.getCount();
+            if(count > 0) {
+                cursor.moveToFirst();
+                do {
+                    BucketBean bucketBean = new BucketBean();
+                    if(hasImage) {
+                        String bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
+                        bucketBean.setBucketId(bucketId);
+                        String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+                        bucketBean.setBucketName(bucketDisplayName);
+                    } else {
+                        String bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_ID));
+                        bucketBean.setBucketId(bucketId);
+                        String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
+                        bucketBean.setBucketName(bucketDisplayName);
+                    }
+                    bucketBeenList.add(bucketBean);
+                } while (cursor.moveToNext());
+            }
+        }
+
+        return bucketBeenList;
+    }
 }
