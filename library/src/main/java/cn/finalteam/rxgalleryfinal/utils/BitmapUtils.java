@@ -118,10 +118,20 @@ public class BitmapUtils {
         return images;
     }
 
+    /**
+     * 获取大缩略图路径
+     * @param thumbnailSaveDir 缩略图保存路径
+     * @param originalPath 图片地址
+     * */
     public static String getThumbnailBigPath(String thumbnailSaveDir, String originalPath) {
         return compressAndSaveImage(thumbnailSaveDir, originalPath, THUMBNAIL_BIG);
     }
 
+    /**
+     * 获取小缩略图路径
+     * @param thumbnailSaveDir 缩略图保存路径
+     * @param originalPath 图片地址
+     * */
     public static String getThumbnailSmallPath(String thumbnailSaveDir, String originalPath) {
         return compressAndSaveImage(thumbnailSaveDir, originalPath, THUMBNAIL_SMALL);
     }

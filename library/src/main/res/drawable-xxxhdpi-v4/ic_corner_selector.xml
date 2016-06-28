@@ -3,5 +3,5 @@
     <item android:state_selected="true" android:drawable="@drawable/ic_corner_gray" />
     <item android:state_focused="true" android:drawable="@drawable/ic_corner_gray" />
     <item android:state_pressed="true" android:drawable="@drawable/ic_corner_gray" />
-    <item android:drawable="@drawable/ic_corner_lightgray" />
+    <item android:drawable="@drawable/ic_corner_gray" />
 </selector>
