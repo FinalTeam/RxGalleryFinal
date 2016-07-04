@@ -2,8 +2,6 @@ package cn.finalteam.rxgalleryfinal.utils;
 
 import android.util.Log;
 
-import cn.finalteam.rxgalleryfinal.BuildConfig;
-
 /**
  * Desction:
  * Author:pengjianbo
@@ -12,33 +10,34 @@ import cn.finalteam.rxgalleryfinal.BuildConfig;
 public class Logger {
 
     public static final String TAG = "RxGalleryFinal";
-
+    public static final boolean DEBUG = true;
+    
     public static void d(String value){
-        if(BuildConfig.DEBUG) {
+        if(DEBUG) {
             Log.d(TAG, value);
         }
     }
 
     public static void e(String value) {
-        if(BuildConfig.DEBUG) {
+        if(DEBUG) {
             Log.e(TAG, value);
         }
     }
 
     public static void e(Exception value) {
-        if(BuildConfig.DEBUG && value != null) {
+        if(DEBUG && value != null) {
             Log.e(TAG, value.getMessage());
         }
     }
 
     public static void i(String value){
-        if(BuildConfig.DEBUG) {
+        if(DEBUG) {
             Log.i(TAG, value);
         }
     }
 
     public static void w(String value){
-        if(BuildConfig.DEBUG) {
+        if(DEBUG) {
             Log.w(TAG, value);
         }
     }
