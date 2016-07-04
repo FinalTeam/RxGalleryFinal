@@ -114,7 +114,7 @@ public class MediaUtils {
                 MediaStore.Images.Media.DATE_MODIFIED//最后修改时间
         };
         Cursor cursor = contentResolver.query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Images.Media.DATA +"=?",
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Images.Media.DATA +"=?",
                 new String[]{originalPath}, null);
         if(cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -122,6 +122,8 @@ public class MediaUtils {
         }
         return null;
     }
+
+
 
     /**
      * 解析图片cursor并且创建缩略图
@@ -147,8 +149,6 @@ public class MediaUtils {
         mediaBean.setCreateDate(createDate);
         long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED));
         mediaBean.setModifiedDate(modifiedDate);
-
-
         File storeFile = StorageUtils.getCacheDirectory(context);
         File bigThumFile = new File(storeFile, "big_" + FilenameUtils.getName(originalPath));
         File smallThumFile = new File(storeFile, "small_" + FilenameUtils.getName(originalPath));
