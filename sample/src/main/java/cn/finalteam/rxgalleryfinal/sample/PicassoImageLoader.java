@@ -26,7 +26,6 @@ public class PicassoImageLoader implements AbsImageLoader {
                 .error(defaultDrawable)
                 .resize(width, height)
                 .tag(context)
-                .centerCrop()
                 .into(imageView);
     }
 }

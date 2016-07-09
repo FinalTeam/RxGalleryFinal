@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="76dp"
+    android:background="@drawable/ic_bucket_item_selector"
+    android:layout_margin="@dimen/margin"
+    android:gravity="center">
+
+    <cn.finalteam.rxgalleryfinal.ui.widget.SquareImageView
+        android:id="@+id/iv_bucket_cover"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:scaleType="centerCrop"
+        android:layout_centerVertical="true"
+        android:background="@drawable/bg_bucket"/>
+
+    <TextView
+        android:id="@+id/tv_bucket_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#2A2A2A"
+        android:gravity="center_vertical"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:lineSpacingExtra="4dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/iv_bucket_cover"/>
+
+    <RadioButton
+        android:id="@+id/rb_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:layout_alignParentRight="true"
+        android:checked="true"
+        android:visibility="gone"/>
+</RelativeLayout>

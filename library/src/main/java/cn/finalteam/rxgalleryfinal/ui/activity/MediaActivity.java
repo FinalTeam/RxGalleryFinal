@@ -2,6 +2,7 @@ package cn.finalteam.rxgalleryfinal.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 
 import javax.inject.Inject;
 
@@ -36,10 +37,15 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     @Inject
     MediaPageFragment mMediaPageFragment;
 
+    private Toolbar mToolbar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.galleryfinal_activity_media);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         if(mConfiguration.isImage()) {
             showImageGridFragment();
@@ -54,6 +60,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mImageGridFragment)
                 .commit();
+        setTitle("图片");
     }
 
     @Override
@@ -61,6 +68,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mVideoGridFragment)
                 .commit();
+        setTitle("视频");
     }
 
     @Override

@@ -3,11 +3,13 @@ package cn.finalteam.rxgalleryfinal.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -28,14 +30,17 @@ import javax.inject.Inject;
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
+import cn.finalteam.rxgalleryfinal.bean.BucketBean;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.di.component.DaggerMediaGridComponent;
 import cn.finalteam.rxgalleryfinal.di.component.MediaGridComponent;
 import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.module.MediaGridModule;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
+import cn.finalteam.rxgalleryfinal.ui.adapter.BucketAdapter;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaGridAdapter;
 import cn.finalteam.rxgalleryfinal.ui.widget.FooterAdapter;
+import cn.finalteam.rxgalleryfinal.ui.widget.HorizontalDividerItemDecoration;
 import cn.finalteam.rxgalleryfinal.ui.widget.MarginDecoration;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerViewFinal;
 import cn.finalteam.rxgalleryfinal.utils.CameraUtils;
@@ -44,6 +49,10 @@ import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
 import cn.finalteam.rxgalleryfinal.utils.MediaUtils;
 import cn.finalteam.rxgalleryfinal.view.MediaGridView;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Desction:
@@ -51,12 +60,13 @@ import cn.finalteam.rxgalleryfinal.view.MediaGridView;
  * Date:16/5/7 上午10:02
  */
 public class ImageGridFragment extends BaseFragment implements MediaGridView, RecyclerViewFinal.OnLoadMoreListener,
-        FooterAdapter.OnItemClickListener,View.OnClickListener {
+        FooterAdapter.OnItemClickListener,View.OnClickListener, MediaScanner.ScanCallback, BucketAdapter.OnRecyclerViewItemClickListener {
 
     private final String IMAGE_STORE_FILE_NAME = "IMG_%s.jpg";
     private final int TAKE_IMAGE_REQUEST_CODE = 1001;
 
     private final String TAKE_URL_STORAGE_KEY = "take_url_storage_key";
+    private final String BUCKET_ID_KEY = "bucket_id_key";
 
     private final int LIMIT = 23;
 
@@ -71,6 +81,9 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
     MediaGridAdapter mMediaGridAdapter;
     RecyclerViewFinal mRvMedia;
     LinearLayout mLlEmptyView;
+    RecyclerView mRvBucket;
+    BucketAdapter mBucketAdapter;
+    List<BucketBean> mBucketBeanList;
     TextView mTvFolderName;
     TextView mTvPreview;
     MediaScanner mMediaScanner;
@@ -78,6 +91,8 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
     private int mPage = 1;
     private File mImageStoreDir;
     private String mImagePath;
+
+    private String mBucketId = String.valueOf(Integer.MIN_VALUE);
 
     public static ImageGridFragment newInstance() {
         return new ImageGridFragment();
@@ -104,14 +119,19 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
 
         mRvMedia = (RecyclerViewFinal) view.findViewById(R.id.rv_media);
         mLlEmptyView = (LinearLayout) view.findViewById(R.id.ll_empty_view);
+        mRvBucket = (RecyclerView) view.findViewById(R.id.rv_bucket);
+
         mRvMedia.setEmptyView(mLlEmptyView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRvMedia.addItemDecoration(new MarginDecoration(getContext()));
         mRvMedia.setLayoutManager(gridLayoutManager);
         mRvMedia.setOnLoadMoreListener(this);
+        mRvMedia.setFooterViewHide(true);
+
         if(mConfiguration.getPauseOnScrollListener() != null) {
             mRvMedia.addOnScrollListener(mConfiguration.getPauseOnScrollListener());
+            mRvBucket.addOnScrollListener(mConfiguration.getPauseOnScrollListener());
         }
 
         mTvFolderName = (TextView) view.findViewById(R.id.tv_folder_name);
@@ -120,13 +140,27 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         mTvPreview.setOnClickListener(this);
 
         mMediaBeanList = new ArrayList<>();
-        MediaBean takePhotoBean = new MediaBean();
-        takePhotoBean.setId(Integer.MIN_VALUE);
-        mMediaBeanList.add(takePhotoBean);
         mMediaGridAdapter = new MediaGridAdapter(getContext(), mMediaBeanList, mScreenSize.widthPixels, mConfiguration);
+        mRvMedia.setAdapter(mMediaGridAdapter);
 
         mMediaGridPresenter.setMediaGridView(this);
-        mMediaGridPresenter.getMediaList(mPage, LIMIT);
+        mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
+        mRvBucket.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
+                .color(getResources().getColor(R.color.C7C7C7))
+                .size(getResources().getDimensionPixelSize(R.dimen.divider_decoration_height))
+                .margin(getResources().getDimensionPixelSize(R.dimen.bucket_margin),
+                        getResources().getDimensionPixelSize(R.dimen.bucket_margin))
+                .build());
+        mRvBucket.setLayoutManager(linearLayoutManager);
+        mBucketBeanList = new ArrayList<>();
+        mBucketAdapter = new BucketAdapter(getContext(), mBucketBeanList, mConfiguration);
+        mRvBucket.setAdapter(mBucketAdapter);
+        mRvMedia.setOnItemClickListener(this);
+        mMediaGridPresenter.getBucketList();
+        mBucketAdapter.setOnRecyclerViewItemClickListener(this);
     }
 
     @Override
@@ -140,37 +174,69 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void loadMore() {
-        mMediaGridPresenter.getMediaList(mPage, LIMIT);
+        mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
     }
 
     @Override
     public void onRequestMediaCallback(List<MediaBean> list) {
-        if (mPage == 1) {
-            mRvMedia.setAdapter(mMediaGridAdapter);
-            mRvMedia.setOnItemClickListener(this);
+        if (mPage == 1 && TextUtils.equals(mBucketId, String.valueOf(Integer.MIN_VALUE))) {
+            MediaBean takePhotoBean = new MediaBean();
+            takePhotoBean.setId(Integer.MIN_VALUE);
+            takePhotoBean.setBucketId(String.valueOf(Integer.MIN_VALUE));
+            mMediaBeanList.add(takePhotoBean);
         }
         if (list != null && list.size() > 0) {
             mMediaBeanList.addAll(list);
             Logger.i(String.format("得到:%s张图片", list.size()));
-            mMediaGridAdapter.notifyDataSetChanged();
         } else {
             Logger.i("没有更多图片");
         }
+        mMediaGridAdapter.notifyDataSetChanged();
 
         mPage++;
 
         if (list == null || list.size() < LIMIT) {
+            mRvMedia.setFooterViewHide(true);
             mRvMedia.setHasLoadMore(false);
         } else {
+            mRvMedia.setFooterViewHide(false);
             mRvMedia.setHasLoadMore(true);
         }
 
         if (mMediaBeanList.size() == 0) {
-            mRvMedia.setFooterViewHide(true);
             EmptyViewUtils.showMessage(mLlEmptyView, "空空如也");
         }
 
         mRvMedia.onLoadMoreComplete();
+    }
+
+    @Override
+    public void onRequestBucketCallback(List<BucketBean> list) {
+        if(list == null){
+            return;
+        }
+
+        mBucketBeanList.addAll(list);
+        mMediaGridAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        BucketBean bucketBean = mBucketBeanList.get(position);
+        String bucketId = bucketBean.getBucketId();
+        mRvBucket.setVisibility(View.GONE);
+        if(TextUtils.equals(mBucketId, bucketId)){
+            return;
+        }
+        mBucketId = bucketId;
+        EmptyViewUtils.showLoading(mLlEmptyView);
+        mRvMedia.setHasLoadMore(false);
+        mMediaBeanList.clear();
+        mMediaGridAdapter.notifyDataSetChanged();
+
+        mRvMedia.setFooterViewHide(true);
+        mPage = 1;
+        mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
     }
 
     @Override
@@ -187,8 +253,10 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
                 String filename = String.format(IMAGE_STORE_FILE_NAME, dateFormat.format(new Date()));
                 mImagePath = new File(mImageStoreDir, filename).getAbsolutePath();
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImagePath);
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mImagePath)));
                 startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
+            } else {
+                Toast.makeText(getContext(), "相机不可用", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -199,13 +267,9 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         Logger.i("onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
         if (requestCode == TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Logger.i(String.format("拍照成功,图片存储路径:%s", mImagePath));
+
             //刷新相册数据库
-            mMediaScanner.scanFile(mImagePath, "image/jpeg");
-            MediaBean mediaBean = MediaUtils.getMediaBeanWithImage(getContext(), mImagePath);
-            if (mediaBean != null) {
-
-            }
-
+            mMediaScanner.scanFile(mImagePath, "image/jpeg", this);
         }
     }
 
@@ -214,6 +278,9 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         super.onSaveInstanceState(outState);
         if (!TextUtils.isEmpty(mImagePath)) {
             outState.putString(TAKE_URL_STORAGE_KEY, mImagePath);
+        }
+        if(!TextUtils.isEmpty(mBucketId)) {
+            outState.putString(BUCKET_ID_KEY, mBucketId);
         }
     }
 
@@ -224,6 +291,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
             return;
         }
         mImagePath = savedInstanceState.getString(TAKE_URL_STORAGE_KEY);
+        mBucketId = savedInstanceState.getString(BUCKET_ID_KEY);
     }
 
     @Override
@@ -238,7 +306,47 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         if(id == R.id.tv_preview) {
 
         } else if(id == R.id.tv_folder_name) {
-
+            int visibility = mRvBucket.getVisibility();
+            if(visibility == View.VISIBLE) {
+                mRvBucket.setVisibility(View.GONE);
+            } else  {
+                mRvBucket.setVisibility(View.VISIBLE);
+            }
         }
     }
+
+    @Override
+    public void onScanCompleted(String[] images) {
+        if(images == null || images.length == 0){
+            Logger.i("images empty");
+            return;
+        }
+
+        Observable.create((Observable.OnSubscribe<MediaBean>) subscriber -> {
+            MediaBean mediaBean = MediaUtils.getMediaBeanWithImage(getContext(), images[0]);
+            subscriber.onNext(mediaBean);
+            subscriber.onCompleted();
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<MediaBean>() {
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Logger.i("获取MediaBean异常");
+            }
+
+            @Override
+            public void onNext(MediaBean mediaBean) {
+                if(!isDetached() && mediaBean != null) {
+                    mMediaBeanList.add(1, mediaBean);
+                    mMediaGridAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
 }

@@ -3,7 +3,9 @@ package cn.finalteam.rxgalleryfinal.utils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,14 +21,18 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
  */
 public class MediaUtils {
 
+    public static List<MediaBean> getMediaWithImageList(Context context, int page, int limit) {
+        return getMediaWithImageList(context, String.valueOf(Integer.MIN_VALUE), page, limit);
+    }
     /**
      * 从数据库中读取图片
      * @param context
+     * @param bucketId
      * @param page
      * @param limit
      * @return
      */
-    public static List<MediaBean> getMediaWithImageList(Context context, int page, int limit) {
+    public static List<MediaBean> getMediaWithImageList(Context context, String bucketId, int page, int limit) {
         int offset = (page -1) * limit;
         List<MediaBean> mediaBeanList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
@@ -40,9 +46,15 @@ public class MediaUtils {
                 MediaStore.Images.Media.DATE_ADDED,//创建时间
                 MediaStore.Images.Media.DATE_MODIFIED//最后修改时间
         };
+        String selection = null;
+        String []selectionArgs = null;
+        if(!TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
+            selection = MediaStore.Images.Media.BUCKET_ID + "=?";
+            selectionArgs = new String[]{bucketId};
+        }
         Cursor cursor = contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
-                null, MediaStore.Images.Media.DATE_ADDED +" DESC LIMIT " + limit +" OFFSET " + offset);
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, selection,
+                selectionArgs, MediaStore.Images.Media.DATE_ADDED +" DESC LIMIT " + limit +" OFFSET " + offset);
         if(cursor != null) {
             int count = cursor.getCount();
             if(count > 0) {
@@ -54,17 +66,26 @@ public class MediaUtils {
             }
         }
 
+        if(cursor != null && !cursor.isClosed()){
+            cursor.close();
+        }
+        cursor = null;
         return mediaBeanList;
+    }
+
+    public static List<MediaBean> getMediaWithVideoList(Context context, int page, int limit) {
+        return getMediaWithVideoList(context, page, limit);
     }
 
     /**
      * 从数据库中读取视频
      * @param context
+     * @param bucketId
      * @param page
      * @param limit
      * @return
      */
-    public static List<MediaBean> getMediaWithVideoList(Context context, int page, int limit) {
+    public static List<MediaBean> getMediaWithVideoList(Context context, String bucketId, int page, int limit) {
         int offset = (page -1) * limit;
         List<MediaBean> mediaBeanList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
@@ -78,9 +99,16 @@ public class MediaUtils {
                 MediaStore.Video.Media.DATE_ADDED,//创建时间
                 MediaStore.Video.Media.DATE_MODIFIED//最后修改时间
         };
+        String selection = null;
+        String []selectionArgs = null;
+        if(!TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
+            selection = MediaStore.Video.Media.BUCKET_ID + "=?";
+            selectionArgs = new String[]{bucketId};
+        }
+
         Cursor cursor = contentResolver.query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null,
-                null, MediaStore.Video.Media.DATE_ADDED +" DESC LIMIT " + limit +" OFFSET " + offset);
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, selection,
+                selectionArgs, MediaStore.Video.Media.DATE_ADDED +" DESC LIMIT " + limit +" OFFSET " + offset);
         if(cursor != null) {
             int count = cursor.getCount();
             if(count > 0) {
@@ -92,6 +120,10 @@ public class MediaUtils {
             }
         }
 
+        if(cursor != null && !cursor.isClosed()){
+            cursor.close();
+        }
+        cursor = null;
         return mediaBeanList;
     }
 
@@ -116,13 +148,17 @@ public class MediaUtils {
         Cursor cursor = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Images.Media.DATA +"=?",
                 new String[]{originalPath}, null);
+        MediaBean mediaBean = null;
         if(cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            return parseImageCursorAndCreateThumImage(context, cursor);
+            mediaBean =  parseImageCursorAndCreateThumImage(context, cursor);
         }
-        return null;
+        if(cursor != null && !cursor.isClosed()){
+            cursor.close();
+        }
+        cursor = null;
+        return mediaBean;
     }
-
 
 
     /**
@@ -245,45 +281,77 @@ public class MediaUtils {
         if(hasImage){
             projection = new String[] {
                     MediaStore.Images.Media.BUCKET_ID,
+                    MediaStore.Images.Media.DATA,
                     MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             };
         } else {
             projection = new String[] {
                     MediaStore.Video.Media.BUCKET_ID,
+                    MediaStore.Video.Media.DATA,
                     MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
             };
         }
         BucketBean allMediaBucket = new BucketBean();
         allMediaBucket.setBucketId(String.valueOf(Integer.MIN_VALUE));
+        Uri uri;
         if(hasImage) {
             allMediaBucket.setBucketName("所有图片");
+            uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         } else {
             allMediaBucket.setBucketName("所有视频");
+            uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         }
         bucketBeenList.add(allMediaBucket);
-        Cursor cursor = contentResolver.query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-        if(cursor != null) {
-            int count = cursor.getCount();
-            if(count > 0) {
-                cursor.moveToFirst();
-                do {
-                    BucketBean bucketBean = new BucketBean();
-                    if(hasImage) {
-                        String bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
-                        bucketBean.setBucketId(bucketId);
-                        String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
-                        bucketBean.setBucketName(bucketDisplayName);
-                    } else {
-                        String bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_ID));
-                        bucketBean.setBucketId(bucketId);
-                        String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
-                        bucketBean.setBucketName(bucketDisplayName);
-                    }
-                    bucketBeenList.add(bucketBean);
-                } while (cursor.moveToNext());
-            }
+        Cursor cursor = contentResolver.query(uri, projection, null, null, MediaStore.Video.Media.DATE_ADDED +" DESC");
+        if(cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                BucketBean bucketBean = new BucketBean();
+                String bucketId;
+                String bucketKey;
+                String cover;
+                if(hasImage) {
+                    bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
+                    bucketBean.setBucketId(bucketId);
+                    String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+                    bucketBean.setBucketName(bucketDisplayName);
+                    bucketKey = MediaStore.Images.Media.BUCKET_ID;
+                    cover = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                } else {
+                    bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_ID));
+                    bucketBean.setBucketId(bucketId);
+                    String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
+                    bucketBean.setBucketName(bucketDisplayName);
+                    bucketKey = MediaStore.Video.Media.BUCKET_ID;
+                    cover = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+                }
+                if(TextUtils.isEmpty(allMediaBucket.getCover())) {
+                    allMediaBucket.setCover(cover);
+                }
+                if(bucketBeenList.contains(bucketBean)) {
+                    bucketBean = null;
+                    bucketId = null;
+                    bucketKey = null;
+                   continue;
+                }
+                //获取数量
+                Cursor c = contentResolver.query(uri, projection, bucketKey +"=?", new String[]{bucketId}, null);
+                if(c != null && c.getCount() > 0) {
+                    bucketBean.setImageCount(c.getCount());
+                }
+                bucketBean.setCover(cover);
+                if(c != null && !c.isClosed()) {
+                    c.close();
+                }
+                c = null;
+                bucketBeenList.add(bucketBean);
+            } while (cursor.moveToNext());
         }
+
+        if(cursor != null && !cursor.isClosed()){
+            cursor.close();
+        }
+        cursor = null;
 
         return bucketBeenList;
     }

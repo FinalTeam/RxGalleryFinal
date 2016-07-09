@@ -1,5 +1,7 @@
 <resources>
 
     <dimen name="grid_item_margin">1dp</dimen>
-
+    <dimen name="divider_decoration_height">0.5dp</dimen>
+    <dimen name="bucket_margin">10dp</dimen>
+    <dimen name="margin">10dp</dimen>
 </resources>

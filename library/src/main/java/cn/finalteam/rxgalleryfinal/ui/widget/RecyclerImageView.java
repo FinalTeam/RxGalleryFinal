@@ -8,7 +8,8 @@ import android.util.AttributeSet;
  * Author:pengjianbo
  * Date:16/6/3 下午8:10
  */
-public class RecyclerImageView extends FixImageView {
+public class RecyclerImageView extends SquareImageView {
+
     public RecyclerImageView(Context context) {
         super(context);
     }
@@ -25,12 +26,6 @@ public class RecyclerImageView extends FixImageView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         setImageDrawable(null);
-    }
-
-    @Override
-    protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec) {
-        super .onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth()); //Snap to width
     }
 
 }

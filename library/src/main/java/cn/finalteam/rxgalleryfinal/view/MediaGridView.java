@@ -2,6 +2,7 @@ package cn.finalteam.rxgalleryfinal.view;
 
 import java.util.List;
 
+import cn.finalteam.rxgalleryfinal.bean.BucketBean;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
 /**
@@ -11,4 +12,5 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
  */
 public interface MediaGridView {
     void onRequestMediaCallback(List<MediaBean> list);
+    void onRequestBucketCallback(List<BucketBean> list);
 }

@@ -4,8 +4,11 @@ import android.content.Context;
 
 import java.util.List;
 
+import cn.finalteam.rxgalleryfinal.bean.BucketBean;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
+import cn.finalteam.rxgalleryfinal.interactor.MediaBucketFactoryInteractor;
 import cn.finalteam.rxgalleryfinal.interactor.MediaSrcFactoryInteractor;
+import cn.finalteam.rxgalleryfinal.interactor.impl.MediaBucketFactoryInteractorImpl;
 import cn.finalteam.rxgalleryfinal.interactor.impl.MediaSrcFactoryInteractorImpl;
 import cn.finalteam.rxgalleryfinal.presenter.MediaGridPresenter;
 import cn.finalteam.rxgalleryfinal.view.MediaGridView;
@@ -15,9 +18,11 @@ import cn.finalteam.rxgalleryfinal.view.MediaGridView;
  * Author:pengjianbo
  * Date:16/5/14 上午10:58
  */
-public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFactoryInteractor.OnGenerateMediaListener{
+public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFactoryInteractor.OnGenerateMediaListener,
+        MediaBucketFactoryInteractor.OnGenerateBucketListener{
 
     MediaSrcFactoryInteractorImpl mediaSrcFactoryInteractor;
+    MediaBucketFactoryInteractorImpl mediaBucketFactoryInteractor;
 
     Context context;
     MediaGridView mediaGridView;
@@ -25,6 +30,7 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
     public MediaGridPresenterImpl(Context context, boolean hasImage) {
         this.context = context;
         this.mediaSrcFactoryInteractor = new MediaSrcFactoryInteractorImpl(context, hasImage, this);
+        this.mediaBucketFactoryInteractor = new MediaBucketFactoryInteractorImpl(context, hasImage, this);
     }
 
     /**
@@ -38,12 +44,18 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
 
     /**
      * 分页获取media
+     * @param bucketId
      * @param pageSize
      * @param currentOffset
      */
     @Override
-    public void getMediaList(int pageSize, int currentOffset) {
-        mediaSrcFactoryInteractor.generateMeidas(pageSize, currentOffset);
+    public void getMediaList(String bucketId, int pageSize, int currentOffset) {
+        mediaSrcFactoryInteractor.generateMeidas(bucketId, pageSize, currentOffset);
+    }
+
+    @Override
+    public void getBucketList() {
+        mediaBucketFactoryInteractor.generateBuckets();
     }
 
     /**
@@ -53,7 +65,16 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
      * @param list
      */
     @Override
-    public void onFinished(int pageSize, int currentOffset, List<MediaBean> list) {
+    public void onFinished(String bucketId, int pageSize, int currentOffset, List<MediaBean> list) {
         mediaGridView.onRequestMediaCallback(list);
+    }
+
+    /**
+     * BUCKET获取事件回调
+     * @param list
+     */
+    @Override
+    public void onFinished(List<BucketBean> list) {
+        mediaGridView.onRequestBucketCallback(list);
     }
 }

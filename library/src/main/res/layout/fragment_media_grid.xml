@@ -11,7 +11,10 @@
         android:layout_height="match_parent"
         android:cacheColorHint="#00000000"/>
 
+
+
     <RelativeLayout
+        android:id="@+id/rl_bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
@@ -54,6 +57,15 @@
             android:layout_toLeftOf="@id/tv_preview"/>
 
     </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_bucket"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/F2F2F2"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_above="@id/rl_bottom_bar"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/ll_empty_view"

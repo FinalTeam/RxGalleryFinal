@@ -30,13 +30,13 @@ public class MediaSrcFactoryInteractorImpl implements MediaSrcFactoryInteractor 
     }
 
     @Override
-    public void generateMeidas(final int page, final int limit) {
+    public void generateMeidas(final String bucketId, final int page, final int limit) {
         Observable.create((Observable.OnSubscribe<List<MediaBean>>) subscriber -> {
             List<MediaBean> mediaBeanList = null;
             if(hasImage) {
-                mediaBeanList = MediaUtils.getMediaWithImageList(context, page, limit);
+                mediaBeanList = MediaUtils.getMediaWithImageList(context, bucketId, page, limit);
             } else {
-                mediaBeanList = MediaUtils.getMediaWithVideoList(context, page, limit);
+                mediaBeanList = MediaUtils.getMediaWithVideoList(context, bucketId, page, limit);
             }
             subscriber.onNext(mediaBeanList);
             subscriber.onCompleted();
@@ -50,12 +50,12 @@ public class MediaSrcFactoryInteractorImpl implements MediaSrcFactoryInteractor 
 
             @Override
             public void onError(Throwable e) {
-                onGenerateMediaListener.onFinished(page, limit, null);
+                onGenerateMediaListener.onFinished(bucketId, page, limit, null);
             }
 
             @Override
             public void onNext(List<MediaBean> mediaBeenList) {
-                onGenerateMediaListener.onFinished(page, limit, mediaBeenList);
+                onGenerateMediaListener.onFinished(bucketId, page, limit, mediaBeenList);
             }
         });
     }
