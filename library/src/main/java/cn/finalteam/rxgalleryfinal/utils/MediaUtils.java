@@ -271,14 +271,14 @@ public class MediaUtils {
     /**
      * 获取所有的问media文件夹
      * @param context
-     * @param hasImage
+     * @param isImage
      * @return
      */
-    public static List<BucketBean> getAllBucket(Context context, boolean hasImage) {
+    public static List<BucketBean> getAllBucket(Context context, boolean isImage) {
         List<BucketBean> bucketBeenList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         String[] projection;
-        if(hasImage){
+        if(isImage){
             projection = new String[] {
                     MediaStore.Images.Media.BUCKET_ID,
                     MediaStore.Images.Media.DATA,
@@ -294,7 +294,7 @@ public class MediaUtils {
         BucketBean allMediaBucket = new BucketBean();
         allMediaBucket.setBucketId(String.valueOf(Integer.MIN_VALUE));
         Uri uri;
-        if(hasImage) {
+        if(isImage) {
             allMediaBucket.setBucketName("所有图片");
             uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         } else {
@@ -302,7 +302,13 @@ public class MediaUtils {
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         }
         bucketBeenList.add(allMediaBucket);
-        Cursor cursor = contentResolver.query(uri, projection, null, null, MediaStore.Video.Media.DATE_ADDED +" DESC");
+        Cursor cursor = null;
+        try {
+             cursor = contentResolver.query(uri, projection, null, null, MediaStore.Video.Media.DATE_ADDED + " DESC");
+        } catch (Exception e){
+            Logger.e(e);
+        }
+
         if(cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
@@ -310,7 +316,7 @@ public class MediaUtils {
                 String bucketId;
                 String bucketKey;
                 String cover;
-                if(hasImage) {
+                if(isImage) {
                     bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
                     bucketBean.setBucketId(bucketId);
                     String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
@@ -352,7 +358,6 @@ public class MediaUtils {
             cursor.close();
         }
         cursor = null;
-
         return bucketBeenList;
     }
 }
