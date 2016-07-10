@@ -20,12 +20,12 @@ import rx.schedulers.Schedulers;
 public class MediaBucketFactoryInteractorImpl implements MediaBucketFactoryInteractor {
 
     private Context context;
-    private boolean hasImage;
+    private boolean isImage;
     private OnGenerateBucketListener onGenerateBucketListener;
 
-    public MediaBucketFactoryInteractorImpl(Context context, boolean hasImage, OnGenerateBucketListener onGenerateBucketListener) {
+    public MediaBucketFactoryInteractorImpl(Context context, boolean isImage, OnGenerateBucketListener onGenerateBucketListener) {
         this.context = context;
-        this.hasImage = hasImage;
+        this.isImage = isImage;
         this.onGenerateBucketListener = onGenerateBucketListener;
     }
 
@@ -33,7 +33,7 @@ public class MediaBucketFactoryInteractorImpl implements MediaBucketFactoryInter
     public void generateBuckets() {
         Observable.create((Observable.OnSubscribe<List<BucketBean>>) subscriber -> {
             List<BucketBean> bucketBeanList = null;
-            if(hasImage) {
+            if(isImage) {
                 bucketBeanList = MediaUtils.getAllBucketByImage(context);
             } else {
                 bucketBeanList = MediaUtils.getAllBucketByVideo(context);

@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,6 +84,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
     LinearLayout mLlEmptyView;
     RecyclerView mRvBucket;
     BucketAdapter mBucketAdapter;
+    RelativeLayout mRlBucektOverview;
     List<BucketBean> mBucketBeanList;
     TextView mTvFolderName;
     TextView mTvPreview;
@@ -120,6 +122,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia = (RecyclerViewFinal) view.findViewById(R.id.rv_media);
         mLlEmptyView = (LinearLayout) view.findViewById(R.id.ll_empty_view);
         mRvBucket = (RecyclerView) view.findViewById(R.id.rv_bucket);
+        mRlBucektOverview = (RelativeLayout) view.findViewById(R.id.rl_bucket_overview);
 
         mRvMedia.setEmptyView(mLlEmptyView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
@@ -224,7 +227,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
     public void onItemClick(View view, int position) {
         BucketBean bucketBean = mBucketBeanList.get(position);
         String bucketId = bucketBean.getBucketId();
-        mRvBucket.setVisibility(View.GONE);
+        mRlBucektOverview.setVisibility(View.GONE);
         if(TextUtils.equals(mBucketId, bucketId)){
             return;
         }
@@ -306,11 +309,11 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         if(id == R.id.tv_preview) {
 
         } else if(id == R.id.tv_folder_name) {
-            int visibility = mRvBucket.getVisibility();
+            int visibility = mRlBucektOverview.getVisibility();
             if(visibility == View.VISIBLE) {
-                mRvBucket.setVisibility(View.GONE);
+                mRlBucektOverview.setVisibility(View.GONE);
             } else  {
-                mRvBucket.setVisibility(View.VISIBLE);
+                mRlBucektOverview.setVisibility(View.VISIBLE);
             }
         }
     }

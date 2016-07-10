@@ -21,11 +21,11 @@ public class MediaSrcFactoryInteractorImpl implements MediaSrcFactoryInteractor 
 
     Context context;
     OnGenerateMediaListener onGenerateMediaListener;
-    boolean hasImage;
+    boolean isImage;
 
-    public MediaSrcFactoryInteractorImpl(Context context, boolean hasImage, OnGenerateMediaListener onGenerateMediaListener) {
+    public MediaSrcFactoryInteractorImpl(Context context, boolean isImage, OnGenerateMediaListener onGenerateMediaListener) {
         this.context = context;
-        this.hasImage = hasImage;
+        this.isImage = isImage;
         this.onGenerateMediaListener = onGenerateMediaListener;
     }
 
@@ -33,7 +33,7 @@ public class MediaSrcFactoryInteractorImpl implements MediaSrcFactoryInteractor 
     public void generateMeidas(final String bucketId, final int page, final int limit) {
         Observable.create((Observable.OnSubscribe<List<MediaBean>>) subscriber -> {
             List<MediaBean> mediaBeanList = null;
-            if(hasImage) {
+            if(isImage) {
                 mediaBeanList = MediaUtils.getMediaWithImageList(context, bucketId, page, limit);
             } else {
                 mediaBeanList = MediaUtils.getMediaWithVideoList(context, bucketId, page, limit);

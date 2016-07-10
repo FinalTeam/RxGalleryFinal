@@ -38,6 +38,9 @@ public class BucketBean {
     }
 
     public String getCover() {
+        if(cover == null){
+            return "";
+        }
         return cover;
     }
 

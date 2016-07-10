@@ -11,8 +11,6 @@
         android:layout_height="match_parent"
         android:cacheColorHint="#00000000"/>
 
-
-
     <RelativeLayout
         android:id="@+id/rl_bottom_bar"
         android:layout_width="match_parent"
@@ -58,14 +56,21 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_bucket"
+    <RelativeLayout
+        android:id="@+id/rl_bucket_overview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/F2F2F2"
-        android:layout_marginTop="?actionBarSize"
         android:layout_above="@id/rl_bottom_bar"
-        android:visibility="gone"/>
+        android:background="#D9000000"
+        android:visibility="gone"
+        android:clickable="true">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_bucket"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/F2F2F2"
+            android:layout_marginTop="?actionBarSize"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ll_empty_view"

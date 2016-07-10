@@ -21,16 +21,16 @@ import cn.finalteam.rxgalleryfinal.view.MediaGridView;
 public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFactoryInteractor.OnGenerateMediaListener,
         MediaBucketFactoryInteractor.OnGenerateBucketListener{
 
-    MediaSrcFactoryInteractorImpl mediaSrcFactoryInteractor;
-    MediaBucketFactoryInteractorImpl mediaBucketFactoryInteractor;
+    MediaSrcFactoryInteractor mediaSrcFactoryInteractor;
+    MediaBucketFactoryInteractor mediaBucketFactoryInteractor;
 
     Context context;
     MediaGridView mediaGridView;
 
-    public MediaGridPresenterImpl(Context context, boolean hasImage) {
+    public MediaGridPresenterImpl(Context context, boolean isImage) {
         this.context = context;
-        this.mediaSrcFactoryInteractor = new MediaSrcFactoryInteractorImpl(context, hasImage, this);
-        this.mediaBucketFactoryInteractor = new MediaBucketFactoryInteractorImpl(context, hasImage, this);
+        this.mediaSrcFactoryInteractor = new MediaSrcFactoryInteractorImpl(context, isImage, this);
+        this.mediaBucketFactoryInteractor = new MediaBucketFactoryInteractorImpl(context, isImage, this);
     }
 
     /**
