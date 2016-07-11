@@ -31,6 +31,9 @@ import javax.inject.Inject;
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
+import cn.finalteam.rxgalleryfinal.anim.Animation;
+import cn.finalteam.rxgalleryfinal.anim.SlideInUnderneathAnimation;
+import cn.finalteam.rxgalleryfinal.anim.SlideOutUnderneathAnimation;
 import cn.finalteam.rxgalleryfinal.bean.BucketBean;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.di.component.DaggerMediaGridComponent;
@@ -164,6 +167,11 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia.setOnItemClickListener(this);
         mMediaGridPresenter.getBucketList();
         mBucketAdapter.setOnRecyclerViewItemClickListener(this);
+
+        mRlBucektOverview.setVisibility(View.INVISIBLE);
+        new SlideInUnderneathAnimation(mRvBucket)
+                .setDirection(Animation.DIRECTION_DOWN)
+                .animate();
     }
 
     @Override
@@ -309,11 +317,24 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         if(id == R.id.tv_preview) {
 
         } else if(id == R.id.tv_folder_name) {
+            v.setEnabled(false);
             int visibility = mRlBucektOverview.getVisibility();
             if(visibility == View.VISIBLE) {
-                mRlBucektOverview.setVisibility(View.GONE);
+                new SlideOutUnderneathAnimation(mRvBucket)
+                        .setDirection(Animation.DIRECTION_DOWN)
+                        .setListener(animation -> {
+                            v.setEnabled(true);
+                            mRlBucektOverview.setVisibility(View.GONE);
+                        })
+                        .animate();
             } else  {
                 mRlBucektOverview.setVisibility(View.VISIBLE);
+                new SlideInUnderneathAnimation(mRvBucket)
+                        .setDirection(Animation.DIRECTION_DOWN)
+                        .setListener(animation -> {
+                            v.setEnabled(true);
+                        })
+                        .animate();
             }
         }
     }
