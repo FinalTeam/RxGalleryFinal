@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
     private Drawable mDefaultImage;
     private Configuration mConfiguration;
     private OnRecyclerViewItemClickListener mOnRecyclerViewItemClickListener;
+    private BucketBean mSelectedBucket;
 
     public BucketAdapter(Context context, List<BucketBean> bucketList, Configuration configuration) {
         this.mContext = context;
@@ -48,7 +50,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
     @Override
     public BucketViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.adapter_bucket_item, parent, false);
-        return new BucketViewHolder(view);
+        return new BucketViewHolder(parent, view);
     }
 
     @Override
@@ -63,10 +65,20 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
         } else {
             holder.mTvBucketName.setText(bucketName);
         }
+        if(mSelectedBucket != null && TextUtils.equals(mSelectedBucket.getBucketId(), bucketBean.getBucketId())) {
+            holder.mRbSelected.setVisibility(View.VISIBLE);
+            holder.mRbSelected.setChecked(true);
+        } else {
+            holder.mRbSelected.setVisibility(View.GONE);
+        }
 
         String path = bucketBean.getCover();
         mConfiguration.getImageLoader()
                 .displayImage(mContext, path, holder.mIvBucketCover, mDefaultImage, 100, 100);
+    }
+
+    public void setSelectedBucket(BucketBean bucketBean) {
+        this.mSelectedBucket = bucketBean;
     }
 
     @Override
@@ -84,8 +96,11 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
         SquareImageView mIvBucketCover;
         RadioButton mRbSelected;
 
-        public BucketViewHolder(View itemView) {
+        private ViewGroup mParentView;
+
+        public BucketViewHolder(ViewGroup parent, View itemView) {
             super(itemView);
+            this.mParentView = parent;
             mTvBucketName = (TextView) itemView.findViewById(R.id.tv_bucket_name);
             mIvBucketCover = (SquareImageView) itemView.findViewById(R.id.iv_bucket_cover);
             mRbSelected = (RadioButton) itemView.findViewById(R.id.rb_selected);
@@ -97,6 +112,29 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
         public void onClick(View v) {
             if(mOnRecyclerViewItemClickListener != null) {
                 mOnRecyclerViewItemClickListener.onItemClick(v, getLayoutPosition());
+            }
+
+            setRadioDisChecked(mParentView);
+            mRbSelected.setVisibility(View.VISIBLE);
+            mRbSelected.setChecked(true);
+        }
+
+        /**
+         * 设置未所有Item为未选中
+         * @param parentView
+         */
+        private void setRadioDisChecked(ViewGroup parentView) {
+            if (parentView == null || parentView.getChildCount() < 1) {
+                return;
+            }
+
+            for (int i = 0; i < parentView.getChildCount(); i++) {
+                View itemView = parentView.getChildAt(i);
+                RadioButton rbSelect = (RadioButton) itemView.findViewById(R.id.rb_selected);
+                if(rbSelect!=null){
+                    rbSelect.setVisibility(View.GONE);
+                    rbSelect.setChecked(false);
+                }
             }
         }
     }
