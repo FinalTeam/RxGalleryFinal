@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--标题栏颜色-->
+    <attr name="gallery_toolbar_bg" format="color"/>
+    <!--标题栏关闭按钮图片-->
+    <attr name="gallery_toolbar_close_image" format="reference"/>
+    <!--标题栏关闭按钮图片颜色-->
+    <attr name="gallery_toolbar_close_color" format="color"/>
+    <!--标题栏控件颜色-->
+    <attr name="gallery_toolbar_widget_color" format="color"/>
+    <!--标题栏字体颜色-->
+    <attr name="gallery_toolbar_text_color" format="color"/>
+    <!--标题栏字体大小-->
+    <attr name="gallery_toolbar_text_size" format="dimension"/>
+    <!--标题栏高度-->
+    <attr name="gallery_toolbar_height" format="dimension"/>
+    <!--标题栏完成按钮背景-->
+    <attr name="gallery_toolbar_over_button_bg" format="dimension"/>
+    <!--标题栏完成按钮字体大小-->
+    <attr name="gallery_toolbar_over_button_text_size" format="dimension"/>
+    <!--标题栏完成按钮字体颜色-->
+    <attr name="gallery_toolbar_over_button_text_color" format="color"/>
+    <!--标题栏完成按钮使用默认背景为其设置点击颜色-->
+    <attr name="gallery_toolbar_over_button_pressed_color" format="color"/>
+    <!--标题栏完成按钮使用默认背景为其设置正常颜色-->
+    <attr name="gallery_toolbar_over_button_normal_color" format="color"/>
+    <!--系统栏颜色-->
+    <attr name="gallery_color_statusbar" format="color"/>
+    <!--控件激活,已选择状态颜色-->
+    <attr name="gallery_color_active_widget" format="color"/>
+    <!--设置checkbox,radiobutton buttonTint颜色-->
+    <attr name="gallery_checkbox_button_tint_color" format="color"/>
+    <!--页面背景-->
+    <attr name="gallery_page_bg" format="color"/>
+    <!--默认图-->
+    <attr name="gallery_default_image" format="dimension"/>
+
+    <!---uCrop-->
+    <!--裁剪页背景颜色-->
+    <attr name="gallery_ucrop_color_crop_background" format="color"/>
+    <!--图片外框背景颜色-->
+    <attr name="gallery_ucrop_image_outer_frame_bg" format="color"/>
+    <!--裁剪边框颜色-->
+    <attr name="gallery_ucrop_crop_frame_color" format="color"/>
+    <!--裁剪边框宽度-->
+    <attr name="gallery_ucrop_crop_frame_stroke_width" format="dimension"/>
+    <!--裁剪框宫格线颜色-->
+    <attr name="gallery_ucrop_image_grid_color" format="color"/>
+    <!--裁剪框宫格线框-->
+    <attr name="gallery_ucrop_image_grid_stroke_size" format="dimension"/>
+    <attr name="gallery_ucrop_vector_ic_crop" format="dimension"/>
+    <!--裁剪页标题文本-->
+    <attr name="gallery_ucrop_title_text" format="string"/>
+</resources>

@@ -1,13 +1,15 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.support.v4.widget.CompoundButtonCompat;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView;
+import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
  * Desction:
@@ -36,14 +39,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         this.mMediaBeanList = list;
         this.mInflater = LayoutInflater.from(context);
         this.mImageSize = screenWidth/3;
-        this.mDefaultImage = context.getResources().getDrawable(R.drawable.ic_default_image);
+        int defaultResId = ThemeUtils.resolveDrawableRes(context, R.attr.gallery_default_image, R.drawable.gallery_default_image);
+        this.mDefaultImage = context.getResources().getDrawable(defaultResId);
         this.mConfiguration = configuration;
     }
 
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.adapter_media_grid_item, parent, false);
-        return new GridViewHolder(view);
+        View view = mInflater.inflate(R.layout.gallery_adapter_media_grid_item, parent, false);
+        return new GridViewHolder(mContext, view);
     }
 
     @Override
@@ -78,15 +82,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     static class GridViewHolder extends RecyclerView.ViewHolder {
 
         RecyclerImageView mIvMediaImage;
-        CheckBox mCbCheck;
+        AppCompatCheckBox mCbCheck;
 
         LinearLayout mLlCamera;
 
-        public GridViewHolder(View itemView) {
+        public GridViewHolder(Context context, View itemView) {
             super(itemView);
             mIvMediaImage = (RecyclerImageView) itemView.findViewById(R.id.iv_media_image);
-            mCbCheck = (CheckBox) itemView.findViewById(R.id.cb_check);
+            mCbCheck = (AppCompatCheckBox) itemView.findViewById(R.id.cb_check);
             mLlCamera = (LinearLayout) itemView.findViewById(R.id.ll_camera);
+
+            int checkTint = ThemeUtils.resolveColor(context, R.attr.gallery_checkbox_button_tint_color, R.color.gallery_default_checkbox_button_tint_color);
+            CompoundButtonCompat.setButtonTintList(mCbCheck, ColorStateList.valueOf(checkTint));
         }
     }
 

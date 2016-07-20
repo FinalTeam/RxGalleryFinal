@@ -1,0 +1,35 @@
+<resources>
+
+    <declare-styleable name="gallery_ucrop_UCropView">
+
+        <!--Crop image view-->
+        <attr name="gallery_ucrop_aspect_ratio_x" format="float"/>
+        <attr name="gallery_ucrop_aspect_ratio_y" format="float"/>
+
+        <!--Overlay view-->
+        <attr name="gallery_ucrop_show_oval_crop_frame" format="boolean"/>
+        <attr name="gallery_ucrop_oval_dimmed_layer" format="boolean"/>
+        <attr name="gallery_ucrop_dimmed_color" format="color"/>
+
+        <attr name="gallery_ucrop_grid_stroke_size" format="dimension"/>
+        <attr name="gallery_ucrop_grid_color" format="color"/>
+        <attr name="gallery_ucrop_grid_row_count" format="integer"/>
+        <attr name="gallery_ucrop_grid_column_count" format="integer"/>
+        <attr name="gallery_ucrop_show_grid" format="boolean"/>
+
+        <attr name="gallery_ucrop_frame_stroke_size" format="dimension"/>
+        <attr name="gallery_ucrop_frame_color" format="color"/>
+        <attr name="gallery_ucrop_show_frame" format="boolean"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="gallery_ucrop_AspectRatioTextView">
+
+        <attr name="gallery_ucrop_artv_ratio_title" format="string"/>
+
+        <attr name="gallery_ucrop_artv_ratio_x" format="float"/>
+        <attr name="gallery_ucrop_artv_ratio_y" format="float"/>
+
+    </declare-styleable>
+
+</resources>

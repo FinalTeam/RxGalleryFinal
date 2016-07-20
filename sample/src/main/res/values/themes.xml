@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme_Light" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="gallery_ucrop_title_text">@string/gallery_ucrop_menu_crop</item>-->
+    </style>
+
+    <style name="Theme_Light.Blue">
+        <item name="colorPrimary">@color/theme_blue_primary</item>
+        <item name="colorPrimaryDark">@color/theme_blue_dark</item>
+        <item name="colorAccent">@color/theme_blue_accent</item>
+        <item name="colorButtonNormal">@color/theme_blue_accent</item>
+        <!--<item name="gallery_toolbar_bg">@color/theme_blue_primary</item>-->
+        <!--<item name="gallery_toolbar_close_image">@drawable/ucrop_ic_cross</item>-->
+        <!--<item name="gallery_toolbar_close_color">@android:color/white</item>-->
+        <item name="gallery_toolbar_widget_color">@android:color/white</item>
+        <!--<item name="gallery_toolbar_text_color">@android:color/white</item>-->
+        <!--<item name="gallery_toolbar_text_size">@dimen/abc_text_size_title_material_toolbar</item>-->
+
+        <!--<item name="gallery_toolbar_over_button_pressed_color">#fb3478</item>-->
+        <!--<item name="gallery_toolbar_over_button_normal_color">@color/theme_blue_accent</item>-->
+        <!--<item name="gallery_toolbar_over_button_bg"></item>-->
+        <!--<item name="gallery_color_statusbar">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_color_active_widget">@color/theme_blue_primary</item>-->
+        <!--<item name="gallery_toolbar_over_button_text_size">12sp</item>-->
+        <!--<item name="gallery_toolbar_over_button_text_color">@android:color/white</item>-->
+        <!--<item name="gallery_checkbox_button_tint_color">#ff00ff</item>-->
+        <item name="gallery_page_bg">#151515</item>
+        <item name="gallery_default_image">@drawable/gallery_default_image</item>
+
+        <!--uCrop-->
+        <!--<item name="gallery_ucrop_color_crop_background">@color/gallery_default_ucrop_color_crop_background</item>-->
+        <item name="gallery_ucrop_vector_ic_crop">@drawable/gallery_ucrop_vector_ic_crop</item>
+        <item name="gallery_ucrop_image_outer_frame_bg">@color/gallery_default_ucrop_color_default_dimmed</item>
+        <item name="gallery_ucrop_crop_frame_stroke_width">1dp</item>
+        <item name="gallery_ucrop_image_grid_stroke_size">1dp</item>
+    </style>
+
+    <style name="Theme_Light.Orange">
+        <item name="colorPrimary">@color/theme_orange_primary</item>
+        <item name="colorPrimaryDark">@color/theme_orange_dark</item>
+        <item name="colorAccent">@color/theme_light_blue_accent</item>
+    </style>
+
+    <style name="Theme_Light.Cyan">
+        <item name="colorPrimary">@color/theme_cyan_primary</item>
+        <item name="colorPrimaryDark">@color/theme_cyan_dark</item>
+        <item name="colorAccent">@color/theme_cyan_accent</item>
+    </style>
+
+    <style name="Theme_Light.Green">
+        <item name="colorPrimary">@color/theme_green_primary</item>
+        <item name="colorPrimaryDark">@color/theme_green_dark</item>
+        <item name="colorAccent">@color/theme_green_accent</item>
+    </style>
+
+    <style name="Theme_Light.Teal">
+        <item name="colorPrimary">@color/theme_teal_primary</item>
+        <item name="colorPrimaryDark">@color/theme_teal_dark</item>
+        <item name="colorAccent">@color/theme_teal_accent</item>
+    </style>
+
+    <style name="Theme_Light.Red">
+        <item name="colorPrimary">@color/theme_red_primary</item>
+        <item name="colorPrimaryDark">@color/theme_red_dark</item>
+        <item name="colorAccent">@color/theme_red_accent</item>
+    </style>
+
+    <style name="Theme_Light.Pink">
+        <item name="colorPrimary">@color/theme_pink_primary</item>
+        <item name="colorPrimaryDark">@color/theme_pink_dark</item>
+        <item name="colorAccent">@color/theme_pink_accent</item>
+    </style>
+
+    <style name="Theme_Light.Purple">
+        <item name="colorPrimary">@color/theme_purple_primary</item>
+        <item name="colorPrimaryDark">@color/theme_purple_dark</item>
+        <item name="colorAccent">@color/theme_purple_accent</item>
+    </style>
+
+    <style name="Theme_Light.Grey">
+        <item name="colorPrimary">@color/theme_grey_primary</item>
+        <item name="colorPrimaryDark">@color/theme_grey_dark</item>
+        <item name="colorAccent">@color/theme_grey_accent</item>
+    </style>
+
+    <style name="Theme_Light.Black">
+        <item name="colorPrimary">@color/theme_black_primary</item>
+        <item name="colorPrimaryDark">@color/theme_black_dark</item>
+        <item name="colorAccent">@color/theme_black_accent</item>
+    </style>
+
+</resources>

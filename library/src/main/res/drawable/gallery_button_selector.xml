@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 按下状态 -->
+    <item android:state_pressed="true">
+        <shape>
+            <solid
+                android:color="?attr/gallery_toolbar_over_button_pressed_color" />
+
+            <padding
+                android:bottom="8dp"
+                android:left="10dp"
+                android:right="10dp"
+                android:top="8dp" />
+            <corners android:radius="4dp"/>
+        </shape>
+    </item>
+    <!-- 普通状态 -->
+    <item>
+        <shape android:shape="rectangle">
+
+            <solid
+                android:color="?attr/gallery_toolbar_over_button_normal_color" />
+
+            <padding
+                android:bottom="8dp"
+                android:left="10dp"
+                android:right="10dp"
+                android:top="8dp" />
+
+            <corners android:radius="4dp"/>
+        </shape>
+    </item>
+
+</selector>

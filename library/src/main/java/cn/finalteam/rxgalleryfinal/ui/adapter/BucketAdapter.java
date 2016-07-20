@@ -1,9 +1,12 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.widget.CompoundButtonCompat;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -22,6 +25,7 @@ import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.BucketBean;
 import cn.finalteam.rxgalleryfinal.ui.widget.SquareImageView;
+import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
  * Desction:
@@ -42,15 +46,14 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
         this.mContext = context;
         this.mBucketList = bucketList;
         this.mConfiguration = configuration;
-
-        this.mDefaultImage = new ColorDrawable(context.getResources().getColor(R.color.F2F2F2));
+        this.mDefaultImage = new ColorDrawable(context.getResources().getColor(R.color.gallery_F2F2F2));
         this.mInflater = LayoutInflater.from(context);
     }
 
     @Override
     public BucketViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.adapter_bucket_item, parent, false);
-        return new BucketViewHolder(parent, view);
+        View view = mInflater.inflate(R.layout.gallery_adapter_bucket_item, parent, false);
+        return new BucketViewHolder(mContext, parent, view);
     }
 
     @Override
@@ -94,18 +97,21 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
 
         TextView mTvBucketName;
         SquareImageView mIvBucketCover;
-        RadioButton mRbSelected;
+        AppCompatRadioButton mRbSelected;
 
         private ViewGroup mParentView;
 
-        public BucketViewHolder(ViewGroup parent, View itemView) {
+        public BucketViewHolder(Context context, ViewGroup parent, View itemView) {
             super(itemView);
             this.mParentView = parent;
             mTvBucketName = (TextView) itemView.findViewById(R.id.tv_bucket_name);
             mIvBucketCover = (SquareImageView) itemView.findViewById(R.id.iv_bucket_cover);
-            mRbSelected = (RadioButton) itemView.findViewById(R.id.rb_selected);
+            mRbSelected = (AppCompatRadioButton) itemView.findViewById(R.id.rb_selected);
 
             itemView.setOnClickListener(this);
+
+            int checkTint = ThemeUtils.resolveColor(context, R.attr.gallery_checkbox_button_tint_color, R.color.gallery_default_checkbox_button_tint_color);
+            CompoundButtonCompat.setButtonTintList(mRbSelected, ColorStateList.valueOf(checkTint));
         }
 
         @Override

@@ -3,6 +3,7 @@ package cn.finalteam.rxgalleryfinal.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -95,6 +98,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
 
     private int mPage = 1;
     private File mImageStoreDir;
+    private File mImageStoreCropDir;
     private String mImagePath;
 
     private String mBucketId = String.valueOf(Integer.MIN_VALUE);
@@ -107,15 +111,16 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
     public void onAttach(Context context) {
         super.onAttach(context);
         mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/RxGalleryFinal/");
-        if (!mImageStoreDir.exists()) {
-            mImageStoreDir.mkdirs();
+        mImageStoreCropDir = new File(mImageStoreDir, "crop");
+        if (!mImageStoreCropDir.exists()) {
+            mImageStoreCropDir.mkdirs();
         }
         mMediaScanner = new MediaScanner(context);
     }
 
     @Override
     public int getContentView() {
-        return R.layout.fragment_media_grid;
+        return R.layout.gallery_fragment_media_grid;
     }
 
     @Override
@@ -155,10 +160,10 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRvBucket.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
-                .color(getResources().getColor(R.color.C7C7C7))
-                .size(getResources().getDimensionPixelSize(R.dimen.divider_decoration_height))
-                .margin(getResources().getDimensionPixelSize(R.dimen.bucket_margin),
-                        getResources().getDimensionPixelSize(R.dimen.bucket_margin))
+                .color(getResources().getColor(R.color.gallery_C7C7C7))
+                .size(getResources().getDimensionPixelSize(R.dimen.gallery_divider_decoration_height))
+                .margin(getResources().getDimensionPixelSize(R.dimen.gallery_bucket_margin),
+                        getResources().getDimensionPixelSize(R.dimen.gallery_bucket_margin))
                 .build());
         mRvBucket.setLayoutManager(linearLayoutManager);
         mBucketBeanList = new ArrayList<>();
@@ -223,12 +228,13 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onRequestBucketCallback(List<BucketBean> list) {
-        if(list == null){
+        if(list == null || list.size() == 0){
             return;
         }
 
         mBucketBeanList.addAll(list);
-        mMediaGridAdapter.notifyDataSetChanged();
+        mBucketAdapter.setSelectedBucket(list.get(0));
+        mBucketAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -244,6 +250,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia.setHasLoadMore(false);
         mMediaBeanList.clear();
         mMediaGridAdapter.notifyDataSetChanged();
+        mBucketAdapter.setSelectedBucket(bucketBean);
 
         mRvMedia.setFooterViewHide(true);
         mPage = 1;
@@ -252,7 +259,8 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onItemClick(RecyclerView.ViewHolder holder, int position) {
-        if (position == 0) {
+        MediaBean mediaBean = mMediaBeanList.get(position);
+        if (mediaBean.getId() == Integer.MIN_VALUE) {
 
             if (!CameraUtils.hasCamera(getContext())) {
                 Toast.makeText(getContext(), "该设备无摄像头", Toast.LENGTH_SHORT).show();
@@ -268,6 +276,23 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
                 startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
             } else {
                 Toast.makeText(getContext(), "相机不可用", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            try {
+                String originalPath = mediaBean.getOriginalPath();
+                File file = new File(originalPath);
+                Uri uri = Uri.fromFile(file);
+                UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(mImageStoreCropDir, file.getName())));
+                uCrop = uCrop.useSourceImageAspectRatio();
+                UCrop.Options options = new UCrop.Options();
+                options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+                options.setCompressionQuality(50);
+                options.setFreeStyleCropEnabled(true);
+                uCrop = uCrop.withOptions(options);
+                uCrop.start(getActivity());
+            }catch (Exception e){
+                e.printStackTrace();
+                Logger.e(e);
             }
         }
     }
@@ -322,6 +347,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
             if(visibility == View.VISIBLE) {
                 new SlideOutUnderneathAnimation(mRvBucket)
                         .setDirection(Animation.DIRECTION_DOWN)
+                        .setDuration(Animation.DURATION_DEFAULT)
                         .setListener(animation -> {
                             v.setEnabled(true);
                             mRlBucektOverview.setVisibility(View.GONE);
@@ -331,6 +357,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
                 mRlBucektOverview.setVisibility(View.VISIBLE);
                 new SlideInUnderneathAnimation(mRvBucket)
                         .setDirection(Animation.DIRECTION_DOWN)
+                        .setDuration(Animation.DURATION_DEFAULT)
                         .setListener(animation -> {
                             v.setEnabled(true);
                         })

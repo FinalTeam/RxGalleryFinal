@@ -7,8 +7,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
-import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 import cn.finalteam.rxgalleryfinal.AbsImageLoader;
+import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 
 /**
  * Desction:

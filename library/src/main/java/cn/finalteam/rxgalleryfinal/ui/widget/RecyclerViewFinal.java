@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -64,7 +65,7 @@ public class RecyclerViewFinal extends RecyclerView {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        mFooterView = LayoutInflater.from(context).inflate(R.layout.loading_view_final_footer_default, null);
+        mFooterView = LayoutInflater.from(context).inflate(R.layout.gallery_loading_view_final_footer_default, null);
         mPbLoading = (ProgressBar) mFooterView.findViewById(R.id.pb_loading);
         mTvMessage = (TextView) mFooterView.findViewById(R.id.tv_loading_msg);
 
@@ -110,7 +111,7 @@ public class RecyclerViewFinal extends RecyclerView {
     void showNoMoreUI() {
         mLoadMoreLock = false;
         mPbLoading.setVisibility(View.GONE);
-        mTvMessage.setText(R.string.loading_view_no_more);
+        mTvMessage.setText(R.string.gallery_loading_view_no_more);
     }
 
     /**
@@ -119,7 +120,7 @@ public class RecyclerViewFinal extends RecyclerView {
     void showNormalUI() {
         mLoadMoreLock = false;
         mPbLoading.setVisibility(View.GONE);
-        mTvMessage.setText(R.string.loading_view_click_loading_more);
+        mTvMessage.setText(R.string.gallery_loading_view_click_loading_more);
     }
 
     /**
@@ -127,7 +128,7 @@ public class RecyclerViewFinal extends RecyclerView {
      */
     void showLoadingUI(){
         mPbLoading.setVisibility(View.VISIBLE);
-        mTvMessage.setText(R.string.loading_view_loading);
+        mTvMessage.setText(R.string.gallery_loading_view_loading);
     }
 
     /**

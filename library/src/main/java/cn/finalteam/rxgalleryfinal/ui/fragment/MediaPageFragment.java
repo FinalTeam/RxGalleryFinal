@@ -15,7 +15,7 @@ public class MediaPageFragment extends BaseFragment {
 
     @Override
     public int getContentView() {
-        return R.layout.fragment_media_grid;
+        return R.layout.gallery_fragment_media_grid;
     }
 
     @Override

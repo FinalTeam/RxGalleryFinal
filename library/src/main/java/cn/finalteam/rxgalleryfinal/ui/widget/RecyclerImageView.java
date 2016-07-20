@@ -22,10 +22,10 @@ public class RecyclerImageView extends SquareImageView {
         super(context, attrs, defStyleAttr);
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        setImageDrawable(null);
-    }
+//    @Override
+//    protected void onDetachedFromWindow() {
+//        super.onDetachedFromWindow();
+//        setImageDrawable(null);
+//    }
 
 }

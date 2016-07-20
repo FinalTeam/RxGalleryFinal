@@ -1,5 +1,5 @@
 <resources>
-    <string name="loading_view_click_loading_more">点击加载更多</string>
-    <string name="loading_view_no_more">没有更多了</string>
-    <string name="loading_view_loading">加载中…</string>
+    <string name="gallery_loading_view_click_loading_more">点击加载更多</string>
+    <string name="gallery_loading_view_no_more">没有更多了</string>
+    <string name="gallery_loading_view_loading">加载中…</string>
 </resources>

@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,7 +15,7 @@ import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
  * Author:pengjianbo
  * Date:16/5/16 下午7:36
  */
-abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,6 +26,13 @@ abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         setupComponent(rxGalleryFinalComponent);
+
+    }
+
+    @Override
+    protected void onStart() {
+        setTheme(getTheme());
+        super.onStart();
     }
 
     protected Handler mFinishHanlder = new Handler() {
@@ -34,6 +42,8 @@ abstract class BaseActivity extends AppCompatActivity {
             finish();
         }
     };
+
+    protected abstract void setTheme(Resources.Theme theme);
 
     protected abstract void setupComponent(RxGalleryFinalComponent rxGalleryFinalComponent);
 }
