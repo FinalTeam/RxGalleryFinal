@@ -219,29 +219,18 @@ public class UCrop {
 
         public static final String EXTRA_ALLOWED_GESTURES = EXTRA_PREFIX + ".AllowedGestures";
 
+        public static final String EXTRA_OVAL_DIMMED_LAYER = EXTRA_PREFIX + ".OvalDimmedLayer";
+
         public static final String EXTRA_MAX_BITMAP_SIZE = EXTRA_PREFIX + ".MaxBitmapSize";
         public static final String EXTRA_MAX_SCALE_MULTIPLIER = EXTRA_PREFIX + ".MaxScaleMultiplier";
         public static final String EXTRA_IMAGE_TO_CROP_BOUNDS_ANIM_DURATION = EXTRA_PREFIX + ".ImageToCropBoundsAnimDuration";
 
-        public static final String EXTRA_OVAL_DIMMED_LAYER = EXTRA_PREFIX + ".OvalDimmedLayer";
-
-        public static final String EXTRA_SHOW_CROP_FRAME = EXTRA_PREFIX + ".ShowCropFrame";
-        public static final String EXTRA_CROP_FRAME_STROKE_WIDTH = EXTRA_PREFIX + ".CropFrameStrokeWidth";
-
-        public static final String EXTRA_SHOW_CROP_GRID = EXTRA_PREFIX + ".ShowCropGrid";
-        public static final String EXTRA_CROP_GRID_ROW_COUNT = EXTRA_PREFIX + ".CropGridRowCount";
-        public static final String EXTRA_CROP_GRID_COLUMN_COUNT = EXTRA_PREFIX + ".CropGridColumnCount";
-        public static final String EXTRA_CROP_GRID_STROKE_WIDTH = EXTRA_PREFIX + ".CropGridStrokeWidth";
-
-
-        public static final String EXTRA_UCROP_TITLE_TEXT_TOOLBAR = EXTRA_PREFIX + ".UcropToolbarTitleText";
-
         public static final String EXTRA_HIDE_BOTTOM_CONTROLS = EXTRA_PREFIX + ".HideBottomControls";
-        public static final String EXTRA_FREE_STYLE_CROP = EXTRA_PREFIX + ".FreeStyleCrop";
 
         public static final String EXTRA_ASPECT_RATIO_SELECTED_BY_DEFAULT = EXTRA_PREFIX + ".AspectRatioSelectedByDefault";
         public static final String EXTRA_ASPECT_RATIO_OPTIONS = EXTRA_PREFIX + ".AspectRatioOptions";
 
+        public static final String EXTRA_FREE_STYLE_CROP = EXTRA_PREFIX + ".FreeStyleCrop";
 
         private final Bundle mOptionBundle;
 
@@ -271,9 +260,7 @@ public class UCrop {
         /**
          * Choose what set of gestures will be enabled on each tab - if any.
          */
-        public void setAllowedGestures(@UCropActivity.GestureTypes int tabScale,
-                                       @UCropActivity.GestureTypes int tabRotate,
-                                       @UCropActivity.GestureTypes int tabAspectRatio) {
+        public void setAllowedGestures(int tabScale, int tabRotate, int tabAspectRatio) {
             mOptionBundle.putIntArray(EXTRA_ALLOWED_GESTURES, new int[]{tabScale, tabRotate, tabAspectRatio});
         }
 
@@ -284,6 +271,20 @@ public class UCrop {
          */
         public void setMaxScaleMultiplier(@FloatRange(from = 1.0, fromInclusive = false) float maxScaleMultiplier) {
             mOptionBundle.putFloat(EXTRA_MAX_SCALE_MULTIPLIER, maxScaleMultiplier);
+        }
+
+        /**
+         * @param enabled - set to true to let user resize crop bounds (disabled by default)
+         */
+        public void setFreeStyleCropEnabled(boolean enabled) {
+            mOptionBundle.putBoolean(EXTRA_FREE_STYLE_CROP, enabled);
+        }
+
+        /**
+         * @param isOval - set it to true if you want dimmed layer to have an oval inside
+         */
+        public void setOvalDimmedLayer(boolean isOval) {
+            mOptionBundle.putBoolean(EXTRA_OVAL_DIMMED_LAYER, isOval);
         }
 
         /**
@@ -305,75 +306,10 @@ public class UCrop {
         }
 
         /**
-         * @param isOval - set it to true if you want dimmed layer to have an oval inside
-         */
-        public void setOvalDimmedLayer(boolean isOval) {
-            mOptionBundle.putBoolean(EXTRA_OVAL_DIMMED_LAYER, isOval);
-        }
-
-        /**
-         * @param show - set to true if you want to see a crop frame rectangle on top of an image
-         */
-        public void setShowCropFrame(boolean show) {
-            mOptionBundle.putBoolean(EXTRA_SHOW_CROP_FRAME, show);
-        }
-
-        /**
-         * @param width - desired width of crop frame line in pixels
-         */
-        public void setCropFrameStrokeWidth(@IntRange(from = 0) int width) {
-            mOptionBundle.putInt(EXTRA_CROP_FRAME_STROKE_WIDTH, width);
-        }
-
-        /**
-         * @param show - set to true if you want to see a crop grid/guidelines on top of an image
-         */
-        public void setShowCropGrid(boolean show) {
-            mOptionBundle.putBoolean(EXTRA_SHOW_CROP_GRID, show);
-        }
-
-        /**
-         * @param count - crop grid rows count.
-         */
-        public void setCropGridRowCount(@IntRange(from = 0) int count) {
-            mOptionBundle.putInt(EXTRA_CROP_GRID_ROW_COUNT, count);
-        }
-
-        /**
-         * @param count - crop grid columns count.
-         */
-        public void setCropGridColumnCount(@IntRange(from = 0) int count) {
-            mOptionBundle.putInt(EXTRA_CROP_GRID_COLUMN_COUNT, count);
-        }
-
-
-        /**
-         * @param width - desired width of crop grid lines in pixels
-         */
-        public void setCropGridStrokeWidth(@IntRange(from = 0) int width) {
-            mOptionBundle.putInt(EXTRA_CROP_GRID_STROKE_WIDTH, width);
-        }
-
-
-        /**
-         * @param text - desired text for Toolbar title
-         */
-        public void setToolbarTitle(@Nullable String text) {
-            mOptionBundle.putString(EXTRA_UCROP_TITLE_TEXT_TOOLBAR, text);
-        }
-
-        /**
          * @param hide - set to true to hide the bottom controls (shown by default)
          */
         public void setHideBottomControls(boolean hide) {
             mOptionBundle.putBoolean(EXTRA_HIDE_BOTTOM_CONTROLS, hide);
-        }
-
-        /**
-         * @param enabled - set to true to let user resize crop bounds (disabled by default)
-         */
-        public void setFreeStyleCropEnabled(boolean enabled) {
-            mOptionBundle.putBoolean(EXTRA_FREE_STYLE_CROP, enabled);
         }
 
         /**

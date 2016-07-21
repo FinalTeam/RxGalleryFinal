@@ -301,14 +301,21 @@ public class UCropActivity extends BaseActivity {
         mGestureCropImageView.setImageToWrapCropBoundsAnimDuration(intent.getIntExtra(UCrop.Options.EXTRA_IMAGE_TO_CROP_BOUNDS_ANIM_DURATION, CropImageView.DEFAULT_IMAGE_TO_CROP_BOUNDS_ANIM_DURATION));
 
         // Overlay view options
+//        boolean freeStyleCrop = ThemeUtils.resolveBoolean(this, R.attr.gallery_ucrop_free_style_crop, R.bool.gallery_default_ucrop_free_style_crop);
         mOverlayView.setFreestyleCropEnabled(intent.getBooleanExtra(UCrop.Options.EXTRA_FREE_STYLE_CROP, OverlayView.DEFAULT_FREESTYLE_CROP_ENABLED));
+//        boolean ovalDimmedLayer = ThemeUtils.resolveBoolean(this, R.attr.gallery_ucrop_oval_dimmed_layer_enabled, R.bool.gallery_default_ucrop_oval_dimmed_layer_enabled);
+//        mOverlayView.setOvalDimmedLayer(ovalDimmedLayer);
         mOverlayView.setOvalDimmedLayer(intent.getBooleanExtra(UCrop.Options.EXTRA_OVAL_DIMMED_LAYER, OverlayView.DEFAULT_OVAL_DIMMED_LAYER));
-        mOverlayView.setShowCropFrame(intent.getBooleanExtra(UCrop.Options.EXTRA_SHOW_CROP_FRAME, OverlayView.DEFAULT_SHOW_CROP_FRAME));
-        mOverlayView.setShowCropGrid(intent.getBooleanExtra(UCrop.Options.EXTRA_SHOW_CROP_GRID, OverlayView.DEFAULT_SHOW_CROP_GRID));
-        mOverlayView.setCropGridRowCount(intent.getIntExtra(UCrop.Options.EXTRA_CROP_GRID_ROW_COUNT, OverlayView.DEFAULT_CROP_GRID_ROW_COUNT));
-        mOverlayView.setCropGridColumnCount(intent.getIntExtra(UCrop.Options.EXTRA_CROP_GRID_COLUMN_COUNT, OverlayView.DEFAULT_CROP_GRID_COLUMN_COUNT));
+        boolean showCropFrame = ThemeUtils.resolveBoolean(this, R.attr.gallery_ucrop_show_crop_frame, R.bool.gallery_default_ucrop_show_crop_frame);
+        mOverlayView.setShowCropFrame(showCropFrame);
+        boolean showCropGrid = ThemeUtils.resolveBoolean(this, R.attr.gallery_ucrop_show_crop_grid, R.bool.gallery_default_ucrop_show_crop_grid);
+        mOverlayView.setShowCropGrid(showCropGrid);
+        int gridRowCount = ThemeUtils.resolveInteger(this, R.attr.gallery_ucrop_grid_column_count, R.integer.gallery_default_ucrop_show_crop_grid_row_count);
+        mOverlayView.setCropGridRowCount(gridRowCount);
+        int gridColumnCount = ThemeUtils.resolveInteger(this, R.attr.gallery_ucrop_grid_column_count, R.integer.gallery_default_ucrop_show_crop_grid_column_count);
+        mOverlayView.setCropGridColumnCount(gridColumnCount);
 
-        // Aspect ratio options
+        // Aspect ratio options宽高比
         float aspectRatioX = intent.getFloatExtra(UCrop.EXTRA_ASPECT_RATIO_X, 0);
         float aspectRatioY = intent.getFloatExtra(UCrop.EXTRA_ASPECT_RATIO_Y, 0);
 

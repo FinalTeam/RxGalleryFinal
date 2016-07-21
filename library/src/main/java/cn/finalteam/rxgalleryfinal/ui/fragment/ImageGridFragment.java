@@ -52,6 +52,7 @@ import cn.finalteam.rxgalleryfinal.ui.widget.MarginDecoration;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerViewFinal;
 import cn.finalteam.rxgalleryfinal.utils.CameraUtils;
 import cn.finalteam.rxgalleryfinal.utils.EmptyViewUtils;
+import cn.finalteam.rxgalleryfinal.utils.FilenameUtils;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
 import cn.finalteam.rxgalleryfinal.utils.MediaUtils;
@@ -278,6 +279,13 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
                 Toast.makeText(getContext(), "相机不可用", Toast.LENGTH_SHORT).show();
             }
         } else {
+            String ext = FilenameUtils.getExtension(mediaBean.getOriginalPath());
+            Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+            if(ext != null && TextUtils.equals(ext.toLowerCase(), "png")) {
+                format = Bitmap.CompressFormat.PNG;
+            } else if(ext != null && TextUtils.equals(ext.toLowerCase(), "webp")) {
+                format = Bitmap.CompressFormat.WEBP;
+            }
             try {
                 String originalPath = mediaBean.getOriginalPath();
                 File file = new File(originalPath);
@@ -285,11 +293,37 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
                 UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(mImageStoreCropDir, file.getName())));
                 uCrop = uCrop.useSourceImageAspectRatio();
                 UCrop.Options options = new UCrop.Options();
-                options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
-                options.setCompressionQuality(50);
-                options.setFreeStyleCropEnabled(true);
+                options.setHideBottomControls(mConfiguration.isHideUCropBottomControls());
+                options.setCompressionFormat(format);
+                if(mConfiguration.getCompressionQuality() != 0) {
+                    options.setCompressionQuality(mConfiguration.getCompressionQuality());
+                }
+
+                if(mConfiguration.getMaxBitmapSize() != 0){
+                    options.setMaxBitmapSize(mConfiguration.getMaxBitmapSize());
+                }
+
+                int []gestures = mConfiguration.getAllowedGestures();
+                if(gestures != null && gestures.length == 3) {
+                    options.setAllowedGestures(gestures[0], gestures[1], gestures[2]);
+                }
+                if(mConfiguration.getMaxScaleMultiplier() != 0){
+                    options.setMaxScaleMultiplier(mConfiguration.getMaxScaleMultiplier());
+                }
+                //设置等比缩放
+                if(mConfiguration.getAspectRatioX() != 0 && mConfiguration.getAspectRatioY() != 0) {
+                    options.withAspectRatio(mConfiguration.getAspectRatioX(), mConfiguration.getAspectRatioY());
+                }
+                //设置等比缩放默认值索引及等比缩放值列表
+                if(mConfiguration.getAspectRatio() != null && mConfiguration.getSelectedByDefault() > mConfiguration.getAspectRatio().length) {
+                    options.setAspectRatioOptions(mConfiguration.getSelectedByDefault(), mConfiguration.getAspectRatio());
+                }
+                options.setFreeStyleCropEnabled(mConfiguration.isFreestyleCropEnabled());
+                options.setOvalDimmedLayer(mConfiguration.isOvalDimmedLayer());
+
                 uCrop = uCrop.withOptions(options);
                 uCrop.start(getActivity());
+
             }catch (Exception e){
                 e.printStackTrace();
                 Logger.e(e);

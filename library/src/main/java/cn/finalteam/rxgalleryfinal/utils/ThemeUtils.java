@@ -72,6 +72,40 @@ public class ThemeUtils {
         return value;
     }
 
+    public static boolean resolveBoolean(Context context, @AttrRes int attr) {
+        return resolveBoolean(context, attr, 0);
+    }
+
+    public static boolean resolveBoolean(Context context, @AttrRes int attr, int fallback) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(new int[]{attr});
+        boolean defValue = false;
+        if(fallback!=0){
+            defValue = context.getResources().getBoolean(fallback);
+        }
+        try {
+            return a.getBoolean(0, defValue);
+        } finally {
+            a.recycle();
+        }
+    }
+
+    public static int resolveInteger(Context context, @AttrRes int attr) {
+        return resolveInteger(context, attr, 0);
+    }
+
+    public static int resolveInteger(Context context, @AttrRes int attr, int fallback) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(new int[]{attr});
+        int defValue = 0;
+        if(fallback!=0){
+            defValue = context.getResources().getInteger(fallback);
+        }
+        try {
+            return a.getInteger(0, defValue);
+        } finally {
+            a.recycle();
+        }
+    }
+
     public static int resolveDrawableRes(Context context, @AttrRes int attr) {
         return resolveDrawableRes(context, attr, 0);
     }
@@ -84,8 +118,6 @@ public class ThemeUtils {
             a.recycle();
         }
     }
-
-
 
     public static Drawable resolveDrawable(Context context, @AttrRes int attr) {
         return resolveDrawable(context, attr, 0);

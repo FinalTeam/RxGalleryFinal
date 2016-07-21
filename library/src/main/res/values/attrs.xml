@@ -51,4 +51,12 @@
     <attr name="gallery_ucrop_vector_ic_crop" format="dimension"/>
     <!--裁剪页标题文本-->
     <attr name="gallery_ucrop_title_text" format="string"/>
+    <!--是否显示裁剪页面frame-->
+    <attr name="gallery_ucrop_show_crop_frame" format="boolean"/>
+    <!--是否显示裁剪页面九宫格线-->
+    <attr name="gallery_ucrop_show_crop_grid" format="boolean"/>
+    <!--裁剪页面九宫格线行数-->
+    <attr name="gallery_ucrop_show_crop_grid_row_count" format="integer"/>
+    <!--裁剪页面九宫格线列数-->
+    <attr name="gallery_ucrop_show_crop_grid_column_count" format="integer"/>
 </resources>
