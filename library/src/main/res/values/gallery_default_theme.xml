@@ -33,5 +33,6 @@
     <bool name="gallery_default_ucrop_show_crop_grid">true</bool>
     <integer name="gallery_default_ucrop_show_crop_grid_row_count">2</integer>
     <integer name="gallery_default_ucrop_show_crop_grid_column_count">2</integer>
+    <integer name="gallery_default_toolbar_text_gravity">0x11</integer>
     <!--uCrop默认颜色 end-->
 </resources>

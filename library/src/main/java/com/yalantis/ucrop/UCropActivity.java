@@ -143,11 +143,13 @@ public class UCropActivity extends BaseActivity {
         mTvToolbarTitle.setText(ThemeUtils.resolveString(this, R.attr.gallery_ucrop_title_text, R.string.gallery_ucrop_menu_crop));
         mToolbar.setTitleTextColor(titleTextColor);
 
-
         int toolbarBg = ThemeUtils.resolveColor(this, R.attr.gallery_toolbar_bg, R.color.gallery_default_color_toolbar_bg);
         mToolbar.setBackgroundColor(toolbarBg);
         int toolbarHeight = (int) ThemeUtils.resolveDimen(this, R.attr.gallery_toolbar_height, R.dimen.gallery_default_toolbar_height);
         mToolbar.setMinimumHeight(toolbarHeight);
+
+        int gravity = ThemeUtils.resolveInteger(this, R.attr.gallery_toolbar_text_gravity, R.integer.gallery_default_toolbar_text_gravity);
+        mTvToolbarTitle.setLayoutParams(new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT, gravity));
 
         setSupportActionBar(mToolbar);
         final ActionBar actionBar = getSupportActionBar();

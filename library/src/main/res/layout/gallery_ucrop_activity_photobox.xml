@@ -14,8 +14,7 @@
             android:id="@+id/tv_toolbar_title"
             style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_height="wrap_content"/>
 
     </android.support.v7.widget.Toolbar>
 
