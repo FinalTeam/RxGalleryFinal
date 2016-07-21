@@ -293,7 +293,7 @@ public class ImageGridFragment extends BaseFragment implements MediaGridView, Re
                 UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(mImageStoreCropDir, file.getName())));
                 uCrop = uCrop.useSourceImageAspectRatio();
                 UCrop.Options options = new UCrop.Options();
-                options.setHideBottomControls(mConfiguration.isHideUCropBottomControls());
+                options.setHideBottomControls(mConfiguration.isHideBottomControls());
                 options.setCompressionFormat(format);
                 if(mConfiguration.getCompressionQuality() != 0) {
                     options.setCompressionQuality(mConfiguration.getCompressionQuality());

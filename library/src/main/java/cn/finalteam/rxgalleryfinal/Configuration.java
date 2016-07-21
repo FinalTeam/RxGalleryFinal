@@ -32,18 +32,18 @@ public class Configuration {
 
     //==========UCrop START==========
     //是否隐藏裁剪页面底部控制栏,默认显示
-    private boolean hideUCropBottomControls;
+    private boolean hideBottomControls;
     //图片压缩质量,默认不压缩
     private int compressionQuality;
     //手势方式,默认all
-    private @UCropActivity.GestureTypes int []gestures;
+    private int []gestures;
     //设置图片最大值,默认根据屏幕得出
     private int maxBitmapSize;
     //设置最大缩放值,默认10.f
-    private int maxScaleMultiplier;
+    private float maxScaleMultiplier;
     //宽高比
-    private int aspectRatioX;
-    private int aspectRatioY;
+    private float aspectRatioX;
+    private float aspectRatioY;
     //等比缩放默认值索引,默认原图比例
     private int selectedByDefault;
     //等比缩放值表,默认1:1,3:4,原图比例,3:2,16:9
@@ -118,12 +118,12 @@ public class Configuration {
         this.pauseOnScrollListener = pauseOnScrollListener;
     }
 
-    public boolean isHideUCropBottomControls() {
-        return hideUCropBottomControls;
+    public boolean isHideBottomControls() {
+        return hideBottomControls;
     }
 
-    public void setHideUCropBottomControls(boolean hideUCropBottomControls) {
-        this.hideUCropBottomControls = hideUCropBottomControls;
+    public void setHideBottomControls(boolean hideBottomControls) {
+        this.hideBottomControls = hideBottomControls;
     }
 
     public int getCompressionQuality() {
@@ -150,27 +150,27 @@ public class Configuration {
         this.maxBitmapSize = maxBitmapSize;
     }
 
-    public int getMaxScaleMultiplier() {
+    public float getMaxScaleMultiplier() {
         return maxScaleMultiplier;
     }
 
-    public void setMaxScaleMultiplier(int maxScaleMultiplier) {
+    public void setMaxScaleMultiplier(float maxScaleMultiplier) {
         this.maxScaleMultiplier = maxScaleMultiplier;
     }
 
-    public int getAspectRatioX() {
+    public float getAspectRatioX() {
         return aspectRatioX;
     }
 
-    public void setAspectRatioX(int aspectRatioX) {
+    public void setAspectRatioX(float aspectRatioX) {
         this.aspectRatioX = aspectRatioX;
     }
 
-    public int getAspectRatioY() {
+    public float getAspectRatioY() {
         return aspectRatioY;
     }
 
-    public void setAspectRatioY(int aspectRatioY) {
+    public void setAspectRatioY(float aspectRatioY) {
         this.aspectRatioY = aspectRatioY;
     }
 
