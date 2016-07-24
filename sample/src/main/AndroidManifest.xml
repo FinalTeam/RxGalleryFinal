@@ -27,12 +27,12 @@
         <activity android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
             android:screenOrientation="portrait"
             android:exported="true"
-            android:theme="@style/Theme_Light.Blue"/>
+            android:theme="@style/Theme_Light.Brown"/>
 
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme_Light.Blue"/>
+            android:theme="@style/Theme_Light.Brown"/>
     </application>
 
 </manifest>
