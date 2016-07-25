@@ -26,7 +26,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         setupComponent(rxGalleryFinalComponent);
-
     }
 
     @Override

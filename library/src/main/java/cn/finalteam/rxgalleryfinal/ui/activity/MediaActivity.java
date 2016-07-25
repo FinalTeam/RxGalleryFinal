@@ -10,23 +10,35 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
+import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.di.component.ActivityFragmentComponent;
 import cn.finalteam.rxgalleryfinal.di.component.DaggerActivityFragmentComponent;
 import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.module.ActivityFragmentModule;
-import cn.finalteam.rxgalleryfinal.ui.fragment.ImageGridFragment;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.MediaPreviewViewPagerChangedEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
+import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPageFragment;
-import cn.finalteam.rxgalleryfinal.ui.fragment.VideoGridFragment;
+import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPreviewFragment;
 import cn.finalteam.rxgalleryfinal.utils.OsCompat;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 import cn.finalteam.rxgalleryfinal.view.ActivityFragmentView;
+import rx.Subscription;
 
 /**
  * Desction:
@@ -37,20 +49,22 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
 
     @Inject
     Configuration mConfiguration;
-
-//    @Inject
-//    ActivityFragmentPresenterImpl mActivityFragmentPresenter;
-//
     @Inject
-    ImageGridFragment mImageGridFragment;
-    @Inject
-    VideoGridFragment mVideoGridFragment;
+    MediaGridFragment mMediaGridFragment;
     @Inject
     MediaPageFragment mMediaPageFragment;
+    @Inject
+    MediaPreviewFragment mMediaPreviewFragment;
 
     private Toolbar mToolbar;
     private TextView mTvToolbarTitle;
     private TextView mTvOverAction;
+
+    private Subscription mSubscriptionOpenMediaPreviewEvent;
+    private Subscription mSubscriptionMediaCheckChangeEvent;
+    private Subscription mSubscriptionMediaPreviewViewPagerChangedEvent;
+
+    private List<MediaBean> mCheckedList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,11 +79,10 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         mTvOverAction.setOnClickListener(view -> {
 
         });
-        if(mConfiguration.isImage()) {
-            showImageGridFragment();
-        } else {
-            showVideoGridFragment();
-        }
+        mCheckedList = new ArrayList<>();
+
+        showMediaGridFragment();
+        subscribeEvent();
     }
 
     @Override
@@ -79,8 +92,12 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         closeDrawable.setColorFilter(closeColor, PorterDuff.Mode.SRC_ATOP);
         mToolbar.setNavigationIcon(closeDrawable);
 
-        int overButtonBg = ThemeUtils.resolveDrawableRes(this, R.attr.gallery_toolbar_over_button_bg, R.drawable.gallery_button_selector);
-        mTvOverAction.setBackgroundResource(overButtonBg);
+        int overButtonBg = ThemeUtils.resolveDrawableRes(this, R.attr.gallery_toolbar_over_button_bg);
+        if(overButtonBg != 0) {
+            mTvOverAction.setBackgroundResource(overButtonBg);
+        } else {
+            OsCompat.setBackgroundDrawableCompat(mTvOverAction, createDefaultOverButtonBgDrawable());
+        }
 
         float overTextSize = ThemeUtils.resolveDimen(this, R.attr.gallery_toolbar_over_button_text_size, R.dimen.gallery_default_toolbar_over_button_text_size);
         mTvOverAction.setTextSize(TypedValue.COMPLEX_UNIT_PX, overTextSize);
@@ -107,39 +124,50 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         ThemeUtils.setStatusBarColor(statusBarColor, getWindow());
 
         setSupportActionBar(mToolbar);
-
-        OsCompat.setBackgroundDrawableCompat(mTvOverAction, createOverButtonBgDrawable());
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            backAction();
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void showImageGridFragment() {
+    public void showMediaGridFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, mImageGridFragment)
+                .replace(R.id.fragment_container, mMediaGridFragment)
+                .hide(mMediaPreviewFragment)
+                .hide(mMediaPageFragment)
+                .show(mMediaGridFragment)
                 .commit();
-        mTvToolbarTitle.setText("图片");
-    }
-
-    @Override
-    public void showVideoGridFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, mVideoGridFragment)
-                .commit();
-        mTvToolbarTitle.setText("视频");
+        if(mConfiguration.isImage()) {
+            mTvToolbarTitle.setText("图片");
+        } else {
+            mTvToolbarTitle.setText("视频");
+        }
     }
 
     @Override
     public void showMediaPageFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, mMediaPageFragment)
+                .add(R.id.fragment_container, mMediaPageFragment)
+                .hide(mMediaGridFragment)
+                .hide(mMediaPreviewFragment)
+                .show(mMediaPageFragment)
                 .commit();
+    }
+
+    @Override
+    public void showMediaPreviewFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, mMediaPreviewFragment)
+                .hide(mMediaGridFragment)
+                .hide(mMediaPageFragment)
+                .show(mMediaPreviewFragment)
+                .commit();
+        mTvToolbarTitle.setText(String.format(Locale.CHINA, "预览(%d/%d)", 1, mCheckedList.size()));
     }
 
     @Override
@@ -151,7 +179,87 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         activityFragmentComponent.inject(this);
     }
 
-    private StateListDrawable createOverButtonBgDrawable() {
+
+    private void subscribeEvent() {
+        mSubscriptionOpenMediaPreviewEvent = RxBus.getDefault().toObservable(OpenMediaPreviewFragmentEvent.class)
+                .map(mediaPreviewEvent -> mediaPreviewEvent)
+                .subscribe(new RxBusSubscriber<OpenMediaPreviewFragmentEvent>() {
+                    @Override
+                    protected void onEvent(OpenMediaPreviewFragmentEvent openMediaPreviewFragmentEvent) {
+                        showMediaPreviewFragment();
+                    }
+                });
+
+        RxBus.getDefault().add(mSubscriptionOpenMediaPreviewEvent);
+
+        mSubscriptionMediaCheckChangeEvent = RxBus.getDefault().toObservable(MediaCheckChangeEvent.class)
+                .map(mediaCheckChangeEvent -> mediaCheckChangeEvent)
+                .subscribe(new RxBusSubscriber<MediaCheckChangeEvent>() {
+                    @Override
+                    protected void onEvent(MediaCheckChangeEvent mediaCheckChangeEvent) {
+                        MediaBean mediaBean = mediaCheckChangeEvent.getMediaBean();
+                        if(mCheckedList.contains(mediaBean)) {
+                            mCheckedList.remove(mediaBean);
+                        } else {
+                            mCheckedList.add(mediaBean);
+                        }
+
+                        if(mCheckedList.size() > 0){
+                            String text = getResources().getString(R.string.gallery_over_button_text_checked, mCheckedList.size(), mConfiguration.getMaxSize());
+                            mTvOverAction.setText(text);
+                            mTvOverAction.setEnabled(true);
+                        } else {
+                            mTvOverAction.setText(R.string.gallery_over_button_text);
+                            mTvOverAction.setEnabled(false);
+                        }
+                    }
+                });
+        RxBus.getDefault().add(mSubscriptionMediaCheckChangeEvent);
+
+        mSubscriptionMediaPreviewViewPagerChangedEvent = RxBus.getDefault().toObservable(MediaPreviewViewPagerChangedEvent.class)
+                .map(mediaPreviewViewPagerChangedEvent -> mediaPreviewViewPagerChangedEvent)
+                .subscribe(new RxBusSubscriber<MediaPreviewViewPagerChangedEvent>() {
+                    @Override
+                    protected void onEvent(MediaPreviewViewPagerChangedEvent mediaPreviewViewPagerChangedEvent) {
+                        int curIndex = mediaPreviewViewPagerChangedEvent.getCurIndex();
+                        int totalSize = mediaPreviewViewPagerChangedEvent.getTotalSize();
+                        String title = String.format(Locale.CHINA, "预览(%d/%d)", curIndex + 1, totalSize);
+                        mTvToolbarTitle.setText(title);
+                    }
+                });
+        RxBus.getDefault().add(mSubscriptionMediaPreviewViewPagerChangedEvent);
+    }
+
+    public List<MediaBean> getCheckedList() {
+        return mCheckedList;
+    }
+
+    private void backAction() {
+        if(mMediaGridFragment.isVisible()) {
+            onBackPressed();
+        } else if(mMediaPreviewFragment.isVisible()){
+            showMediaGridFragment();
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            backAction();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RxBus.getDefault().remove(mSubscriptionOpenMediaPreviewEvent);
+        RxBus.getDefault().remove(mSubscriptionMediaCheckChangeEvent);
+        RxBus.getDefault().remove(mSubscriptionMediaPreviewViewPagerChangedEvent);
+    }
+
+    private StateListDrawable createDefaultOverButtonBgDrawable() {
         int dp10 = (int) ThemeUtils.applyDimensionDp(this, 10.f);
         int dp8 = (int) ThemeUtils.applyDimensionDp(this, 8.f);
         float dp4 = ThemeUtils.applyDimensionDp(this, 4.f);

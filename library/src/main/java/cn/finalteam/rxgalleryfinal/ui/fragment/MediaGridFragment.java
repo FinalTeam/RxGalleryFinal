@@ -3,6 +3,7 @@ package cn.finalteam.rxgalleryfinal.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -42,7 +45,8 @@ import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.module.MediaGridModule;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
-import cn.finalteam.rxgalleryfinal.rxbus.event.MediaPreviewEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
+import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.adapter.BucketAdapter;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaGridAdapter;
 import cn.finalteam.rxgalleryfinal.ui.widget.FooterAdapter;
@@ -51,6 +55,7 @@ import cn.finalteam.rxgalleryfinal.ui.widget.MarginDecoration;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerViewFinal;
 import cn.finalteam.rxgalleryfinal.utils.CameraUtils;
 import cn.finalteam.rxgalleryfinal.utils.EmptyViewUtils;
+import cn.finalteam.rxgalleryfinal.utils.FilenameUtils;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
 import cn.finalteam.rxgalleryfinal.utils.MediaUtils;
@@ -84,16 +89,16 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     DisplayMetrics mScreenSize;
 
     private List<MediaBean> mMediaBeanList;
-    MediaGridAdapter mMediaGridAdapter;
-    RecyclerViewFinal mRvMedia;
-    LinearLayout mLlEmptyView;
-    RecyclerView mRvBucket;
-    BucketAdapter mBucketAdapter;
-    RelativeLayout mRlBucektOverview;
-    List<BucketBean> mBucketBeanList;
-    TextView mTvFolderName;
-    TextView mTvPreview;
-    MediaScanner mMediaScanner;
+    private MediaGridAdapter mMediaGridAdapter;
+    private RecyclerViewFinal mRvMedia;
+    private LinearLayout mLlEmptyView;
+    private RecyclerView mRvBucket;
+    private BucketAdapter mBucketAdapter;
+    private RelativeLayout mRlBucektOverview;
+    private List<BucketBean> mBucketBeanList;
+    private TextView mTvFolderName;
+    private TextView mTvPreview;
+    private MediaScanner mMediaScanner;
 
     private int mPage = 1;
     private File mImageStoreDir;
@@ -102,6 +107,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     private String mBucketId = String.valueOf(Integer.MIN_VALUE);
 
+    private MediaActivity mMediaActivity;
+
     public static MediaGridFragment newInstance() {
         return new MediaGridFragment();
     }
@@ -109,6 +116,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if(context instanceof MediaActivity) {
+            mMediaActivity = (MediaActivity) context;
+        }
         mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/RxGalleryFinal/");
         mImageStoreCropDir = new File(mImageStoreDir, "crop");
         if (!mImageStoreCropDir.exists()) {
@@ -150,7 +160,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mTvPreview.setOnClickListener(this);
 
         mMediaBeanList = new ArrayList<>();
-        mMediaGridAdapter = new MediaGridAdapter(getContext(), mMediaBeanList, mScreenSize.widthPixels, mConfiguration);
+        mMediaGridAdapter = new MediaGridAdapter(getContext(), mMediaBeanList, mMediaActivity.getCheckedList(),
+                mScreenSize.widthPixels, mConfiguration);
         mRvMedia.setAdapter(mMediaGridAdapter);
 
         mMediaGridPresenter.setMediaGridView(this);
@@ -277,57 +288,55 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 Toast.makeText(getContext(), "相机不可用", Toast.LENGTH_SHORT).show();
             }
         } else {
-            RxBus.getDefault().post(new MediaPreviewEvent(true));
-//
-//            String ext = FilenameUtils.getExtension(mediaBean.getOriginalPath());
-//            Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-//            if(ext != null && TextUtils.equals(ext.toLowerCase(), "png")) {
-//                format = Bitmap.CompressFormat.PNG;
-//            } else if(ext != null && TextUtils.equals(ext.toLowerCase(), "webp")) {
-//                format = Bitmap.CompressFormat.WEBP;
-//            }
-//            try {
-//                String originalPath = mediaBean.getOriginalPath();
-//                File file = new File(originalPath);
-//                Uri uri = Uri.fromFile(file);
-//                UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(mImageStoreCropDir, file.getName())));
-//                uCrop = uCrop.useSourceImageAspectRatio();
-//                UCrop.Options options = new UCrop.Options();
-//                options.setHideBottomControls(mConfiguration.isHideBottomControls());
-//                options.setCompressionFormat(format);
-//                if(mConfiguration.getCompressionQuality() != 0) {
-//                    options.setCompressionQuality(mConfiguration.getCompressionQuality());
-//                }
-//
-//                if(mConfiguration.getMaxBitmapSize() != 0){
-//                    options.setMaxBitmapSize(mConfiguration.getMaxBitmapSize());
-//                }
-//
-//                int []gestures = mConfiguration.getAllowedGestures();
-//                if(gestures != null && gestures.length == 3) {
-//                    options.setAllowedGestures(gestures[0], gestures[1], gestures[2]);
-//                }
-//                if(mConfiguration.getMaxScaleMultiplier() != 0){
-//                    options.setMaxScaleMultiplier(mConfiguration.getMaxScaleMultiplier());
-//                }
-//                //设置等比缩放
-//                if(mConfiguration.getAspectRatioX() != 0 && mConfiguration.getAspectRatioY() != 0) {
-//                    options.withAspectRatio(mConfiguration.getAspectRatioX(), mConfiguration.getAspectRatioY());
-//                }
-//                //设置等比缩放默认值索引及等比缩放值列表
-//                if(mConfiguration.getAspectRatio() != null && mConfiguration.getSelectedByDefault() > mConfiguration.getAspectRatio().length) {
-//                    options.setAspectRatioOptions(mConfiguration.getSelectedByDefault(), mConfiguration.getAspectRatio());
-//                }
-//                options.setFreeStyleCropEnabled(mConfiguration.isFreestyleCropEnabled());
-//                options.setOvalDimmedLayer(mConfiguration.isOvalDimmedLayer());
-//
-//                uCrop = uCrop.withOptions(options);
-//                uCrop.start(getActivity());
-//
-//            }catch (Exception e){
-//                e.printStackTrace();
-//                Logger.e(e);
-//            }
+            String ext = FilenameUtils.getExtension(mediaBean.getOriginalPath());
+            Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+            if(ext != null && TextUtils.equals(ext.toLowerCase(), "png")) {
+                format = Bitmap.CompressFormat.PNG;
+            } else if(ext != null && TextUtils.equals(ext.toLowerCase(), "webp")) {
+                format = Bitmap.CompressFormat.WEBP;
+            }
+            try {
+                String originalPath = mediaBean.getOriginalPath();
+                File file = new File(originalPath);
+                Uri uri = Uri.fromFile(file);
+                UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(mImageStoreCropDir, file.getName())));
+                uCrop = uCrop.useSourceImageAspectRatio();
+                UCrop.Options options = new UCrop.Options();
+                options.setHideBottomControls(mConfiguration.isHideBottomControls());
+                options.setCompressionFormat(format);
+                if(mConfiguration.getCompressionQuality() != 0) {
+                    options.setCompressionQuality(mConfiguration.getCompressionQuality());
+                }
+
+                if(mConfiguration.getMaxBitmapSize() != 0){
+                    options.setMaxBitmapSize(mConfiguration.getMaxBitmapSize());
+                }
+
+                int []gestures = mConfiguration.getAllowedGestures();
+                if(gestures != null && gestures.length == 3) {
+                    options.setAllowedGestures(gestures[0], gestures[1], gestures[2]);
+                }
+                if(mConfiguration.getMaxScaleMultiplier() != 0){
+                    options.setMaxScaleMultiplier(mConfiguration.getMaxScaleMultiplier());
+                }
+                //设置等比缩放
+                if(mConfiguration.getAspectRatioX() != 0 && mConfiguration.getAspectRatioY() != 0) {
+                    options.withAspectRatio(mConfiguration.getAspectRatioX(), mConfiguration.getAspectRatioY());
+                }
+                //设置等比缩放默认值索引及等比缩放值列表
+                if(mConfiguration.getAspectRatio() != null && mConfiguration.getSelectedByDefault() > mConfiguration.getAspectRatio().length) {
+                    options.setAspectRatioOptions(mConfiguration.getSelectedByDefault(), mConfiguration.getAspectRatio());
+                }
+                options.setFreeStyleCropEnabled(mConfiguration.isFreestyleCropEnabled());
+                options.setOvalDimmedLayer(mConfiguration.isOvalDimmedLayer());
+
+                uCrop = uCrop.withOptions(options);
+                uCrop.start(getActivity());
+
+            }catch (Exception e){
+                e.printStackTrace();
+                Logger.e(e);
+            }
         }
     }
 
@@ -374,7 +383,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     public void onClick(View v) {
         int id = v.getId();
         if(id == R.id.tv_preview) {
-
+            RxBus.getDefault().post(new OpenMediaPreviewFragmentEvent());
         } else if(id == R.id.tv_folder_name) {
             v.setEnabled(false);
             int visibility = mRlBucektOverview.getVisibility();

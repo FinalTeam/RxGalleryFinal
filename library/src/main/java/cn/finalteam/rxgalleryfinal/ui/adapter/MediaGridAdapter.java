@@ -11,12 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
+import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
@@ -33,10 +36,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private int mImageSize;
     private Configuration mConfiguration;
     private Drawable mDefaultImage;
+    private List<MediaBean> mCheckedList;
 
-    public MediaGridAdapter(Context context, List<MediaBean> list, int screenWidth, Configuration configuration) {
+    public MediaGridAdapter(Context context, List<MediaBean> list, List<MediaBean> checkedList, int screenWidth, Configuration configuration) {
         this.mContext = context;
         this.mMediaBeanList = list;
+        this.mCheckedList = checkedList;
         this.mInflater = LayoutInflater.from(context);
         this.mImageSize = screenWidth/3;
         int defaultResId = ThemeUtils.resolveDrawableRes(context, R.attr.gallery_default_image, R.drawable.gallery_default_image);
@@ -59,9 +64,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mLlCamera.setVisibility(View.VISIBLE);
         } else {
             holder.mCbCheck.setVisibility(View.VISIBLE);
+            holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
             holder.mIvMediaImage.setVisibility(View.VISIBLE);
             holder.mLlCamera.setVisibility(View.GONE);
-
+            if(mCheckedList != null && mCheckedList.contains(mediaBean)){
+                holder.mCbCheck.setChecked(true);
+            } else {
+                holder.mCbCheck.setChecked(false);
+            }
             String path = mediaBean.getThumbnailSmallPath();
             if(TextUtils.isEmpty(path)) {
                 path = mediaBean.getThumbnailBigPath();
@@ -77,6 +87,27 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     @Override
     public int getItemCount() {
         return mMediaBeanList.size();
+    }
+
+    class OnCheckBoxClickListener implements View.OnClickListener {
+
+        private MediaBean mediaBean;
+
+        public OnCheckBoxClickListener(MediaBean bean) {
+            this.mediaBean = bean;
+        }
+
+        @Override
+        public void onClick(View view) {
+            if(mConfiguration.getMaxSize() == mCheckedList.size() && !mCheckedList.contains(mediaBean)) {
+                AppCompatCheckBox checkBox = (AppCompatCheckBox) view;
+                checkBox.setChecked(false);
+                Toast.makeText(mContext, mContext.getResources()
+                        .getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()), Toast.LENGTH_SHORT).show();
+            } else {
+                RxBus.getDefault().post(new MediaCheckChangeEvent(mediaBean));
+            }
+        }
     }
 
     static class GridViewHolder extends RecyclerView.ViewHolder {

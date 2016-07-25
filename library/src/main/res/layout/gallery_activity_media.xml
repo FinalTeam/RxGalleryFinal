@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="完成(0/8)"
+            android:text="@string/gallery_over_button_text"
             android:layout_margin="8dp"/>
     </android.support.v7.widget.Toolbar>
 

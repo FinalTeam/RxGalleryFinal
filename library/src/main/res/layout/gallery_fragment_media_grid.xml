@@ -18,7 +18,8 @@
         android:layout_alignParentBottom="true"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:background="#EF2B2C30">
+        android:background="#EF2B2C30"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/tv_folder_name"
