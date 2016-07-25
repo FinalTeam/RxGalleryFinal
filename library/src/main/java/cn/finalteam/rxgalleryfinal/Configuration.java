@@ -8,6 +8,9 @@ import com.yalantis.ucrop.model.AspectRatio;
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
+import cn.finalteam.rxgalleryfinal.imageloader.AbsImageLoader;
+import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
+import cn.finalteam.rxgalleryfinal.imageloader.PicassoImageLoader;
 import cn.finalteam.rxgalleryfinal.utils.MediaType;
 
 /**
@@ -26,8 +29,8 @@ public class Configuration {
     private List<MediaBean> selectedList;
 
     private boolean radio;
-    private int maxSize;
-    private AbsImageLoader imageLoader;
+    private int maxSize = 1;
+    private ImageLoaderType imageLoaderType;
     private PauseOnScrollListener pauseOnScrollListener;
 
     //==========UCrop START==========
@@ -103,11 +106,15 @@ public class Configuration {
     }
 
     public AbsImageLoader getImageLoader() {
+        AbsImageLoader imageLoader = null;
+        if(imageLoaderType == ImageLoaderType.PICASSO) {
+            imageLoader = new PicassoImageLoader();
+        }
         return imageLoader;
     }
 
-    protected void setImageLoader(AbsImageLoader imageLoader) {
-        this.imageLoader = imageLoader;
+    protected void setImageLoaderType(ImageLoaderType imageLoaderType) {
+        this.imageLoaderType = imageLoaderType;
     }
 
     public PauseOnScrollListener getPauseOnScrollListener() {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.yalantis.ucrop.UCropActivity;
 import com.yalantis.ucrop.model.AspectRatio;
@@ -15,8 +16,10 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.di.component.DaggerRxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.module.RxGalleryFinalModule;
+import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.utils.MediaType;
+import cn.finalteam.rxgalleryfinal.utils.StorageUtils;
 
 /**
  * Desction:
@@ -48,7 +51,7 @@ public class RxGalleryFinal {
         return this;
     }
 
-    public RxGalleryFinal filterMime(MediaType ...mediaTypes) {
+    public RxGalleryFinal filterMime(@NonNull MediaType ...mediaTypes) {
         configuration.setFilterMimes(mediaTypes);
         return this;
     }
@@ -63,7 +66,7 @@ public class RxGalleryFinal {
         return this;
     }
 
-    public RxGalleryFinal maxSize(int maxSize){
+    public RxGalleryFinal maxSize(@IntRange(from = 1) int maxSize){
         configuration.setMaxSize(maxSize);
         return this;
     }
@@ -73,8 +76,8 @@ public class RxGalleryFinal {
         return this;
     }
 
-    public RxGalleryFinal imageLoader(AbsImageLoader imageLoader) {
-        configuration.setImageLoader(imageLoader);
+    public RxGalleryFinal imageLoader(ImageLoaderType imageLoaderType) {
+        configuration.setImageLoaderType(imageLoaderType);
         return this;
     }
 
@@ -188,14 +191,8 @@ public class RxGalleryFinal {
         return this;
     }
 
-
     public void openGallery(){
-//        ThumbnailsUtils.createThumbnailsTask(configuration);
         execute();
-    }
-
-    public void openCamera() {
-
     }
 
     private void execute() {
@@ -203,6 +200,11 @@ public class RxGalleryFinal {
         if(context == null) {
             return;
         }
+        if(!StorageUtils.existSDcard()){
+            Toast.makeText(context, "没有找到SD卡", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         mRxGalleryFinalComponent = DaggerRxGalleryFinalComponent.builder()
                 .rxGalleryFinalModule(new RxGalleryFinalModule(configuration))
                 .build();
