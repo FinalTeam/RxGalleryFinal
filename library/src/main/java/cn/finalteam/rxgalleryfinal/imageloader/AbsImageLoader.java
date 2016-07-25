@@ -1,4 +1,4 @@
-package cn.finalteam.rxgalleryfinal;
+package cn.finalteam.rxgalleryfinal.imageloader;
 
 import android.graphics.drawable.Drawable;
 
