@@ -90,4 +90,10 @@
         <item name="colorAccent">@color/theme_black_accent</item>
     </style>
 
+    <style name="Theme_Light.Brown">
+        <item name="colorPrimary">@color/theme_brown_primary</item>
+        <item name="colorPrimaryDark">@color/theme_brown_dark</item>
+        <item name="colorAccent">@color/theme_brown_dark</item>
+    </style>
+
 </resources>

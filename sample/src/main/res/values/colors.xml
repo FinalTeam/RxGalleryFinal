@@ -41,4 +41,8 @@
     <color name="theme_black_primary">#2A2A2F</color>
     <color name="theme_black_dark">#151515</color>
     <color name="theme_black_accent">#FF4081</color>
+
+    <color name="theme_brown_primary">#785447</color>
+    <color name="theme_brown_dark">#5C3F36</color>
+    <color name="theme_blown_accent">#785447</color>
 </resources>
