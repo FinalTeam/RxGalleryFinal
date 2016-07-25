@@ -172,3 +172,10 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+.idea/
+docs/device-2016-06-08-155613.png
+docs/device-2016-07-04-183837.png
+docs/device-2016-07-04-183909.png
+library/libs/
+sample/libs/
+sample/src/main/res/drawable/

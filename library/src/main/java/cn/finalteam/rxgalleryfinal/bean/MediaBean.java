@@ -110,6 +110,20 @@ public class MediaBean {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if(obj == null || !(obj instanceof MediaBean)){
+            return false;
+        }
+
+        MediaBean bean = (MediaBean) obj;
+        if(bean == null){
+            return false;
+        }
+
+        return bean.getId() == getId();
+    }
+
+    @Override
     public String toString() {
         return "MediaBean{" +
                 "id=" + id +

@@ -67,6 +67,8 @@
     <attr name="gallery_color_active_widget" format="color"/>
     <!--设置checkbox,radiobutton buttonTint颜色-->
     <attr name="gallery_checkbox_button_tint_color" format="color"/>
+    <!--checkbox文本颜色-->
+    <attr name="gallery_checkbox_text_color" format="color"/>
     <!--页面背景-->
     <attr name="gallery_page_bg" format="color"/>
     <!--默认图-->

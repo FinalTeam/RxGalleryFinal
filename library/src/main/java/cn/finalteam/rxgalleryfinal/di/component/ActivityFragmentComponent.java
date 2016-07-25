@@ -3,9 +3,9 @@ package cn.finalteam.rxgalleryfinal.di.component;
 import cn.finalteam.rxgalleryfinal.di.module.ActivityFragmentModule;
 import cn.finalteam.rxgalleryfinal.di.scope.RxGalleryFinalScope;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
-import cn.finalteam.rxgalleryfinal.ui.fragment.ImageGridFragment;
+import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPageFragment;
-import cn.finalteam.rxgalleryfinal.ui.fragment.VideoGridFragment;
+import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPreviewFragment;
 import dagger.Component;
 
 /**
@@ -18,8 +18,7 @@ import dagger.Component;
 public interface ActivityFragmentComponent {
     void inject(MediaActivity mediaActivity);
 
-    ImageGridFragment provideImageGridFragment();
-    VideoGridFragment provideVideoGridFragment();
+    MediaGridFragment provideImageGridFragment();
     MediaPageFragment provideMediaPageFragment();
-
+    MediaPreviewFragment provideMediaPreviewFragment();
 }

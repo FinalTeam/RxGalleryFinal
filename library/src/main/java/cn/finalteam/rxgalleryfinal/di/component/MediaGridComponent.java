@@ -3,8 +3,7 @@ package cn.finalteam.rxgalleryfinal.di.component;
 import cn.finalteam.rxgalleryfinal.di.module.MediaGridModule;
 import cn.finalteam.rxgalleryfinal.di.scope.MediaGridScope;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
-import cn.finalteam.rxgalleryfinal.ui.fragment.ImageGridFragment;
-import cn.finalteam.rxgalleryfinal.ui.fragment.VideoGridFragment;
+import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import dagger.Component;
 
 /**
@@ -15,8 +14,7 @@ import dagger.Component;
 @MediaGridScope
 @Component(dependencies = RxGalleryFinalComponent.class, modules = MediaGridModule.class)
 public interface MediaGridComponent {
-    void inject(ImageGridFragment imageGridFragment);
-    void inject(VideoGridFragment videoGridFragment);
+    void inject(MediaGridFragment mediaGridFragment);
 
     MediaGridPresenterImpl provideMediaGridPresenter();
 }

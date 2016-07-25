@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
+import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,9 +21,9 @@ public class MainActivity extends AppCompatActivity {
         mBtnOpen.setOnClickListener(v -> RxGalleryFinal
                 .with(this)
                 .image()
-                .radio()
-                .imageLoader(new PicassoImageLoader())
-//                .pauseOnScrollListener()
+                .multiple()
+                .maxSize(8)
+                .imageLoader(ImageLoaderType.PICASSO)
                 .openGallery());
 //
 //        mBtnOpen.setOnClickListener(new View.OnClickListener() {
@@ -51,4 +52,6 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
     }
+
+
 }
