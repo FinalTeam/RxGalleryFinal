@@ -7,7 +7,7 @@ package cn.finalteam.rxgalleryfinal.view;
  */
 public interface ActivityFragmentView {
 
-    void showImageGridFragment();
-    void showVideoGridFragment();
+    void showMediaGridFragment();
     void showMediaPageFragment();
+    void showMediaPreviewFragment();
 }

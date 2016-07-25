@@ -30,8 +30,15 @@ public abstract class BaseFragment extends Fragment {
         return inflater.inflate(getContentView(), container, false);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        setTheme();
+    }
+
     public abstract int getContentView();
 
     protected abstract void setupComponent(RxGalleryFinalComponent rxGalleryFinalComponent);
 
+    public void setTheme(){}
 }

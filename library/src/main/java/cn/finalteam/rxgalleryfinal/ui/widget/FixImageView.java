@@ -3,15 +3,15 @@ package cn.finalteam.rxgalleryfinal.ui.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * Desction:为了兼容fresco框架而自定义的ImageView
  * Author:pengjianbo
  * Date:2015/12/24 0024 20:14
  */
-public class FixImageView extends ImageView {
+public class FixImageView extends AppCompatImageView {
 
     private OnImageViewListener mOnImageViewListener;
 

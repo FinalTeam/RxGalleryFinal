@@ -6,7 +6,7 @@ package cn.finalteam.rxgalleryfinal.utils;
  * Date:16/5/5 下午5:03
  */
 public enum  MediaType {
-    JPG,PNG,GIF,MP4;
+    JPG,PNG,WEBP,GIF,MP4;
 
     public boolean hasVideo() {
         return this == MP4;

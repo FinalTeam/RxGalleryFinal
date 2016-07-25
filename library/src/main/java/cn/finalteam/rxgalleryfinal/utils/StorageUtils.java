@@ -50,15 +50,8 @@ public final class StorageUtils {
      */
     public static File getCacheDirectory(Context context, boolean preferExternal) {
         File appCacheDir = null;
-        String externalStorageState;
-        try {
-            externalStorageState = Environment.getExternalStorageState();
-        } catch (NullPointerException e) { // (sh)it happens (Issue #660)
-            externalStorageState = "";
-        } catch (IncompatibleClassChangeError e) { // (sh)it happens too (Issue #989)
-            externalStorageState = "";
-        }
-        if (preferExternal && MEDIA_MOUNTED.equals(externalStorageState) && hasExternalStoragePermission(context)) {
+
+        if (preferExternal && existSDcard() && hasExternalStoragePermission(context)) {
             appCacheDir = getExternalCacheDir(context);
         }
         if (appCacheDir == null) {
@@ -70,6 +63,18 @@ public final class StorageUtils {
             appCacheDir = new File(cacheDirPath);
         }
         return appCacheDir;
+    }
+
+    public static boolean existSDcard() {
+        String externalStorageState;
+        try {
+            externalStorageState = Environment.getExternalStorageState();
+        } catch (NullPointerException e) { // (sh)it happens (Issue #660)
+            externalStorageState = "";
+        } catch (IncompatibleClassChangeError e) { // (sh)it happens too (Issue #989)
+            externalStorageState = "";
+        }
+        return MEDIA_MOUNTED.equals(externalStorageState);
     }
 
     /**

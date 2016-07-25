@@ -14,6 +14,7 @@
     <color name="gallery_default_color_toolbar_icon">#fff</color>
     <color name="gallery_default_color_statusbar">#151515</color>
     <color name="gallery_default_checkbox_button_tint_color">#FF6E40</color>
+    <color name="gallery_default_checkbox_text_color">#ffffff</color>
     <color name="gallery_default_toolbar_over_button_pressed_color">#CC5833</color>
     <color name="gallery_default_toolbar_over_button_normal_color">#FF6E40</color>
 
