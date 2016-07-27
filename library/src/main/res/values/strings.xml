@@ -5,4 +5,7 @@
     <string name="gallery_over_button_text">完成</string>
     <string name="gallery_over_button_text_checked">完成(%1$d/%2$d)</string>
     <string name="gallery_image_max_size_tip">你最多只能选择%1$d张照片</string>
+    <string name="gallery_preview_page_title">预览(%1$d/%2$d)</string>
+    <string name="gallery_image_page_title">图片(%1$d/%2$d)</string>
+    <string name="gallery_video_page_title">视频(%1$d/%2$d)</string>
 </resources>
