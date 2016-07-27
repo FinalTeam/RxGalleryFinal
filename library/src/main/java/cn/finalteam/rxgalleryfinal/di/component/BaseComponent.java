@@ -5,6 +5,7 @@ import java.util.List;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.di.module.BaseModule;
 import cn.finalteam.rxgalleryfinal.di.scope.BaseScope;
+import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPageFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPreviewFragment;
 import dagger.Component;
 
@@ -17,6 +18,7 @@ import dagger.Component;
 @Component(dependencies = RxGalleryFinalComponent.class, modules = BaseModule.class)
 public interface BaseComponent {
     void inject(MediaPreviewFragment mediaPreviewFragment);
+    void inject(MediaPageFragment mediaPageFragment);
 
     List<MediaBean> provideMediaBeans();
 }

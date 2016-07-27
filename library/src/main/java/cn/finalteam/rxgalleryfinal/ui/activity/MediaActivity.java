@@ -8,6 +8,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -30,7 +31,8 @@ import cn.finalteam.rxgalleryfinal.di.module.ActivityFragmentModule;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.MediaPreviewViewPagerChangedEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.MediaViewPagerChangedEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPageFragment;
@@ -138,6 +140,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                 .hide(mMediaPageFragment)
                 .show(mMediaGridFragment)
                 .commit();
+
         if(mConfiguration.isImage()) {
             mTvToolbarTitle.setText("图片");
         } else {
@@ -147,9 +150,11 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
 
     @Override
     public void showMediaPageFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, mMediaPageFragment)
-                .hide(mMediaGridFragment)
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(!mMediaPageFragment.isAdded()){
+            ft.add(R.id.fragment_container, mMediaPageFragment);
+        }
+        ft.hide(mMediaGridFragment)
                 .hide(mMediaPreviewFragment)
                 .show(mMediaPageFragment)
                 .commit();
@@ -157,12 +162,15 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
 
     @Override
     public void showMediaPreviewFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, mMediaPreviewFragment)
-                .hide(mMediaGridFragment)
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(!mMediaPreviewFragment.isAdded()){
+            ft.add(R.id.fragment_container, mMediaPreviewFragment);
+        }
+        ft.hide(mMediaGridFragment)
                 .hide(mMediaPageFragment)
                 .show(mMediaPreviewFragment)
                 .commit();
+
         mTvToolbarTitle.setText(String.format(Locale.CHINA, "预览(%d/%d)", 1, mCheckedList.size()));
     }
 
@@ -212,18 +220,39 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                 });
         RxBus.getDefault().add(subscriptionMediaCheckChangeEvent);
 
-        Subscription subscriptionMediaPreviewViewPagerChangedEvent = RxBus.getDefault().toObservable(MediaPreviewViewPagerChangedEvent.class)
-                .map(mediaPreviewViewPagerChangedEvent -> mediaPreviewViewPagerChangedEvent)
-                .subscribe(new RxBusSubscriber<MediaPreviewViewPagerChangedEvent>() {
+        Subscription subscriptionMediaViewPagerChangedEvent = RxBus.getDefault().toObservable(MediaViewPagerChangedEvent.class)
+                .map(mediaViewPagerChangedEvent -> mediaViewPagerChangedEvent)
+                .subscribe(new RxBusSubscriber<MediaViewPagerChangedEvent>() {
                     @Override
-                    protected void onEvent(MediaPreviewViewPagerChangedEvent mediaPreviewViewPagerChangedEvent) {
+                    protected void onEvent(MediaViewPagerChangedEvent mediaPreviewViewPagerChangedEvent) {
                         int curIndex = mediaPreviewViewPagerChangedEvent.getCurIndex();
                         int totalSize = mediaPreviewViewPagerChangedEvent.getTotalSize();
-                        String title = String.format(Locale.CHINA, "预览(%d/%d)", curIndex + 1, totalSize);
+
+                        String title;
+                        if(mediaPreviewViewPagerChangedEvent.isPreview()){
+                            title = getString(R.string.gallery_preview_page_title, curIndex + 1, totalSize);
+                        } else {
+                            if(mConfiguration.isImage()) {
+                                title = getString(R.string.gallery_image_page_title, curIndex + 1, totalSize);
+                            } else {
+                                title = getString(R.string.gallery_video_page_title, curIndex + 1, totalSize);
+                            }
+                        }
+
                         mTvToolbarTitle.setText(title);
                     }
                 });
-        RxBus.getDefault().add(subscriptionMediaPreviewViewPagerChangedEvent);
+        RxBus.getDefault().add(subscriptionMediaViewPagerChangedEvent);
+
+        Subscription subscriptionOpenMediaPageFragmentEvent = RxBus.getDefault().toObservable(OpenMediaPageFragmentEvent.class)
+                .map(openMediaPageFragmentEvent -> openMediaPageFragmentEvent)
+                .subscribe(new RxBusSubscriber<OpenMediaPageFragmentEvent>() {
+                    @Override
+                    protected void onEvent(OpenMediaPageFragmentEvent openMediaPageFragmentEvent) throws Exception {
+                        showMediaPageFragment();
+                    }
+                });
+        RxBus.getDefault().add(subscriptionOpenMediaPageFragmentEvent);
     }
 
     public List<MediaBean> getCheckedList() {
@@ -233,7 +262,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     private void backAction() {
         if(mMediaGridFragment.isVisible()) {
             onBackPressed();
-        } else if(mMediaPreviewFragment.isVisible()){
+        } else if(mMediaPreviewFragment.isVisible() || mMediaPageFragment.isVisible()){
             showMediaGridFragment();
         }
     }
@@ -251,6 +280,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     protected void onDestroy() {
         super.onDestroy();
         RxBus.getDefault().clear();
+        RxBus.getDefault().removeAllStickyEvents();
     }
 
     private StateListDrawable createDefaultOverButtonBgDrawable() {
