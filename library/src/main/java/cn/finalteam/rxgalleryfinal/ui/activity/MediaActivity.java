@@ -60,10 +60,6 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     private TextView mTvToolbarTitle;
     private TextView mTvOverAction;
 
-    private Subscription mSubscriptionOpenMediaPreviewEvent;
-    private Subscription mSubscriptionMediaCheckChangeEvent;
-    private Subscription mSubscriptionMediaPreviewViewPagerChangedEvent;
-
     private List<MediaBean> mCheckedList;
 
     @Override
@@ -181,7 +177,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
 
 
     private void subscribeEvent() {
-        mSubscriptionOpenMediaPreviewEvent = RxBus.getDefault().toObservable(OpenMediaPreviewFragmentEvent.class)
+        Subscription subscriptionOpenMediaPreviewEvent = RxBus.getDefault().toObservable(OpenMediaPreviewFragmentEvent.class)
                 .map(mediaPreviewEvent -> mediaPreviewEvent)
                 .subscribe(new RxBusSubscriber<OpenMediaPreviewFragmentEvent>() {
                     @Override
@@ -190,9 +186,9 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                     }
                 });
 
-        RxBus.getDefault().add(mSubscriptionOpenMediaPreviewEvent);
+        RxBus.getDefault().add(subscriptionOpenMediaPreviewEvent);
 
-        mSubscriptionMediaCheckChangeEvent = RxBus.getDefault().toObservable(MediaCheckChangeEvent.class)
+        Subscription subscriptionMediaCheckChangeEvent = RxBus.getDefault().toObservable(MediaCheckChangeEvent.class)
                 .map(mediaCheckChangeEvent -> mediaCheckChangeEvent)
                 .subscribe(new RxBusSubscriber<MediaCheckChangeEvent>() {
                     @Override
@@ -214,9 +210,9 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                         }
                     }
                 });
-        RxBus.getDefault().add(mSubscriptionMediaCheckChangeEvent);
+        RxBus.getDefault().add(subscriptionMediaCheckChangeEvent);
 
-        mSubscriptionMediaPreviewViewPagerChangedEvent = RxBus.getDefault().toObservable(MediaPreviewViewPagerChangedEvent.class)
+        Subscription subscriptionMediaPreviewViewPagerChangedEvent = RxBus.getDefault().toObservable(MediaPreviewViewPagerChangedEvent.class)
                 .map(mediaPreviewViewPagerChangedEvent -> mediaPreviewViewPagerChangedEvent)
                 .subscribe(new RxBusSubscriber<MediaPreviewViewPagerChangedEvent>() {
                     @Override
@@ -227,7 +223,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                         mTvToolbarTitle.setText(title);
                     }
                 });
-        RxBus.getDefault().add(mSubscriptionMediaPreviewViewPagerChangedEvent);
+        RxBus.getDefault().add(subscriptionMediaPreviewViewPagerChangedEvent);
     }
 
     public List<MediaBean> getCheckedList() {
@@ -254,9 +250,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RxBus.getDefault().remove(mSubscriptionOpenMediaPreviewEvent);
-        RxBus.getDefault().remove(mSubscriptionMediaCheckChangeEvent);
-        RxBus.getDefault().remove(mSubscriptionMediaPreviewViewPagerChangedEvent);
+        RxBus.getDefault().clear();
     }
 
     private StateListDrawable createDefaultOverButtonBgDrawable() {
