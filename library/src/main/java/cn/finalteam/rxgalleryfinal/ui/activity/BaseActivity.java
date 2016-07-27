@@ -30,8 +30,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        setTheme(getTheme());
         super.onStart();
+        setTheme(getTheme());
     }
 
     protected Handler mFinishHanlder = new Handler() {

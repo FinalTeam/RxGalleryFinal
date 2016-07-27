@@ -28,6 +28,7 @@ public class MediaPreviewAdapter extends RecyclingPagerAdapter {
     private Configuration mConfiguration;
     private Drawable mDefaultImage;
     private int mScreenWidth, mScreenHeight;
+    private int mPageColor;
 
     public MediaPreviewAdapter(Context context, List<MediaBean> list, int screenWidth, int screenHeight, Configuration configuration) {
         this.mContext = context;
@@ -36,7 +37,7 @@ public class MediaPreviewAdapter extends RecyclingPagerAdapter {
         this.mScreenWidth = screenWidth;
         this.mScreenHeight = screenHeight;
         this.mConfiguration = configuration;
-
+        this.mPageColor = ThemeUtils.resolveColor(context, R.attr.gallery_page_bg, R.color.gallery_default_page_bg);
         int defaultResId = ThemeUtils.resolveDrawableRes(context, R.attr.gallery_default_image, R.drawable.gallery_default_image);
         this.mDefaultImage = context.getResources().getDrawable(defaultResId);
     }
@@ -53,6 +54,7 @@ public class MediaPreviewAdapter extends RecyclingPagerAdapter {
         if(TextUtils.isEmpty(path)) {
             path = mediaBean.getOriginalPath();
         }
+        ivImage.setBackgroundColor(mPageColor);
         mConfiguration.getImageLoader().displayImage(mContext, path, ivImage,mDefaultImage, mScreenWidth, mScreenHeight);
         return view;
     }

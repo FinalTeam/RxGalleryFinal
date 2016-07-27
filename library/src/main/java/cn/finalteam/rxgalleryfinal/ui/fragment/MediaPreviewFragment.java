@@ -9,6 +9,7 @@ import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
     private ViewPager mViewPager;
     private MediaPreviewAdapter mMediaPreviewAdapter;
     private List<MediaBean> mMediaBeanList;
+    private RelativeLayout mRlRootView;
 
     private MediaActivity mMediaActivity;
 
@@ -81,6 +83,7 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         super.onViewCreated(view, savedInstanceState);
         mCbCheck = (AppCompatCheckBox) view.findViewById(R.id.cb_check);
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
+        mRlRootView = (RelativeLayout) view.findViewById(R.id.rl_root_view);
         mMediaBeanList = new ArrayList<>();
         if(mMediaActivity.getCheckedList() != null){
             mMediaBeanList.addAll(mMediaActivity.getCheckedList());
@@ -99,6 +102,9 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         CompoundButtonCompat.setButtonTintList(mCbCheck, ColorStateList.valueOf(checkTint));
         int cbTextColor = ThemeUtils.resolveColor(getContext(), R.attr.gallery_checkbox_text_color, R.color.gallery_default_checkbox_text_color);
         mCbCheck.setTextColor(cbTextColor);
+
+        int pageColor = ThemeUtils.resolveColor(getContext(), R.attr.gallery_page_bg, R.color.gallery_default_page_bg);
+        mRlRootView.setBackgroundColor(pageColor);
     }
 
     @Override

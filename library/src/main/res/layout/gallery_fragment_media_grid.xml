@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="?attr/gallery_page_bg">
+    android:orientation="vertical">
 
     <cn.finalteam.rxgalleryfinal.ui.widget.RecyclerViewFinal
         android:id="@+id/rv_media"
@@ -46,7 +46,8 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:paddingTop="12dp"
-            android:paddingBottom="12dp"/>
+            android:paddingBottom="12dp"
+            android:clickable="false"/>
 
         <View
             android:layout_width="1dp"

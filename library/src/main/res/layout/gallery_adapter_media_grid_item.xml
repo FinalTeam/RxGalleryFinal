@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/gallery_page_bg">
+    android:layout_height="120dp">
 
     <cn.finalteam.rxgalleryfinal.ui.widget.SquareLinearLayout
         android:id="@+id/ll_camera"

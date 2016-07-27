@@ -45,6 +45,8 @@ import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.module.MediaGridModule;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.adapter.BucketAdapter;
@@ -59,9 +61,11 @@ import cn.finalteam.rxgalleryfinal.utils.FilenameUtils;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
 import cn.finalteam.rxgalleryfinal.utils.MediaUtils;
+import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 import cn.finalteam.rxgalleryfinal.view.MediaGridView;
 import rx.Observable;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -98,6 +102,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private List<BucketBean> mBucketBeanList;
     private TextView mTvFolderName;
     private TextView mTvPreview;
+    private RelativeLayout mRlRootView;
+
     private MediaScanner mMediaScanner;
 
     private int mPage = 1;
@@ -108,6 +114,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private String mBucketId = String.valueOf(Integer.MIN_VALUE);
 
     private MediaActivity mMediaActivity;
+    private Subscription mSubscrMediaCheckChangeEvent;
 
     public static MediaGridFragment newInstance() {
         return new MediaGridFragment();
@@ -140,6 +147,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mLlEmptyView = (LinearLayout) view.findViewById(R.id.ll_empty_view);
         mRvBucket = (RecyclerView) view.findViewById(R.id.rv_bucket);
         mRlBucektOverview = (RelativeLayout) view.findViewById(R.id.rl_bucket_overview);
+        mRlRootView = (RelativeLayout) view.findViewById(R.id.rl_root_view);
 
         mRvMedia.setEmptyView(mLlEmptyView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
@@ -187,6 +195,28 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         new SlideInUnderneathAnimation(mRvBucket)
                 .setDirection(Animation.DIRECTION_DOWN)
                 .animate();
+
+        mSubscrMediaCheckChangeEvent = RxBus.getDefault().toObservable(MediaCheckChangeEvent.class)
+                .map(mediaCheckChangeEvent -> mediaCheckChangeEvent)
+                .subscribe(new RxBusSubscriber<MediaCheckChangeEvent>() {
+                    @Override
+                    protected void onEvent(MediaCheckChangeEvent mediaCheckChangeEvent) {
+                        if(mMediaActivity.getCheckedList().size() == 0){
+                            mTvPreview.setClickable(false);
+                        } else {
+                            mTvPreview.setClickable(true);
+                        }
+
+                    }
+                });
+        RxBus.getDefault().add(mSubscrMediaCheckChangeEvent);
+    }
+
+    @Override
+    public void setTheme() {
+        super.setTheme();
+        int pageColor = ThemeUtils.resolveColor(getContext(), R.attr.gallery_page_bg, R.color.gallery_default_page_bg);
+        mRlRootView.setBackgroundColor(pageColor);
     }
 
     @Override
@@ -443,4 +473,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         });
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        RxBus.getDefault().remove(mSubscrMediaCheckChangeEvent);
+    }
 }

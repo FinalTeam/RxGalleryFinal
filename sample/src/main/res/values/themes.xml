@@ -25,7 +25,6 @@
         <!--<item name="gallery_toolbar_over_button_text_size">12sp</item>-->
         <!--<item name="gallery_toolbar_over_button_text_color">@android:color/white</item>-->
         <!--<item name="gallery_checkbox_button_tint_color">#ff00ff</item>-->
-        <item name="gallery_page_bg">#151515</item>
         <item name="gallery_default_image">@drawable/gallery_default_image</item>
 
         <!--uCrop-->
