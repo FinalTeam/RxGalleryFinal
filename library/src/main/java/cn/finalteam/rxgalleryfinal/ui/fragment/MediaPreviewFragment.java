@@ -25,8 +25,9 @@ import cn.finalteam.rxgalleryfinal.di.component.DaggerBaseComponent;
 import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.module.BaseModule;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
+import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.MediaPreviewViewPagerChangedEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.MediaViewPagerChangedEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaPreviewAdapter;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
@@ -120,7 +121,7 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
             mCbCheck.setChecked(mMediaActivity.getCheckedList().contains(mediaBean));
         }
 
-        RxBus.getDefault().post(new MediaPreviewViewPagerChangedEvent(position, mMediaBeanList.size()));
+        RxBus.getDefault().post(new MediaViewPagerChangedEvent(position, mMediaBeanList.size(), true));
     }
 
     @Override
@@ -143,5 +144,11 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         } else {
             RxBus.getDefault().post(new MediaCheckChangeEvent(mediaBean));
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        RxBus.getDefault().post(new CloseMediaViewPageFragmentEvent());
     }
 }
