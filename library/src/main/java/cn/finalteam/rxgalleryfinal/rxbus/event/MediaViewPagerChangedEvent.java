@@ -5,12 +5,12 @@ package cn.finalteam.rxgalleryfinal.rxbus.event;
  * Author:pengjianbo
  * Date:16/7/25 下午3:45
  */
-public class MediaPreviewViewPagerChangedEvent {
+public class MediaViewPagerChangedEvent {
 
     private int curIndex;
     private int totalSize;
 
-    public MediaPreviewViewPagerChangedEvent(int curIndex, int totalSize) {
+    public MediaViewPagerChangedEvent(int curIndex, int totalSize) {
         this.curIndex = curIndex;
         this.totalSize = totalSize;
     }
