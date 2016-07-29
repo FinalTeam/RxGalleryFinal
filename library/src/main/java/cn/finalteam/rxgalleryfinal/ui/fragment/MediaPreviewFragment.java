@@ -52,6 +52,7 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
     private RelativeLayout mRlRootView;
 
     private MediaActivity mMediaActivity;
+    private int mPagerPosition;
 
     @Override
     public void onAttach(Context context) {
@@ -94,6 +95,7 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         mViewPager.setAdapter(mMediaPreviewAdapter);
         mViewPager.addOnPageChangeListener(this);
         mCbCheck.setOnClickListener(this);
+        mPagerPosition = 0;
     }
 
     @Override
@@ -109,11 +111,18 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mViewPager.setCurrentItem(mPagerPosition, false);
+    }
+
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
 
     @Override
     public void onPageSelected(int position) {
+        mPagerPosition = position;
         MediaBean mediaBean = mMediaBeanList.get(position);
         mCbCheck.setChecked(false);
         //判断是否选择

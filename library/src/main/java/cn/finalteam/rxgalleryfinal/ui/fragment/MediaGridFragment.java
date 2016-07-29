@@ -387,10 +387,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 RxBus.getDefault().post(new OpenMediaPageFragmentEvent());
                 MediaBean firstBean = mMediaBeanList.get(0);
                 List<MediaBean> gridMediaList = mMediaBeanList;
+                int pos = position;
                 if(firstBean.getId() == Integer.MIN_VALUE) {
+                    pos = position - 1;
                     gridMediaList = mMediaBeanList.subList(1, mMediaBeanList.size());
                 }
-                RxBus.getDefault().postSticky(new SendMediaPageFragmentDataEvent(gridMediaList));
+                RxBus.getDefault().postSticky(new SendMediaPageFragmentDataEvent(gridMediaList, pos));
             }
         }
     }

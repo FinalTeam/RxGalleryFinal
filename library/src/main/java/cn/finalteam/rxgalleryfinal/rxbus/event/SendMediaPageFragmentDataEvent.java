@@ -11,12 +11,18 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
  */
 public class SendMediaPageFragmentDataEvent {
     private List<MediaBean> mediaBeanList;
+    private int position;
 
-    public SendMediaPageFragmentDataEvent(List<MediaBean> mediaBeanList){
+    public SendMediaPageFragmentDataEvent(List<MediaBean> mediaBeanList, int position){
         this.mediaBeanList = mediaBeanList;
+        this.position = position;
     }
 
     public List<MediaBean> getMediaBeanList() {
         return mediaBeanList;
+    }
+
+    public int getPosition() {
+        return position;
     }
 }

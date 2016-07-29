@@ -55,6 +55,7 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
     private RelativeLayout mRlRootView;
 
     private MediaActivity mMediaActivity;
+    private int mItemClickPosition;
 
     @Override
     public void onAttach(Context context) {
@@ -95,7 +96,7 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
         mViewPager.setAdapter(mMediaPreviewAdapter);
         mViewPager.addOnPageChangeListener(this);
         mCbCheck.setOnClickListener(this);
-
+        mViewPager.setCurrentItem(0, false);
         subscribeEvent();
     }
 
@@ -104,6 +105,7 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
                 .subscribe(new RxBusSubscriber<SendMediaPageFragmentDataEvent>() {
                     @Override
                     protected void onEvent(SendMediaPageFragmentDataEvent sendMediaPageFragmentDataEvent) {
+                        mItemClickPosition = sendMediaPageFragmentDataEvent.getPosition();
                         mMediaBeanList.addAll(sendMediaPageFragmentDataEvent.getMediaBeanList());
                         mMediaPreviewAdapter.notifyDataSetChanged();
 
@@ -111,6 +113,12 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
                     }
                 });
         RxBus.getDefault().add(subscriptionSendMediaPageFragmentDataEvent);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mViewPager.setCurrentItem(mItemClickPosition);
     }
 
     @Override
@@ -131,6 +139,7 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
+        mItemClickPosition = position;
         MediaBean mediaBean = mMediaBeanList.get(position);
         mCbCheck.setChecked(false);
         //判断是否选择
