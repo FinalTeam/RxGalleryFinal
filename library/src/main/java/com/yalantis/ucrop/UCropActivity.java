@@ -50,7 +50,7 @@ import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
- * Created by Oleksii Shliama (https://github.com/shliama).//1b3107e
+ * Created by Oleksii Shliama (https://github.com/shliama).//b2b7690
  */
 
 @SuppressWarnings("ConstantConditions")
