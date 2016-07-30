@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/gallery_D8D8D8" android:state_pressed="true"/>
-    <item android:drawable="@color/gallery_F2F2F2"/>
+    <item android:drawable="@color/gallery_bucket_list_item_pressed_color" android:state_pressed="true"/>
+    <item android:drawable="@color/gallery_bucket_list_item_normal_color"/>
 </selector>
 

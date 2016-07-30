@@ -29,7 +29,7 @@
 
         <ImageView
             style="@style/gallery_ucrop_ImageViewWidgetIcon"
-            android:src="@drawable/ucrop_ic_reset"/>
+            android:src="@drawable/gallery_ucrop_ic_reset"/>
 
     </FrameLayout>
 
@@ -42,7 +42,7 @@
 
         <ImageView
             style="@style/gallery_ucrop_ImageViewWidgetIcon"
-            android:src="@drawable/ucrop_ic_angle"/>
+            android:src="@drawable/gallery_ucrop_ic_angle"/>
 
     </FrameLayout>
 

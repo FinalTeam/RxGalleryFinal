@@ -24,7 +24,7 @@
             android:id="@+id/tv_folder_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="所有图片"
+            android:text="@string/gallery_all_image"
             android:textColor="@color/gallery_text_color_selector"
             android:textSize="14sp"
             android:paddingLeft="15dp"
@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:drawablePadding="3dp"
             android:gravity="center_vertical"
-            android:drawableRight="@drawable/ic_corner_selector"
+            android:drawableRight="@drawable/gallery_ic_corner_selector"
             />
 
         <TextView
@@ -42,7 +42,7 @@
             android:layout_height="match_parent"
             android:textColor="@color/gallery_text_color_selector"
             android:textSize="14sp"
-            android:text="预览"
+            android:text="@string/gallery_preview_title"
             android:gravity="center_vertical"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -69,14 +69,14 @@
         android:layout_height="match_parent"
         android:layout_above="@id/rl_bottom_bar"
         android:paddingTop="?actionBarSize"
-        android:background="#D9000000"
+        android:background="@color/gallery_media_grid_block_color"
         android:visibility="gone"
         android:clickable="true">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_bucket"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/gallery_F2F2F2"/>
+            android:background="@color/gallery_bucket_list_item_normal_color"/>
     </RelativeLayout>
 
     <LinearLayout

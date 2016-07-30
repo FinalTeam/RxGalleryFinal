@@ -14,13 +14,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_camera"/>
+            android:src="@drawable/gallery_ic_camera"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="拍摄照片"
-            android:textColor="#E2E2E2"/>
+            android:text="@string/gallery_take_image"
+            android:textColor="@color/gallery_take_image_item_bg"/>
     </cn.finalteam.rxgalleryfinal.ui.widget.SquareLinearLayout>
 
     <cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView

@@ -173,7 +173,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mTvFolderName.setOnClickListener(this);
         mTvPreview = (TextView) view.findViewById(R.id.tv_preview);
         mTvPreview.setOnClickListener(this);
-        mTvPreview.setClickable(false);
+        mTvPreview.setEnabled(false);
         if(mConfiguration.isRadio()){
             view.findViewById(R.id.tv_preview_vr).setVisibility(View.GONE);
             mTvPreview.setVisibility(View.GONE);
@@ -189,7 +189,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRvBucket.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
-                .color(getResources().getColor(R.color.gallery_C7C7C7))
+                .color(getResources().getColor(R.color.gallery_bucket_list_item_normal_color))
                 .size(getResources().getDimensionPixelSize(R.dimen.gallery_divider_decoration_height))
                 .margin(getResources().getDimensionPixelSize(R.dimen.gallery_bucket_margin),
                         getResources().getDimensionPixelSize(R.dimen.gallery_bucket_margin))
@@ -230,9 +230,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                     @Override
                     protected void onEvent(MediaCheckChangeEvent mediaCheckChangeEvent) {
                         if(mMediaActivity.getCheckedList().size() == 0){
-                            mTvPreview.setClickable(false);
+                            mTvPreview.setEnabled(false);
                         } else {
-                            mTvPreview.setClickable(true);
+                            mTvPreview.setEnabled(true);
                         }
 
                     }

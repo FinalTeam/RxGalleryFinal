@@ -13,4 +13,8 @@
     <string name="gallery_default_media_empty_tips">空空如也</string>
     <string name="gallery_device_no_camera_tips">该设备无摄像头</string>
     <string name="gallery_device_camera_unable">相机不可用</string>
+    <string name="gallery_preview_title">预览</string>
+    <string name="gallery_all_image">所有图片</string>
+    <string name="gallery_all_video">所有视频</string>
+    <string name="gallery_take_image">拍摄照片</string>
 </resources>

@@ -13,7 +13,7 @@
         android:layout_height="72dp"
         android:scaleType="centerCrop"
         android:layout_centerVertical="true"
-        android:background="@drawable/bg_bucket"/>
+        android:background="@drawable/gallery_bg_bucket"/>
 
     <TextView
         android:id="@+id/tv_bucket_name"

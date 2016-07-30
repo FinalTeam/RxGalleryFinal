@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="gallery_C7C7C7">#C7C7C7</color>
-    <color name="gallery_F2F2F2">#F2F2F2</color>
-    <color name="gallery_D8D8D8">#D8D8D8</color>
-    <!--<color name="ucrop_color_toolbar" tools:override="true">?attr/gallery_toolbar_bg</color>-->
-
-</resources>

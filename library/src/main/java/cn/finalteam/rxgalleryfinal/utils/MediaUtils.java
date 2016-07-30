@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.BucketBean;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
@@ -295,10 +296,10 @@ public class MediaUtils {
         allMediaBucket.setBucketId(String.valueOf(Integer.MIN_VALUE));
         Uri uri;
         if(isImage) {
-            allMediaBucket.setBucketName("所有图片");
+            allMediaBucket.setBucketName(context.getString(R.string.gallery_all_image));
             uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         } else {
-            allMediaBucket.setBucketName("所有视频");
+            allMediaBucket.setBucketName(context.getString(R.string.gallery_all_video));
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         }
         bucketBeenList.add(allMediaBucket);

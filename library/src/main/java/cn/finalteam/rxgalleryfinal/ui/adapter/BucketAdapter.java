@@ -46,7 +46,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
         this.mContext = context;
         this.mBucketList = bucketList;
         this.mConfiguration = configuration;
-        this.mDefaultImage = new ColorDrawable(context.getResources().getColor(R.color.gallery_F2F2F2));
+        this.mDefaultImage = new ColorDrawable(context.getResources().getColor(R.color.gallery_bucket_list_item_normal_color));
         this.mInflater = LayoutInflater.from(context);
     }
 
