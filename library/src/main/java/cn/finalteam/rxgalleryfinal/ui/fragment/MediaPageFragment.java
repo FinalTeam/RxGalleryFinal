@@ -107,6 +107,12 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
                         mItemClickPosition = sendMediaPageFragmentDataEvent.getPosition();
                         mMediaBeanList.addAll(sendMediaPageFragmentDataEvent.getMediaBeanList());
                         mMediaPreviewAdapter.notifyDataSetChanged();
+                        MediaBean mediaBean = mMediaBeanList.get(mItemClickPosition);
+                        if(mMediaActivity != null && mMediaActivity.getCheckedList() != null){
+                            if(mMediaActivity.getCheckedList().contains(mediaBean)) {
+                                mCbCheck.setChecked(true);
+                            }
+                        }
 
                         RxBus.getDefault().post(new MediaViewPagerChangedEvent(mItemClickPosition, mMediaBeanList.size(), false));
                     }
