@@ -93,9 +93,15 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         mMediaPreviewAdapter = new MediaPreviewAdapter(getContext(), mMediaBeanList,
                 mScreenSize.widthPixels, mScreenSize.heightPixels, mConfiguration);
         mViewPager.setAdapter(mMediaPreviewAdapter);
-        mViewPager.addOnPageChangeListener(this);
         mCbCheck.setOnClickListener(this);
         mPagerPosition = 0;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mViewPager.setCurrentItem(mPagerPosition, false);
+        mViewPager.addOnPageChangeListener(this);
     }
 
     @Override
@@ -108,12 +114,6 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
 
         int pageColor = ThemeUtils.resolveColor(getContext(), R.attr.gallery_page_bg, R.color.gallery_default_page_bg);
         mRlRootView.setBackgroundColor(pageColor);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mViewPager.setCurrentItem(mPagerPosition, false);
     }
 
     @Override
@@ -158,6 +158,7 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mPagerPosition = 0;
         RxBus.getDefault().post(new CloseMediaViewPageFragmentEvent());
     }
 }
