@@ -213,7 +213,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if(activity == null){
             activity = getActivity();
         }
-        boolean success = PermissionCheckUtils.checkReadExternalPermission(activity, "App请求读取你的相册",
+
+        String requestStorageAccessPermissionTips = ThemeUtils.resolveString(getContext(),
+                R.attr.gallery_request_storage_access_permission_tips,
+                R.string.gallery_default_request_storage_access_permission_tips);
+        boolean success = PermissionCheckUtils.checkReadExternalPermission(activity, requestStorageAccessPermissionTips,
                 MediaActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION);
         if(success) {
             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
@@ -306,7 +310,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
 
         if (mMediaBeanList.size() == 0) {
-            EmptyViewUtils.showMessage(mLlEmptyView, "空空如也");
+            String mediaEmptyTils = ThemeUtils.resolveString(getContext(), R.attr.gallery_media_empty_tips, R.string.gallery_default_media_empty_tips);
+            EmptyViewUtils.showMessage(mLlEmptyView, mediaEmptyTils);
         }
 
         mRvMedia.onLoadMoreComplete();
@@ -349,13 +354,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (mediaBean.getId() == Integer.MIN_VALUE) {
 
             if (!CameraUtils.hasCamera(getContext())) {
-                Toast.makeText(getContext(), "该设备无摄像头", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.gallery_device_no_camera_tips, Toast.LENGTH_SHORT).show();
                 return;
-            }
-
-            Activity activity = mMediaActivity;
-            if(activity == null){
-                activity = getActivity();
             }
 
             openCamera();
@@ -434,7 +434,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mImagePath)));
             startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
         } else {
-            Toast.makeText(getContext(), "相机不可用", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
         }
     }
 

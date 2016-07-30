@@ -1,11 +1,16 @@
 <resources>
-    <string name="gallery_loading_view_click_loading_more">点击加载更多</string>
+    <string name="gallery_loading_view_click_loading_more">加载更多</string>
     <string name="gallery_loading_view_no_more">没有更多了</string>
     <string name="gallery_loading_view_loading">加载中…</string>
+
     <string name="gallery_over_button_text">完成</string>
     <string name="gallery_over_button_text_checked">完成(%1$d/%2$d)</string>
     <string name="gallery_image_max_size_tip">你最多只能选择%1$d张照片</string>
-    <string name="gallery_preview_page_title">预览(%1$d/%2$d)</string>
-    <string name="gallery_image_page_title">图片(%1$d/%2$d)</string>
-    <string name="gallery_video_page_title">视频(%1$d/%2$d)</string>
+    <string name="gallery_page_title">%1$d/%2$d</string>
+    <string name="gallery_media_grid_image_title">图片</string>
+    <string name="gallery_media_grid_video_title">视频</string>
+    <string name="gallery_default_request_storage_access_permission_tips">App请求读取你的相册</string>
+    <string name="gallery_default_media_empty_tips">空空如也</string>
+    <string name="gallery_device_no_camera_tips">该设备无摄像头</string>
+    <string name="gallery_device_camera_unable">相机不可用</string>
 </resources>

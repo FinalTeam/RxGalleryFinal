@@ -73,6 +73,10 @@
     <attr name="gallery_page_bg" format="color"/>
     <!--默认图-->
     <attr name="gallery_default_image" format="dimension"/>
+    <!--请求读取相册授权提示语-->
+    <attr name="gallery_request_storage_access_permission_tips" format="dimension|string"/>
+    <!--没有任何图片提示语-->
+    <attr name="gallery_media_empty_tips" format="dimension|string"/>
 
     <!---uCrop-->
     <!--裁剪页背景颜色-->

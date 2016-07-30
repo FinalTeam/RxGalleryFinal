@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -155,9 +154,9 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                 .commit();
 
         if(mConfiguration.isImage()) {
-            mTvToolbarTitle.setText("图片");
+            mTvToolbarTitle.setText(R.string.gallery_media_grid_image_title);
         } else {
-            mTvToolbarTitle.setText("视频");
+            mTvToolbarTitle.setText(R.string.gallery_media_grid_video_title);
         }
     }
 
@@ -184,7 +183,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                 .show(mMediaPreviewFragment)
                 .commit();
 
-        mTvToolbarTitle.setText(String.format(Locale.CHINA, "预览(%d/%d)", 1, mCheckedList.size()));
+        mTvToolbarTitle.setText(getString(R.string.gallery_page_title, 1, mCheckedList.size()));
     }
 
     @Override
@@ -240,18 +239,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                     protected void onEvent(MediaViewPagerChangedEvent mediaPreviewViewPagerChangedEvent) {
                         int curIndex = mediaPreviewViewPagerChangedEvent.getCurIndex();
                         int totalSize = mediaPreviewViewPagerChangedEvent.getTotalSize();
-
-                        String title;
-                        if(mediaPreviewViewPagerChangedEvent.isPreview()){
-                            title = getString(R.string.gallery_preview_page_title, curIndex + 1, totalSize);
-                        } else {
-                            if(mConfiguration.isImage()) {
-                                title = getString(R.string.gallery_image_page_title, curIndex + 1, totalSize);
-                            } else {
-                                title = getString(R.string.gallery_video_page_title, curIndex + 1, totalSize);
-                            }
-                        }
-
+                        String title = getString(R.string.gallery_page_title, curIndex + 1, totalSize);
                         mTvToolbarTitle.setText(title);
                     }
                 });
