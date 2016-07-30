@@ -3,12 +3,14 @@ package cn.finalteam.rxgalleryfinal.sample;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
+import android.widget.RadioButton;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 
 public class MainActivity extends AppCompatActivity {
 
+    RadioButton mRbRadio,mRbMuti;
     Button mBtnOpen;
 
     @Override
@@ -17,14 +19,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mBtnOpen = (Button) findViewById(R.id.btn_open);
+        mRbRadio = (RadioButton) findViewById(R.id.rb_radio);
+        mRbMuti = (RadioButton) findViewById(R.id.rb_muti);
 
-        mBtnOpen.setOnClickListener(v -> RxGalleryFinal
-                .with(this)
-                .image()
-                .multiple()
-                .maxSize(8)
-                .imageLoader(ImageLoaderType.PICASSO)
-                .openGallery());
+        mBtnOpen.setOnClickListener(view -> {
+            if(mRbRadio.isChecked()) {
+                RxGalleryFinal
+                        .with(MainActivity.this)
+                        .image()
+                        .radio()
+                        .imageLoader(ImageLoaderType.PICASSO)
+                        .openGallery();
+            } else {
+                RxGalleryFinal
+                        .with(MainActivity.this)
+                        .image()
+                        .multiple()
+                        .maxSize(8)
+                        .imageLoader(ImageLoaderType.PICASSO)
+                        .openGallery();
+            }
+        });
 //
 //        mBtnOpen.setOnClickListener(new View.OnClickListener() {
 //            @Override

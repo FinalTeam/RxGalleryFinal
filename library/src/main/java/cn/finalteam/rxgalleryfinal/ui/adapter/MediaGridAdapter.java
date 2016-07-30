@@ -63,8 +63,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mIvMediaImage.setVisibility(View.GONE);
             holder.mLlCamera.setVisibility(View.VISIBLE);
         } else {
-            holder.mCbCheck.setVisibility(View.VISIBLE);
-            holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
+            if(mConfiguration.isRadio()) {
+                holder.mCbCheck.setVisibility(View.GONE);
+            } else{
+                holder.mCbCheck.setVisibility(View.VISIBLE);
+                holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
+            }
             holder.mIvMediaImage.setVisibility(View.VISIBLE);
             holder.mLlCamera.setVisibility(View.GONE);
             if(mCheckedList != null && mCheckedList.contains(mediaBean)){

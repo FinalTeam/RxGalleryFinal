@@ -10,6 +10,27 @@
     android:orientation="vertical"
     tools:context="cn.finalteam.rxgalleryfinal.sample.MainActivity">
 
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_radio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="单选"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/rb_muti"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="多选"/>
+    </RadioGroup>
+
     <Button
         android:id="@+id/btn_open"
         android:layout_width="match_parent"

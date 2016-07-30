@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -74,13 +75,19 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
 
         mTvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         mTvOverAction = (TextView) findViewById(R.id.tv_over_action);
-        mTvOverAction.setOnClickListener(view -> {
+        if(!mConfiguration.isRadio()) {
+            mTvOverAction.setOnClickListener(view -> {
 
-        });
+            });
+            mTvOverAction.setVisibility(View.VISIBLE);
+        } else {
+            mTvOverAction.setVisibility(View.GONE);
+        }
         mCheckedList = new ArrayList<>();
 
         showMediaGridFragment();
         subscribeEvent();
+
     }
 
     @Override
@@ -284,18 +291,18 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     }
 
     private StateListDrawable createDefaultOverButtonBgDrawable() {
-        int dp10 = (int) ThemeUtils.applyDimensionDp(this, 10.f);
+        int dp12 = (int) ThemeUtils.applyDimensionDp(this, 12.f);
         int dp8 = (int) ThemeUtils.applyDimensionDp(this, 8.f);
         float dp4 = ThemeUtils.applyDimensionDp(this, 4.f);
         float[] round = new float[] { dp4, dp4, dp4, dp4, dp4, dp4, dp4, dp4 };
         ShapeDrawable pressedDrawable = new ShapeDrawable(new RoundRectShape(round, null, null));
-        pressedDrawable.setPadding(dp10, dp8, dp10, dp8);
+        pressedDrawable.setPadding(dp12, dp8, dp12, dp8);
         int pressedColor = ThemeUtils.resolveColor(this, R.attr.gallery_toolbar_over_button_pressed_color, R.color.gallery_default_toolbar_over_button_pressed_color);
         pressedDrawable.getPaint().setColor(pressedColor);
 
         int normalColor = ThemeUtils.resolveColor(this, R.attr.gallery_toolbar_over_button_normal_color, R.color.gallery_default_toolbar_over_button_normal_color);
         ShapeDrawable normalDrawable = new ShapeDrawable(new RoundRectShape(round, null, null));
-        normalDrawable.setPadding(dp10, dp8, dp10, dp8);
+        normalDrawable.setPadding(dp12, dp8, dp12, dp8);
         normalDrawable.getPaint().setColor(normalColor);
 
         StateListDrawable stateListDrawable = new StateListDrawable();

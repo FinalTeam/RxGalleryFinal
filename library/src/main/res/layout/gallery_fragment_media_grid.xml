@@ -16,9 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:background="#EF2B2C30"
+        android:gravity="center_vertical"
         android:clickable="true">
 
         <TextView
@@ -27,29 +26,35 @@
             android:layout_height="wrap_content"
             android:text="所有图片"
             android:textColor="@color/gallery_text_color_selector"
-            android:textSize="13sp"
+            android:textSize="14sp"
+            android:paddingLeft="15dp"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:layout_centerVertical="true"
             android:drawablePadding="3dp"
+            android:gravity="center_vertical"
             android:drawableRight="@drawable/ic_corner_selector"
             />
 
         <TextView
             android:id="@+id/tv_preview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textColor="@color/gallery_text_color_selector"
-            android:textSize="13sp"
-            android:layout_marginLeft="15dp"
+            android:textSize="14sp"
             android:text="预览"
+            android:gravity="center_vertical"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:clickable="false"/>
 
         <View
+            android:id="@+id/tv_preview_vr"
             android:layout_width="1dp"
             android:layout_height="28dp"
             android:background="#1F1F1F"

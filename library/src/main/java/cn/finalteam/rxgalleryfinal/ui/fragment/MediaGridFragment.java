@@ -170,6 +170,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mTvFolderName.setOnClickListener(this);
         mTvPreview = (TextView) view.findViewById(R.id.tv_preview);
         mTvPreview.setOnClickListener(this);
+        mTvPreview.setClickable(false);
+        if(mConfiguration.isRadio()){
+            view.findViewById(R.id.tv_preview_vr).setVisibility(View.GONE);
+            mTvPreview.setVisibility(View.GONE);
+        }
 
         mMediaBeanList = new ArrayList<>();
         mMediaGridAdapter = new MediaGridAdapter(getContext(), mMediaBeanList, mMediaActivity.getCheckedList(),
