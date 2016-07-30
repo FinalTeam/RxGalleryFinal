@@ -50,6 +50,7 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.RequestStorageReadAccessPermissionEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.SendMediaPageFragmentDataEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.adapter.BucketAdapter;
@@ -64,6 +65,7 @@ import cn.finalteam.rxgalleryfinal.utils.FilenameUtils;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
 import cn.finalteam.rxgalleryfinal.utils.MediaUtils;
+import cn.finalteam.rxgalleryfinal.utils.PermissionCheckUtils;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 import cn.finalteam.rxgalleryfinal.view.MediaGridView;
 import rx.Observable;
@@ -119,6 +121,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private MediaActivity mMediaActivity;
     private Subscription mSubscrMediaCheckChangeEvent;
     private Subscription mSubscrCloseMediaViewPageFragmentEvent;
+    private Subscription mSubscrRequestStorageReadAccessPermissionEvent;
 
     public static MediaGridFragment newInstance() {
         return new MediaGridFragment();
@@ -182,7 +185,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia.setAdapter(mMediaGridAdapter);
 
         mMediaGridPresenter.setMediaGridView(this);
-        mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
@@ -206,6 +208,16 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .animate();
 
         subscribeEvent();
+
+        Activity activity = mMediaActivity;
+        if(activity == null){
+            activity = getActivity();
+        }
+        boolean success = PermissionCheckUtils.checkReadExternalPermission(activity, "App请求读取你的相册",
+                MediaActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION);
+        if(success) {
+            mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+        }
     }
 
     private void subscribeEvent() {
@@ -231,6 +243,20 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                     }
                 });
         RxBus.getDefault().add(mSubscrCloseMediaViewPageFragmentEvent);
+
+        mSubscrRequestStorageReadAccessPermissionEvent = RxBus.getDefault().toObservable(RequestStorageReadAccessPermissionEvent.class)
+                .subscribe(new RxBusSubscriber<RequestStorageReadAccessPermissionEvent>() {
+                    @Override
+                    protected void onEvent(RequestStorageReadAccessPermissionEvent requestStorageReadAccessPermissionEvent) throws Exception {
+                        if(requestStorageReadAccessPermissionEvent.isSuccess()){
+                            mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+                        } else {
+                            getActivity().finish();
+                        }
+                    }
+                });
+        RxBus.getDefault().add(mSubscrRequestStorageReadAccessPermissionEvent);
+
     }
     @Override
     public void setTheme() {
@@ -327,16 +353,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 return;
             }
 
-            Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (captureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
-                String filename = String.format(IMAGE_STORE_FILE_NAME, dateFormat.format(new Date()));
-                mImagePath = new File(mImageStoreDir, filename).getAbsolutePath();
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mImagePath)));
-                startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
-            } else {
-                Toast.makeText(getContext(), "相机不可用", Toast.LENGTH_SHORT).show();
+            Activity activity = mMediaActivity;
+            if(activity == null){
+                activity = getActivity();
             }
+
+            openCamera();
+
         } else {
             if (mConfiguration.isRadio()) {
                 String ext = FilenameUtils.getExtension(mediaBean.getOriginalPath());
@@ -399,6 +422,19 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 }
                 RxBus.getDefault().postSticky(new SendMediaPageFragmentDataEvent(gridMediaList, pos));
             }
+        }
+    }
+
+    private void openCamera() {
+        Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (captureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+            String filename = String.format(IMAGE_STORE_FILE_NAME, dateFormat.format(new Date()));
+            mImagePath = new File(mImageStoreDir, filename).getAbsolutePath();
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mImagePath)));
+            startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
+        } else {
+            Toast.makeText(getContext(), "相机不可用", Toast.LENGTH_SHORT).show();
         }
     }
 

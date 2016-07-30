@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -7,6 +8,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -35,9 +37,11 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaViewPagerChangedEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.RequestStorageReadAccessPermissionEvent;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPageFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPreviewFragment;
+import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.OsCompat;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 import cn.finalteam.rxgalleryfinal.view.ActivityFragmentView;
@@ -49,6 +53,8 @@ import rx.Subscription;
  * Date:16/5/7 上午10:01
  */
 public class MediaActivity extends BaseActivity implements ActivityFragmentView {
+
+    public static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
 
     @Inject
     Configuration mConfiguration;
@@ -86,8 +92,8 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         mCheckedList = new ArrayList<>();
 
         showMediaGridFragment();
-        subscribeEvent();
 
+        subscribeEvent();
     }
 
     @Override
@@ -267,11 +273,11 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     }
 
     private void backAction() {
-        if(mMediaGridFragment.isVisible()) {
-            onBackPressed();
-        } else if(mMediaPreviewFragment.isVisible() || mMediaPageFragment.isVisible()){
+        if(mMediaPreviewFragment.isVisible() || mMediaPageFragment.isVisible()){
             showMediaGridFragment();
+            return;
         }
+        onBackPressed();
     }
 
     @Override
@@ -310,5 +316,22 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         stateListDrawable.addState(new int[]{}, normalDrawable);
 
         return stateListDrawable;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Logger.i("onRequestPermissionsResult:requestCode="+requestCode +" permissions=" + permissions[0]);
+        switch (requestCode) {
+            case REQUEST_STORAGE_READ_ACCESS_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    RxBus.getDefault().post(new RequestStorageReadAccessPermissionEvent(true));
+                } else {
+                    finish();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }
