@@ -6,13 +6,13 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.Configuration;
@@ -20,6 +20,9 @@ import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
+import cn.finalteam.rxgalleryfinal.rxjob.Job;
+import cn.finalteam.rxgalleryfinal.rxjob.RxJob;
+import cn.finalteam.rxgalleryfinal.rxjob.job.ImageThmbnailJobCreate;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
@@ -76,13 +79,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             } else {
                 holder.mCbCheck.setChecked(false);
             }
-            String path = mediaBean.getThumbnailSmallPath();
-            if(TextUtils.isEmpty(path)) {
-                path = mediaBean.getThumbnailBigPath();
+            String bitPath = mediaBean.getThumbnailSmallPath();
+            String smallPath = mediaBean.getThumbnailSmallPath();
+
+            if(!new File(bitPath).exists() || !new File(smallPath).exists()) {
+                Job job = new ImageThmbnailJobCreate(mContext, mediaBean).create();
+                RxJob.getDefault().addJob(job);
             }
-            if(TextUtils.isEmpty(path)) {
+            String path;
                 path = mediaBean.getOriginalPath();
-            }
+
+
+
             mConfiguration.getImageLoader()
                     .displayImage(mContext, path, holder.mIvMediaImage, mDefaultImage, mImageSize, mImageSize);
         }

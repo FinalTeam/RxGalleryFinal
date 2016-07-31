@@ -28,12 +28,12 @@ public class BitmapUtils {
     private final static int THUMBNAIL_BIG = 1;
     private final static int THUMBNAIL_SMALL = 2;
 
-    public static String getVideoThumbnailBigPath(String thumbnailSaveDir, String originalPath) {
-        return createVideoThumbnail(thumbnailSaveDir, originalPath, THUMBNAIL_BIG);
+    public static void createVideoThumbnailBigPath(String thumbnailSaveDir, String originalPath) {
+        createVideoThumbnail(thumbnailSaveDir, originalPath, THUMBNAIL_BIG);
     }
 
-    public static String getVideoThumbnailSmallPath(String thumbnailSaveDir, String originalPath) {
-        return createVideoThumbnail(thumbnailSaveDir, originalPath, THUMBNAIL_SMALL);
+    public static void createVideoThumbnailSmallPath(String thumbnailSaveDir, String originalPath) {
+        createVideoThumbnail(thumbnailSaveDir, originalPath, THUMBNAIL_SMALL);
     }
 
     /**
@@ -43,10 +43,10 @@ public class BitmapUtils {
      * @param scale
      * @return
      */
-    public static String createVideoThumbnail(String thumbnailSaveDir, String originalPath, int scale) {
+    public static void createVideoThumbnail(String thumbnailSaveDir, String originalPath, int scale) {
         Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(originalPath, MediaStore.Video.Thumbnails.MINI_KIND);
         if(bitmap == null){
-            return "";
+            return;
         }
         int originalImageWidth = bitmap.getWidth();
         int originalImageHeight = bitmap.getHeight();
@@ -77,7 +77,7 @@ public class BitmapUtils {
             bufferedInputStream.close();
             bitmap.recycle();
             if (bm == null) {
-                return "";
+                return;
             }
             bitmap = bm;
 
@@ -100,58 +100,38 @@ public class BitmapUtils {
             IOUtils.flush(fileOutputStream);
             IOUtils.close(fileOutputStream);
         }
-        if(targetFile != null && targetFile.exists()){
-            return targetFile.getAbsolutePath();
-        }
-
-        return "";
     }
 
     /**
-     * 创建缩略图
-     *
-     * @param thumbnailSaveDir 缩略图保存路径
-     * @param originalPath
-     * @return
-     */
-    public static String[] createThumbnails(String thumbnailSaveDir, String originalPath) {
-        String[] images = new String[2];
-        images[0] = getThumbnailBigPath(thumbnailSaveDir, originalPath);
-        images[1] = getThumbnailSmallPath(thumbnailSaveDir, originalPath);
-        return images;
-    }
-
-    /**
-     * 获取大缩略图路径
-     * @param thumbnailSaveDir 缩略图保存路径
+     * 创建大缩略图
+     * @param targetFile 保存目标文件
      * @param originalPath 图片地址
      * */
-    public static String getThumbnailBigPath(String thumbnailSaveDir, String originalPath) {
-        return compressAndSaveImage(thumbnailSaveDir, originalPath, THUMBNAIL_BIG);
+    public static void createThumbnailBig(File targetFile, String originalPath) {
+        compressAndSaveImage(targetFile, originalPath, THUMBNAIL_BIG);
     }
 
     /**
-     * 获取小缩略图路径
-     * @param thumbnailSaveDir 缩略图保存路径
+     * 创建小缩略图
+     * @param targetFile 保存目标文件
      * @param originalPath 图片地址
      * */
-    public static String getThumbnailSmallPath(String thumbnailSaveDir, String originalPath) {
-        return compressAndSaveImage(thumbnailSaveDir, originalPath, THUMBNAIL_SMALL);
+    public static void createThumbnailSmall(File targetFile, String originalPath) {
+        compressAndSaveImage(targetFile, originalPath, THUMBNAIL_SMALL);
     }
 
     /**
      * 图片压缩并且存储
-     * @param thumbnailSaveDir 缩略图保存路径
+     * @param targetFile 保存目标文件
      * @param originalPath 图片地址
      * @param scale 图片缩放值
      * @return
      */
-    public static String compressAndSaveImage(String thumbnailSaveDir, String originalPath, int scale) {
+    public static void compressAndSaveImage(File targetFile, String originalPath, int scale) {
 
         Bitmap bitmap = null;
         BufferedInputStream bufferedInputStream = null;
         FileOutputStream fileOutputStream = null;
-        String thumbnailPath = null;
 
         try {
             //1、得到图片的宽、高
@@ -205,15 +185,9 @@ public class BitmapUtils {
             bufferedInputStream.close();
 
             if(bitmap == null){
-                return "";
+                return;
             }
-
-            String scaleStr = (scale == THUMBNAIL_BIG?"big":"small");
-
             String extension = FilenameUtils.getExtension(originalPath);
-            File original = new File(originalPath);
-            File targetFile = new File(thumbnailSaveDir, scaleStr + "_" + original.getName());
-
             fileOutputStream = new FileOutputStream(targetFile);
             if (rotate != 0) {
                 Matrix matrix = new Matrix();
@@ -234,7 +208,6 @@ public class BitmapUtils {
             } else {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
             }
-            thumbnailPath = targetFile.getAbsolutePath();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -245,8 +218,6 @@ public class BitmapUtils {
                 bitmap.recycle();
             }
         }
-
-        return thumbnailPath;
     }
 
     /**

@@ -186,23 +186,8 @@ public class MediaUtils {
         mediaBean.setCreateDate(createDate);
         long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED));
         mediaBean.setModifiedDate(modifiedDate);
-        File storeFile = StorageUtils.getCacheDirectory(context);
-        File bigThumFile = new File(storeFile, "big_" + FilenameUtils.getName(originalPath));
-        File smallThumFile = new File(storeFile, "small_" + FilenameUtils.getName(originalPath));
-        if(!smallThumFile.exists()){
-            String thum = BitmapUtils.getThumbnailSmallPath(storeFile.getAbsolutePath(), originalPath);
-            mediaBean.setThumbnailSmallPath(thum);
-        }else{
-            mediaBean.setThumbnailSmallPath(smallThumFile.getAbsolutePath());
-        }
-        if(!bigThumFile.exists()){
-            String thum = BitmapUtils.getThumbnailBigPath(storeFile.getAbsolutePath(), originalPath);
-            mediaBean.setThumbnailBigPath(thum);
-        } else {
-            mediaBean.setThumbnailBigPath(bigThumFile.getAbsolutePath());
-        }
-
-        mediaBean.setThumbnailSmallPath(bigThumFile.getAbsolutePath());
+        mediaBean.setThumbnailBigPath(createThumbnailBigFileName(context, originalPath).getAbsolutePath());
+        mediaBean.setThumbnailSmallPath(createThumbnailSmallFileName(context, originalPath).getAbsolutePath());
         return mediaBean;
     }
 
@@ -231,24 +216,22 @@ public class MediaUtils {
         long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));
         mediaBean.setModifiedDate(modifiedDate);
 
-        //获取缩略图
+        //创建缩略图文件
+        mediaBean.setThumbnailBigPath(createThumbnailBigFileName(context, originalPath).getAbsolutePath());
+        mediaBean.setThumbnailSmallPath(createThumbnailSmallFileName(context, originalPath).getAbsolutePath());
+        return mediaBean;
+    }
+
+    public static File createThumbnailBigFileName(Context context, String originalPath) {
         File storeFile = StorageUtils.getCacheDirectory(context);
         File bigThumFile = new File(storeFile, "big_" + FilenameUtils.getName(originalPath));
-        File smallThumFile = new File(storeFile, "small_" + FilenameUtils.getName(originalPath));
-        if(!smallThumFile.exists()){
-            String thum = BitmapUtils.getVideoThumbnailSmallPath(storeFile.getAbsolutePath(), originalPath);
-            mediaBean.setThumbnailSmallPath(thum);
-        }else{
-            mediaBean.setThumbnailSmallPath(smallThumFile.getAbsolutePath());
-        }
-        if(!bigThumFile.exists()){
-            String thum = BitmapUtils.getVideoThumbnailBigPath(storeFile.getAbsolutePath(), originalPath);
-            mediaBean.setThumbnailBigPath(thum);
-        } else {
-            mediaBean.setThumbnailBigPath(bigThumFile.getAbsolutePath());
-        }
+        return bigThumFile;
+    }
 
-        return mediaBean;
+    public static File createThumbnailSmallFileName(Context context, String originalPath) {
+        File storeFile = StorageUtils.getCacheDirectory(context);
+        File smallThumFile = new File(storeFile, "small_" + FilenameUtils.getName(originalPath));
+        return smallThumFile;
     }
 
     /**
