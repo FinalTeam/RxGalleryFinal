@@ -105,11 +105,7 @@ public class UCropActivity extends BaseActivity {
         setContentView(R.layout.gallery_ucrop_activity_photobox);
 
         findViews();
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
         final Intent intent = getIntent();
         setupViews(intent);
         setImageData(intent);
