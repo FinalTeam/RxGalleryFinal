@@ -17,9 +17,15 @@ import cn.finalteam.rxgalleryfinal.di.component.DaggerRxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.module.RxGalleryFinalModule;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.utils.MediaType;
 import cn.finalteam.rxgalleryfinal.utils.StorageUtils;
+import rx.Subscription;
 
 /**
  * Desction:
@@ -71,12 +77,12 @@ public class RxGalleryFinal {
         return this;
     }
 
-    public RxGalleryFinal selectedList(List<MediaBean> list) {
+    public RxGalleryFinal selectedList(@NonNull List<MediaBean> list) {
         configuration.setSelectedList(list);
         return this;
     }
 
-    public RxGalleryFinal imageLoader(ImageLoaderType imageLoaderType) {
+    public RxGalleryFinal imageLoader(@NonNull ImageLoaderType imageLoaderType) {
         configuration.setImageLoaderType(imageLoaderType);
         return this;
     }
@@ -191,6 +197,16 @@ public class RxGalleryFinal {
         return this;
     }
 
+    /**
+     * 设置回调
+     * @param rxBusResultSubscriber
+     * @return
+     */
+    public RxGalleryFinal subscribe(@NonNull RxBusResultSubscriber<? extends BaseResultEvent> rxBusResultSubscriber) {
+        configuration.setResultSubscriber((RxBusResultSubscriber<BaseResultEvent>) rxBusResultSubscriber);
+        return this;
+    }
+
     public void openGallery(){
         execute();
     }
@@ -210,11 +226,23 @@ public class RxGalleryFinal {
                 .build();
 
         mRxGalleryFinalComponent.inject(this);
+        Subscription subscription;
+        if(configuration.isRadio()) {
+            subscription = RxBus.getDefault()
+                    .toObservable(ImageRadioResultEvent.class)
+                    .subscribe(configuration.getResultSubscriber());
+        } else {
+            subscription = RxBus.getDefault()
+                    .toObservable(ImageMultipleResultEvent.class)
+                    .subscribe(configuration.getResultSubscriber());
+        }
+        RxBus.getDefault().add(subscription);
 
         Intent intent = new Intent(context, MediaActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
+
 
     public static RxGalleryFinalComponent getRxGalleryFinalComponent() {
         if(instance == null) {

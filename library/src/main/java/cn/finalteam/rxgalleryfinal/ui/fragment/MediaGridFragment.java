@@ -372,8 +372,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 try {
                     String originalPath = mediaBean.getOriginalPath();
                     File file = new File(originalPath);
-                    Uri uri = Uri.fromFile(file);
-                    UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(mImageStoreCropDir, file.getName())));
+                    UCrop uCrop = UCrop.of(mediaBean, Uri.fromFile(new File(mImageStoreCropDir, file.getName())));
                     uCrop = uCrop.useSourceImageAspectRatio();
                     UCrop.Options options = new UCrop.Options();
                     options.setHideBottomControls(mConfiguration.isHideBottomControls());

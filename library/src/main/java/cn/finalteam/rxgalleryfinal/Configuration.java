@@ -1,6 +1,7 @@
 package cn.finalteam.rxgalleryfinal;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.yalantis.ucrop.UCropActivity;
 import com.yalantis.ucrop.model.AspectRatio;
@@ -11,6 +12,8 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.imageloader.AbsImageLoader;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.imageloader.PicassoImageLoader;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.utils.MediaType;
 
 /**
@@ -27,11 +30,11 @@ public class Configuration {
     private Context context;
     private MediaType []filterMimes;
     private List<MediaBean> selectedList;
-
     private boolean radio;
     private int maxSize = 1;
     private ImageLoaderType imageLoaderType;
     private PauseOnScrollListener pauseOnScrollListener;
+    private RxBusResultSubscriber<BaseResultEvent> resultSubscriber;
 
     //==========UCrop START==========
     //是否隐藏裁剪页面底部控制栏,默认显示
@@ -216,5 +219,13 @@ public class Configuration {
 
     public void setOvalDimmedLayer(boolean ovalDimmedLayer) {
         this.ovalDimmedLayer = ovalDimmedLayer;
+    }
+
+    public RxBusResultSubscriber<BaseResultEvent> getResultSubscriber() {
+        return resultSubscriber;
+    }
+
+    public void setResultSubscriber(@NonNull RxBusResultSubscriber<BaseResultEvent> resultSubscriber) {
+        this.resultSubscriber = resultSubscriber;
     }
 }

@@ -37,6 +37,7 @@ import com.yalantis.ucrop.view.UCropView;
 import com.yalantis.ucrop.view.widget.AspectRatioTextView;
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -44,7 +45,16 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.finalteam.rxgalleryfinal.R;
+import cn.finalteam.rxgalleryfinal.bean.ImageCropBean;
+import cn.finalteam.rxgalleryfinal.bean.MediaBean;
+import cn.finalteam.rxgalleryfinal.di.component.BaseComponent;
+import cn.finalteam.rxgalleryfinal.di.component.DaggerBaseComponent;
 import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
+import cn.finalteam.rxgalleryfinal.di.module.BaseModule;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
+import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.CloseRxMediaGridPageEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.BaseActivity;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
@@ -98,6 +108,7 @@ public class UCropActivity extends BaseActivity {
     private Bitmap.CompressFormat mCompressFormat = DEFAULT_COMPRESS_FORMAT;
     private int mCompressQuality = DEFAULT_COMPRESS_QUALITY;
     private int[] mAllowedGestures = new int[]{SCALE, ROTATE, ALL};
+    private MediaBean mMediaBean;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,7 +174,11 @@ public class UCropActivity extends BaseActivity {
 
     @Override
     protected void setupComponent(RxGalleryFinalComponent rxGalleryFinalComponent) {
-
+        BaseComponent baseComponent = DaggerBaseComponent.builder()
+                .rxGalleryFinalComponent(rxGalleryFinalComponent)
+                .baseModule(new BaseModule())
+                .build();
+        baseComponent.inject(this);
     }
 
     private void findViews(){
@@ -254,7 +269,9 @@ public class UCropActivity extends BaseActivity {
      * This method extracts all data from the incoming intent and setups views properly.
      */
     private void setImageData(@NonNull Intent intent) {
-        Uri inputUri = intent.getParcelableExtra(UCrop.EXTRA_INPUT_URI);
+        mMediaBean = intent.getParcelableExtra(UCrop.EXTRA_INPUT_BEAN);
+        File file = new File(mMediaBean.getOriginalPath());
+        Uri inputUri = Uri.fromFile(file);
         Uri outputUri = intent.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
         processOptions(intent);
 
@@ -263,11 +280,9 @@ public class UCropActivity extends BaseActivity {
                 mGestureCropImageView.setImageUri(inputUri, outputUri);
             } catch (Exception e) {
                 setResultError(e);
-                finish();
             }
         } else {
             setResultError(new NullPointerException(getString(R.string.gallery_ucrop_error_input_data_is_absent)));
-            finish();
         }
     }
 
@@ -373,7 +388,6 @@ public class UCropActivity extends BaseActivity {
         @Override
         public void onLoadFailure(@NonNull Exception e) {
             setResultError(e);
-            finish();
         }
 
     };
@@ -505,12 +519,9 @@ public class UCropActivity extends BaseActivity {
         mGestureCropImageView.setImageToWrapCropBounds();
     }
 
-    private final View.OnClickListener mStateClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (!v.isSelected()) {
-                setWidgetState(v.getId());
-            }
+    private final View.OnClickListener mStateClickListener = v -> {
+        if (!v.isSelected()) {
+            setWidgetState(v.getId());
         }
     };
 
@@ -579,25 +590,30 @@ public class UCropActivity extends BaseActivity {
             @Override
             public void onBitmapCropped(@NonNull Uri resultUri) {
                 setResultUri(resultUri, mGestureCropImageView.getTargetAspectRatio());
-                finish();
             }
 
             @Override
             public void onCropFailure(@NonNull Throwable t) {
                 setResultError(t);
-                finish();
             }
         });
     }
 
     protected void setResultUri(Uri uri, float resultAspectRatio) {
-        setResult(RESULT_OK, new Intent()
-                .putExtra(UCrop.EXTRA_OUTPUT_URI, uri)
-                .putExtra(UCrop.EXTRA_OUTPUT_CROP_ASPECT_RATIO, resultAspectRatio));
+        ImageCropBean bean = new ImageCropBean();
+        bean.copyMediaBean(mMediaBean);
+        bean.setCropPath(uri.getPath());
+        bean.setAspectRatio(resultAspectRatio);
+        BaseResultEvent event = new ImageRadioResultEvent(bean);
+        RxBus.getDefault().post(event);
+        RxBus.getDefault().post(new CloseRxMediaGridPageEvent());
+        finish();
     }
 
     protected void setResultError(Throwable throwable) {
-        setResult(UCrop.RESULT_ERROR, new Intent().putExtra(UCrop.EXTRA_ERROR, throwable));
+        Logger.e(String.format("Image crop error:%s", throwable.getMessage()));
+        RxBus.getDefault().post(new CloseRxMediaGridPageEvent());
+        finish();
     }
 
 }

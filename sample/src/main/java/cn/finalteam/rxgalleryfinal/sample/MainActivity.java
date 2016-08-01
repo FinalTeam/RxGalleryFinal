@@ -4,9 +4,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
                         .image()
                         .radio()
                         .imageLoader(ImageLoaderType.PICASSO)
+                        .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                            @Override
+                            protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+                                Toast.makeText(getBaseContext(), imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
+                            }
+                        })
                         .openGallery();
             } else {
                 RxGalleryFinal
@@ -37,34 +47,15 @@ public class MainActivity extends AppCompatActivity {
                         .multiple()
                         .maxSize(8)
                         .imageLoader(ImageLoaderType.PICASSO)
+                        .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                            @Override
+                            protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
+                                Toast.makeText(getBaseContext(), "已选择" + imageMultipleResultEvent.getResult().size() +"张图片", Toast.LENGTH_SHORT).show();
+                            }
+                        })
                         .openGallery();
             }
         });
-//
-//        mBtnOpen.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String path = "/storage/emulated/0/com.ct.client/crop/1468247716552.jpg";
-//
-//                File file = new File(path);
-//                File saveFile = new File(getCacheDir(), file.getName());
-//                System.out.println("====" + saveFile.getAbsolutePath());
-//                Uri uri = Uri.fromFile(file);
-//                UCrop uCrop = UCrop.of(uri, Uri.fromFile(saveFile));
-//                uCrop = uCrop.useSourceImageAspectRatio();
-//                UCrop.Options options = new UCrop.Options();
-//                options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
-//                options.setCompressionQuality(50);
-//                options.setFreeStyleCropEnabled(true);
-//                uCrop = uCrop.withOptions(options);
-//                uCrop.start(MainActivity.this);
-//
-//                UCrop.of(uri, Uri.fromFile(saveFile))
-//                        .withAspectRatio(16, 9)
-//                        .withMaxResultSize(500, 500)
-//                        .start(MainActivity.this);
-//            }
-//        });
 
     }
 

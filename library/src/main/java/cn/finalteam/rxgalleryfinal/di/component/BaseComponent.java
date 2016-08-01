@@ -1,5 +1,7 @@
 package cn.finalteam.rxgalleryfinal.di.component;
 
+import com.yalantis.ucrop.UCropActivity;
+
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
@@ -19,6 +21,7 @@ import dagger.Component;
 public interface BaseComponent {
     void inject(MediaPreviewFragment mediaPreviewFragment);
     void inject(MediaPageFragment mediaPageFragment);
+    void inject(UCropActivity uCropActivity);
 
     List<MediaBean> provideMediaBeans();
 }

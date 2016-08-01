@@ -1,11 +1,14 @@
 package cn.finalteam.rxgalleryfinal.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Desction:Media Bean
  * Author:pengjianbo
  * Date:16/5/4 下午4:14
  */
-public class MediaBean {
+public class MediaBean implements Parcelable {
 
     //图片ID
     private long id;
@@ -28,6 +31,52 @@ public class MediaBean {
     private String thumbnailBigPath;
     //小缩略图
     private String thumbnailSmallPath;
+
+    public MediaBean(){}
+
+    protected MediaBean(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        originalPath = in.readString();
+        createDate = in.readLong();
+        modifiedDate = in.readLong();
+        mimeType = in.readString();
+        bucketId = in.readString();
+        bucketDisplayName = in.readString();
+        thumbnailBigPath = in.readString();
+        thumbnailSmallPath = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(title);
+        dest.writeString(originalPath);
+        dest.writeLong(createDate);
+        dest.writeLong(modifiedDate);
+        dest.writeString(mimeType);
+        dest.writeString(bucketId);
+        dest.writeString(bucketDisplayName);
+        dest.writeString(thumbnailBigPath);
+        dest.writeString(thumbnailSmallPath);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<MediaBean> CREATOR = new Creator<MediaBean>() {
+        @Override
+        public MediaBean createFromParcel(Parcel in) {
+            return new MediaBean(in);
+        }
+
+        @Override
+        public MediaBean[] newArray(int size) {
+            return new MediaBean[size];
+        }
+    };
 
     public long getId() {
         return id;
