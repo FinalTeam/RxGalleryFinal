@@ -91,6 +91,10 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
             mTvOverAction.setVisibility(View.GONE);
         }
         mCheckedList = new ArrayList<>();
+        List<MediaBean> selectedList = mConfiguration.getSelectedList();
+        if(selectedList != null && selectedList.size() > 0){
+            mCheckedList.addAll(selectedList);
+        }
 
         showMediaGridFragment();
 

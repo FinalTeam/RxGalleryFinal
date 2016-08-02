@@ -57,7 +57,7 @@ public class RxGalleryFinal {
         return this;
     }
 
-    public RxGalleryFinal filterMime(@NonNull MediaType ...mediaTypes) {
+    public RxGalleryFinal filterMime(MediaType ...mediaTypes) {
         configuration.setFilterMimes(mediaTypes);
         return this;
     }
@@ -82,7 +82,7 @@ public class RxGalleryFinal {
         return this;
     }
 
-    public RxGalleryFinal selectedList(@NonNull List<MediaBean> list) {
+    public RxGalleryFinal selected(@NonNull List<MediaBean> list) {
         configuration.setSelectedList(list);
         return this;
     }
