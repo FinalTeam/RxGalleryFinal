@@ -96,6 +96,7 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
         mViewPager.setAdapter(mMediaPreviewAdapter);
         mCbCheck.setOnClickListener(this);
         subscribeEvent();
+
     }
 
     private void subscribeEvent() {
@@ -117,19 +118,14 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
     @Override
     public void onStart() {
         super.onStart();
-        mViewPager.setCurrentItem(mItemClickPosition, false);
-        mViewPager.addOnPageChangeListener(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         MediaBean mediaBean = mMediaBeanList.get(mItemClickPosition);
         if(mMediaActivity != null && mMediaActivity.getCheckedList() != null){
             if(mMediaActivity.getCheckedList().contains(mediaBean)) {
                 mCbCheck.setChecked(true);
             }
         }
+        mViewPager.setCurrentItem(mItemClickPosition, false);
+        mViewPager.addOnPageChangeListener(this);
     }
 
     @Override
@@ -152,10 +148,11 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
     public void onPageSelected(int position) {
         mItemClickPosition = position;
         MediaBean mediaBean = mMediaBeanList.get(position);
-        mCbCheck.setChecked(false);
         //判断是否选择
         if(mMediaActivity != null && mMediaActivity.getCheckedList() != null){
             mCbCheck.setChecked(mMediaActivity.getCheckedList().contains(mediaBean));
+        } else {
+            mCbCheck.setChecked(false);
         }
 
         RxBus.getDefault().post(new MediaViewPagerChangedEvent(position, mMediaBeanList.size(), false));

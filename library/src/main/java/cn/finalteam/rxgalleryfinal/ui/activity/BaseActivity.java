@@ -1,6 +1,5 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,13 +25,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         setupComponent(rxGalleryFinalComponent);
+
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setTheme(getTheme());
-    }
+    public abstract void findViews();
 
     protected Handler mFinishHanlder = new Handler() {
         @Override
@@ -42,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     };
 
-    protected abstract void setTheme(Resources.Theme theme);
+    protected abstract void setTheme();
 
     protected abstract void setupComponent(RxGalleryFinalComponent rxGalleryFinalComponent);
 }

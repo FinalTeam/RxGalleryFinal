@@ -1,7 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -32,6 +31,7 @@ import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
 import cn.finalteam.rxgalleryfinal.di.module.ActivityFragmentModule;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseRxMediaGridPageEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
@@ -39,7 +39,6 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.MediaViewPagerChangedEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.RequestStorageReadAccessPermissionEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPageFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPreviewFragment;
@@ -62,9 +61,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     Configuration mConfiguration;
     @Inject
     MediaGridFragment mMediaGridFragment;
-    @Inject
     MediaPageFragment mMediaPageFragment;
-    @Inject
     MediaPreviewFragment mMediaPreviewFragment;
 
     private Toolbar mToolbar;
@@ -78,11 +75,9 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery_activity_media);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle("");
+        findViews();
+        setTheme();
 
-        mTvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        mTvOverAction = (TextView) findViewById(R.id.tv_over_action);
         if(!mConfiguration.isRadio()) {
             mTvOverAction.setOnClickListener(view -> {
                 if(mCheckedList != null && mCheckedList.size() > 0) {
@@ -103,7 +98,15 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     }
 
     @Override
-    protected void setTheme(Resources.Theme theme) {
+    public void findViews() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitle("");
+        mTvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        mTvOverAction = (TextView) findViewById(R.id.tv_over_action);
+    }
+
+    @Override
+    protected void setTheme() {
         Drawable closeDrawable = ThemeUtils.resolveDrawable(this, R.attr.gallery_toolbar_close_image, R.drawable.gallery_default_toolbar_close_image);
         int closeColor = ThemeUtils.resolveColor(this, R.attr.gallery_toolbar_close_color, R.color.gallery_default_toolbar_widget_color);
         closeDrawable.setColorFilter(closeColor, PorterDuff.Mode.SRC_ATOP);
@@ -153,12 +156,19 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
 
     @Override
     public void showMediaGridFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, mMediaGridFragment)
-                .hide(mMediaPreviewFragment)
-                .hide(mMediaPageFragment)
-                .show(mMediaGridFragment)
-                .commit();
+        mMediaPreviewFragment = null;
+        mMediaPageFragment = null;
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, mMediaGridFragment);
+                if(mMediaPreviewFragment != null) {
+                    ft.hide(mMediaPreviewFragment);
+                }
+                if(mMediaPageFragment != null){
+                    ft.hide(mMediaPageFragment);
+                }
+        ft.show(mMediaGridFragment)
+        .commit();
 
         if(mConfiguration.isImage()) {
             mTvToolbarTitle.setText(R.string.gallery_media_grid_image_title);
@@ -170,25 +180,23 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     @Override
     public void showMediaPageFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if(!mMediaPageFragment.isAdded()){
-            ft.add(R.id.fragment_container, mMediaPageFragment);
-        }
-        ft.hide(mMediaGridFragment)
-                .hide(mMediaPreviewFragment)
-                .show(mMediaPageFragment)
-                .commit();
+        mMediaPageFragment = MediaPageFragment.newInstance();
+        ft.add(R.id.fragment_container, mMediaPageFragment);
+        mMediaPreviewFragment = null;
+        ft.hide(mMediaGridFragment);
+        ft.show(mMediaPageFragment);
+        ft.commit();
     }
 
     @Override
     public void showMediaPreviewFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if(!mMediaPreviewFragment.isAdded()){
-            ft.add(R.id.fragment_container, mMediaPreviewFragment);
-        }
-        ft.hide(mMediaGridFragment)
-                .hide(mMediaPageFragment)
-                .show(mMediaPreviewFragment)
-                .commit();
+        mMediaPreviewFragment = MediaPreviewFragment.newInstance();
+        ft.add(R.id.fragment_container, mMediaPreviewFragment);
+        mMediaPageFragment = null;
+        ft.hide(mMediaGridFragment);
+        ft.show(mMediaPreviewFragment);
+        ft.commit();
 
         mTvToolbarTitle.setText(getString(R.string.gallery_page_title, 1, mCheckedList.size()));
     }
@@ -276,7 +284,8 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     }
 
     private void backAction() {
-        if(mMediaPreviewFragment.isVisible() || mMediaPageFragment.isVisible()){
+        if((mMediaPreviewFragment != null && mMediaPreviewFragment.isVisible())
+                || (mMediaPageFragment != null &&mMediaPageFragment.isVisible())){
             showMediaGridFragment();
             return;
         }
