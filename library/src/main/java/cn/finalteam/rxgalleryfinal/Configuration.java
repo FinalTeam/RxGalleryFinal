@@ -31,6 +31,7 @@ public class Configuration {
     private MediaType []filterMimes;
     private List<MediaBean> selectedList;
     private boolean radio;
+    private boolean crop;
     private int maxSize = 1;
     private ImageLoaderType imageLoaderType;
     private PauseOnScrollListener pauseOnScrollListener;
@@ -219,6 +220,14 @@ public class Configuration {
 
     public void setOvalDimmedLayer(boolean ovalDimmedLayer) {
         this.ovalDimmedLayer = ovalDimmedLayer;
+    }
+
+    public boolean isCrop() {
+        return crop;
+    }
+
+    public void setCrop(boolean crop) {
+        this.crop = crop;
     }
 
     public RxBusResultSubscriber<BaseResultEvent> getResultSubscriber() {

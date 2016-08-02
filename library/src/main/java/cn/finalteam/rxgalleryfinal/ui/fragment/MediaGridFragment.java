@@ -38,6 +38,7 @@ import cn.finalteam.rxgalleryfinal.anim.Animation;
 import cn.finalteam.rxgalleryfinal.anim.SlideInUnderneathAnimation;
 import cn.finalteam.rxgalleryfinal.anim.SlideOutUnderneathAnimation;
 import cn.finalteam.rxgalleryfinal.bean.BucketBean;
+import cn.finalteam.rxgalleryfinal.bean.ImageCropBean;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.di.component.DaggerMediaGridComponent;
 import cn.finalteam.rxgalleryfinal.di.component.MediaGridComponent;
@@ -47,6 +48,7 @@ import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
@@ -362,53 +364,59 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
         } else {
             if (mConfiguration.isRadio()) {
-                String ext = FilenameUtils.getExtension(mediaBean.getOriginalPath());
-                Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-                if (ext != null && TextUtils.equals(ext.toLowerCase(), "png")) {
-                    format = Bitmap.CompressFormat.PNG;
-                } else if (ext != null && TextUtils.equals(ext.toLowerCase(), "webp")) {
-                    format = Bitmap.CompressFormat.WEBP;
-                }
-                try {
-                    String originalPath = mediaBean.getOriginalPath();
-                    File file = new File(originalPath);
-                    UCrop uCrop = UCrop.of(mediaBean, Uri.fromFile(new File(mImageStoreCropDir, file.getName())));
-                    uCrop = uCrop.useSourceImageAspectRatio();
-                    UCrop.Options options = new UCrop.Options();
-                    options.setHideBottomControls(mConfiguration.isHideBottomControls());
-                    options.setCompressionFormat(format);
-                    if (mConfiguration.getCompressionQuality() != 0) {
-                        options.setCompressionQuality(mConfiguration.getCompressionQuality());
+                if(!mConfiguration.isCrop()){
+                    ImageCropBean bean = new ImageCropBean();
+                    bean.copyMediaBean(mediaBean);
+                    RxBus.getDefault().post(new ImageRadioResultEvent(bean));
+                    getActivity().finish();
+                } else {
+                    String ext = FilenameUtils.getExtension(mediaBean.getOriginalPath());
+                    Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+                    if (ext != null && TextUtils.equals(ext.toLowerCase(), "png")) {
+                        format = Bitmap.CompressFormat.PNG;
+                    } else if (ext != null && TextUtils.equals(ext.toLowerCase(), "webp")) {
+                        format = Bitmap.CompressFormat.WEBP;
                     }
+                    try {
+                        String originalPath = mediaBean.getOriginalPath();
+                        File file = new File(originalPath);
+                        UCrop uCrop = UCrop.of(mediaBean, Uri.fromFile(new File(mImageStoreCropDir, file.getName())));
+                        uCrop = uCrop.useSourceImageAspectRatio();
+                        UCrop.Options options = new UCrop.Options();
+                        options.setHideBottomControls(mConfiguration.isHideBottomControls());
+                        options.setCompressionFormat(format);
+                        if (mConfiguration.getCompressionQuality() != 0) {
+                            options.setCompressionQuality(mConfiguration.getCompressionQuality());
+                        }
 
-                    if (mConfiguration.getMaxBitmapSize() != 0) {
-                        options.setMaxBitmapSize(mConfiguration.getMaxBitmapSize());
-                    }
+                        if (mConfiguration.getMaxBitmapSize() != 0) {
+                            options.setMaxBitmapSize(mConfiguration.getMaxBitmapSize());
+                        }
 
-                    int[] gestures = mConfiguration.getAllowedGestures();
-                    if (gestures != null && gestures.length == 3) {
-                        options.setAllowedGestures(gestures[0], gestures[1], gestures[2]);
-                    }
-                    if (mConfiguration.getMaxScaleMultiplier() != 0) {
-                        options.setMaxScaleMultiplier(mConfiguration.getMaxScaleMultiplier());
-                    }
-                    //设置等比缩放
-                    if (mConfiguration.getAspectRatioX() != 0 && mConfiguration.getAspectRatioY() != 0) {
-                        options.withAspectRatio(mConfiguration.getAspectRatioX(), mConfiguration.getAspectRatioY());
-                    }
-                    //设置等比缩放默认值索引及等比缩放值列表
-                    if (mConfiguration.getAspectRatio() != null && mConfiguration.getSelectedByDefault() > mConfiguration.getAspectRatio().length) {
-                        options.setAspectRatioOptions(mConfiguration.getSelectedByDefault(), mConfiguration.getAspectRatio());
-                    }
-                    options.setFreeStyleCropEnabled(mConfiguration.isFreestyleCropEnabled());
-                    options.setOvalDimmedLayer(mConfiguration.isOvalDimmedLayer());
+                        int[] gestures = mConfiguration.getAllowedGestures();
+                        if (gestures != null && gestures.length == 3) {
+                            options.setAllowedGestures(gestures[0], gestures[1], gestures[2]);
+                        }
+                        if (mConfiguration.getMaxScaleMultiplier() != 0) {
+                            options.setMaxScaleMultiplier(mConfiguration.getMaxScaleMultiplier());
+                        }
+                        //设置等比缩放
+                        if (mConfiguration.getAspectRatioX() != 0 && mConfiguration.getAspectRatioY() != 0) {
+                            options.withAspectRatio(mConfiguration.getAspectRatioX(), mConfiguration.getAspectRatioY());
+                        }
+                        //设置等比缩放默认值索引及等比缩放值列表
+                        if (mConfiguration.getAspectRatio() != null && mConfiguration.getSelectedByDefault() > mConfiguration.getAspectRatio().length) {
+                            options.setAspectRatioOptions(mConfiguration.getSelectedByDefault(), mConfiguration.getAspectRatio());
+                        }
+                        options.setFreeStyleCropEnabled(mConfiguration.isFreestyleCropEnabled());
+                        options.setOvalDimmedLayer(mConfiguration.isOvalDimmedLayer());
 
-                    uCrop = uCrop.withOptions(options);
-                    uCrop.start(getActivity());
+                        uCrop = uCrop.withOptions(options);
+                        uCrop.start(getActivity());
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Logger.e(e);
+                    } catch (Exception e) {
+                        Logger.e(e);
+                    }
                 }
             } else {
                 RxBus.getDefault().post(new OpenMediaPageFragmentEvent());

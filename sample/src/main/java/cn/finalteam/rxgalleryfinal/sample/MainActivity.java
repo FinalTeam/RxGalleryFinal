@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
                         .with(MainActivity.this)
                         .image()
                         .radio()
+                        .crop()
                         .imageLoader(ImageLoaderType.PICASSO)
                         .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
                             @Override

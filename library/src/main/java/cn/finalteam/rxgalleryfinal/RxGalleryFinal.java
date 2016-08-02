@@ -72,6 +72,11 @@ public class RxGalleryFinal {
         return this;
     }
 
+    public RxGalleryFinal crop(){
+        configuration.setCrop(true);
+        return this;
+    }
+
     public RxGalleryFinal maxSize(@IntRange(from = 1) int maxSize){
         configuration.setMaxSize(maxSize);
         return this;
@@ -97,7 +102,7 @@ public class RxGalleryFinal {
      * @param hide
      * @return
      */
-    public RxGalleryFinal uCropHideBottomControls(boolean hide) {
+    public RxGalleryFinal cropHideBottomControls(boolean hide) {
         configuration.setHideBottomControls(hide);
         return this;
     }
@@ -106,7 +111,7 @@ public class RxGalleryFinal {
      * Set compression quality [0-100] that will be used to save resulting Bitmap.
      * @param compressQuality
      */
-    public RxGalleryFinal uCropropCompressionQuality(@IntRange(from = 0) int compressQuality) {
+    public RxGalleryFinal cropropCompressionQuality(@IntRange(from = 0) int compressQuality) {
         configuration.setCompressionQuality(compressQuality);
         return this;
     }
@@ -117,7 +122,7 @@ public class RxGalleryFinal {
      * @param tabRotate
      * @param tabAspectRatio
      */
-    public RxGalleryFinal uCropAllowedGestures(@UCropActivity.GestureTypes int tabScale,
+    public RxGalleryFinal cropAllowedGestures(@UCropActivity.GestureTypes int tabScale,
                                    @UCropActivity.GestureTypes int tabRotate,
                                    @UCropActivity.GestureTypes int tabAspectRatio) {
         configuration.setAllowedGestures(new int[]{tabScale, tabRotate, tabAspectRatio});
@@ -129,7 +134,7 @@ public class RxGalleryFinal {
      *
      * @param maxBitmapSize - size in pixels
      */
-    public RxGalleryFinal uCropMaxBitmapSize(@IntRange(from = 100) int maxBitmapSize) {
+    public RxGalleryFinal cropMaxBitmapSize(@IntRange(from = 100) int maxBitmapSize) {
         configuration.setMaxBitmapSize(maxBitmapSize);
         return this;
     }
@@ -139,7 +144,7 @@ public class RxGalleryFinal {
      *
      * @param maxScaleMultiplier - (minScale * maxScaleMultiplier) = maxScale
      */
-    public RxGalleryFinal uCropMaxScaleMultiplier(@FloatRange(from = 1.0, fromInclusive = false) float maxScaleMultiplier) {
+    public RxGalleryFinal cropMaxScaleMultiplier(@FloatRange(from = 1.0, fromInclusive = false) float maxScaleMultiplier) {
         configuration.setMaxScaleMultiplier(maxScaleMultiplier);
         return this;
     }
@@ -151,7 +156,7 @@ public class RxGalleryFinal {
      * @param x aspect ratio X
      * @param y aspect ratio Y
      */
-    public RxGalleryFinal uCropWithAspectRatio(float x, float y) {
+    public RxGalleryFinal cropWithAspectRatio(float x, float y) {
         configuration.setAspectRatioX(x);
         configuration.setAspectRatioY(y);
         return this;
@@ -161,7 +166,7 @@ public class RxGalleryFinal {
      * Set an aspect ratio for crop bounds that is evaluated from source image width and height.
      * User won't see the menu with other ratios options.
      */
-    public RxGalleryFinal uCropUseSourceImageAspectRatio() {
+    public RxGalleryFinal cropUseSourceImageAspectRatio() {
         configuration.setAspectRatioX(0);
         configuration.setAspectRatioY(0);
         return this;
@@ -173,7 +178,7 @@ public class RxGalleryFinal {
      * @param selectedByDefault - index of aspect ratio option that is selected by default (starts with 0).
      * @param aspectRatio       - list of aspect ratio options that are available to user
      */
-    public RxGalleryFinal uCropAspectRatioOptions(int selectedByDefault, AspectRatio... aspectRatio) {
+    public RxGalleryFinal cropAspectRatioOptions(int selectedByDefault, AspectRatio... aspectRatio) {
         configuration.setSelectedByDefault(selectedByDefault);
         configuration.setAspectRatio(aspectRatio);
         return this;
@@ -183,7 +188,7 @@ public class RxGalleryFinal {
      * set to true to let user resize crop bounds (disabled by default)
      * @param enabled
      */
-    public RxGalleryFinal uCropFreeStyleCropEnabled(boolean enabled) {
+    public RxGalleryFinal cropFreeStyleCropEnabled(boolean enabled) {
         configuration.setFreestyleCropEnabled(enabled);
         return this;
     }
@@ -192,7 +197,7 @@ public class RxGalleryFinal {
      * set it to true if you want dimmed layer to have an oval inside
      * @param isOval
      */
-    public RxGalleryFinal uCropOvalDimmedLayer(boolean isOval) {
+    public RxGalleryFinal cropOvalDimmedLayer(boolean isOval) {
         configuration.setOvalDimmedLayer(isOval);
         return this;
     }

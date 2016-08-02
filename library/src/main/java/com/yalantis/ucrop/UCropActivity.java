@@ -1,7 +1,6 @@
 package com.yalantis.ucrop;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
@@ -116,6 +115,7 @@ public class UCropActivity extends BaseActivity {
         setContentView(R.layout.gallery_ucrop_activity_photobox);
 
         findViews();
+        setTheme();
 
         final Intent intent = getIntent();
         setupViews(intent);
@@ -127,7 +127,7 @@ public class UCropActivity extends BaseActivity {
     }
 
     @Override
-    protected void setTheme(Resources.Theme theme) {
+    protected void setTheme() {
         mActiveWidgetColor = ThemeUtils.resolveColor(this, R.attr.gallery_color_active_widget, R.color.gallery_default_ucrop_color_widget_active);
         mToolbarWidgetColor = ThemeUtils.resolveColor(this, R.attr.gallery_toolbar_widget_color, R.color.gallery_default_color_toolbar_icon);
 
@@ -181,7 +181,8 @@ public class UCropActivity extends BaseActivity {
         baseComponent.inject(this);
     }
 
-    private void findViews(){
+    @Override
+    public void findViews(){
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         ViewGroup photoBox = (ViewGroup) findViewById(R.id.ucrop_photobox);

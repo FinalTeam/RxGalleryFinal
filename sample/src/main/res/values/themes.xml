@@ -25,12 +25,12 @@
         <!--<item name="gallery_toolbar_over_button_text_size">12sp</item>-->
         <!--<item name="gallery_toolbar_over_button_text_color">@android:color/white</item>-->
         <!--<item name="gallery_checkbox_button_tint_color">#ff00ff</item>-->
-        <item name="gallery_default_image">@drawable/gallery_default_image</item>
+        <!--<item name="gallery_default_image">@drawable/gallery_default_image</item>-->
 
         <!--uCrop-->
         <!--<item name="gallery_ucrop_color_crop_background">@color/gallery_default_ucrop_color_crop_background</item>-->
-        <item name="gallery_ucrop_vector_ic_crop">@drawable/gallery_ucrop_vector_ic_crop</item>
-        <item name="gallery_ucrop_image_outer_frame_bg">@color/gallery_default_ucrop_color_default_dimmed</item>
+        <!--<item name="gallery_ucrop_vector_ic_crop">@drawable/gallery_ucrop_vector_ic_crop</item>-->
+        <!--<item name="gallery_ucrop_image_outer_frame_bg">@color/gallery_default_ucrop_color_default_dimmed</item>-->
         <item name="gallery_ucrop_crop_frame_stroke_width">1dp</item>
         <item name="gallery_ucrop_image_grid_stroke_size">1dp</item>
     </style>
