@@ -22,6 +22,18 @@ public class MediaBean implements Parcelable {
     private long modifiedDate;
     //媒体类型
     private String mimeType;
+    //宽
+    private int width;
+    //高
+    private int height;
+    //纬度
+    private double latitude;
+    //经度
+    private double longitude;
+    //图片方向
+    private int orientation;
+    //文件大小
+    private long length;
 
     //文件夹相关
     private String bucketId;
@@ -45,6 +57,12 @@ public class MediaBean implements Parcelable {
         bucketDisplayName = in.readString();
         thumbnailBigPath = in.readString();
         thumbnailSmallPath = in.readString();
+        width = in.readInt();
+        height = in.readInt();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        orientation = in.readInt();
+        length = in.readLong();
     }
 
     @Override
@@ -59,6 +77,12 @@ public class MediaBean implements Parcelable {
         dest.writeString(bucketDisplayName);
         dest.writeString(thumbnailBigPath);
         dest.writeString(thumbnailSmallPath);
+        dest.writeInt(width);
+        dest.writeInt(height);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeInt(orientation);
+        dest.writeLong(length);
     }
 
     @Override
@@ -158,6 +182,54 @@ public class MediaBean implements Parcelable {
         this.thumbnailSmallPath = thumbnailSmallPath;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public int getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
+    public long getLength() {
+        return length;
+    }
+
+    public void setLength(long length) {
+        this.length = length;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == null || !(obj instanceof MediaBean)){
@@ -181,6 +253,12 @@ public class MediaBean implements Parcelable {
                 ", createDate=" + createDate +
                 ", modifiedDate=" + modifiedDate +
                 ", mimeType='" + mimeType + '\'' +
+                ", width=" + width +
+                ", height=" + height +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", orientation=" + orientation +
+                ", length=" + length +
                 ", bucketId='" + bucketId + '\'' +
                 ", bucketDisplayName='" + bucketDisplayName + '\'' +
                 ", thumbnailBigPath='" + thumbnailBigPath + '\'' +

@@ -3,11 +3,14 @@ package cn.finalteam.rxgalleryfinal.utils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,16 +40,23 @@ public class MediaUtils {
         int offset = (page -1) * limit;
         List<MediaBean> mediaBeanList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
-        String[] projection = new String[] {
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.TITLE,
-                MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media.BUCKET_ID,
-                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-                MediaStore.Images.Media.MIME_TYPE,
-                MediaStore.Images.Media.DATE_ADDED,//创建时间
-                MediaStore.Images.Media.DATE_MODIFIED//最后修改时间
-        };
+        List<String> projection = new ArrayList<>();
+        projection.add(MediaStore.Images.Media._ID);
+        projection.add(MediaStore.Images.Media.TITLE);
+        projection.add(MediaStore.Images.Media.DATA);
+        projection.add(MediaStore.Images.Media.BUCKET_ID);
+        projection.add(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        projection.add(MediaStore.Images.Media.MIME_TYPE);
+        projection.add(MediaStore.Images.Media.DATE_ADDED);
+        projection.add(MediaStore.Images.Media.DATE_MODIFIED);
+        projection.add(MediaStore.Images.Media.LATITUDE);
+        projection.add(MediaStore.Images.Media.LONGITUDE);
+        projection.add(MediaStore.Images.Media.ORIENTATION);
+        projection.add(MediaStore.Images.Media.SIZE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            projection.add(MediaStore.Images.Media.WIDTH);
+            projection.add(MediaStore.Images.Media.HEIGHT);
+        }
         String selection = null;
         String []selectionArgs = null;
         if(!TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
@@ -54,7 +64,7 @@ public class MediaUtils {
             selectionArgs = new String[]{bucketId};
         }
         Cursor cursor = contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, selection,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection.toArray(new String[projection.size()]), selection,
                 selectionArgs, MediaStore.Images.Media.DATE_ADDED +" DESC LIMIT " + limit +" OFFSET " + offset);
         if(cursor != null) {
             int count = cursor.getCount();
@@ -90,16 +100,22 @@ public class MediaUtils {
         int offset = (page -1) * limit;
         List<MediaBean> mediaBeanList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
-        String[] projection = new String[] {
-                MediaStore.Video.Media._ID,
-                MediaStore.Video.Media.TITLE,
-                MediaStore.Video.Media.DATA,
-                MediaStore.Video.Media.BUCKET_ID,
-                MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
-                MediaStore.Video.Media.MIME_TYPE,
-                MediaStore.Video.Media.DATE_ADDED,//创建时间
-                MediaStore.Video.Media.DATE_MODIFIED//最后修改时间
-        };
+        List<String> projection = new ArrayList<>();
+        projection.add(MediaStore.Video.Media._ID);
+        projection.add(MediaStore.Video.Media.TITLE);
+        projection.add(MediaStore.Video.Media.DATA);
+        projection.add(MediaStore.Video.Media.BUCKET_ID);
+        projection.add(MediaStore.Video.Media.BUCKET_DISPLAY_NAME);
+        projection.add(MediaStore.Video.Media.MIME_TYPE);
+        projection.add(MediaStore.Video.Media.DATE_ADDED);
+        projection.add(MediaStore.Video.Media.DATE_MODIFIED);
+        projection.add(MediaStore.Video.Media.LATITUDE);
+        projection.add(MediaStore.Video.Media.LONGITUDE);
+        projection.add(MediaStore.Video.Media.SIZE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            projection.add(MediaStore.Video.Media.WIDTH);
+            projection.add(MediaStore.Video.Media.HEIGHT);
+        }
         String selection = null;
         String []selectionArgs = null;
         if(!TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
@@ -108,7 +124,7 @@ public class MediaUtils {
         }
 
         Cursor cursor = contentResolver.query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, selection,
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection.toArray(new String[projection.size()]), selection,
                 selectionArgs, MediaStore.Video.Media.DATE_ADDED +" DESC LIMIT " + limit +" OFFSET " + offset);
         if(cursor != null) {
             int count = cursor.getCount();
@@ -136,18 +152,25 @@ public class MediaUtils {
      */
     public static MediaBean getMediaBeanWithImage(Context context, String originalPath) {
         ContentResolver contentResolver = context.getContentResolver();
-        String[] projection = new String[] {
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.TITLE,
-                MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media.BUCKET_ID,
-                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-                MediaStore.Images.Media.MIME_TYPE,
-                MediaStore.Images.Media.DATE_ADDED,//创建时间
-                MediaStore.Images.Media.DATE_MODIFIED//最后修改时间
-        };
+        List<String> projection = new ArrayList<>();
+        projection.add(MediaStore.Images.Media._ID);
+        projection.add(MediaStore.Images.Media.TITLE);
+        projection.add(MediaStore.Images.Media.DATA);
+        projection.add(MediaStore.Images.Media.BUCKET_ID);
+        projection.add(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        projection.add(MediaStore.Images.Media.MIME_TYPE);
+        projection.add(MediaStore.Images.Media.DATE_ADDED);
+        projection.add(MediaStore.Images.Media.DATE_MODIFIED);
+        projection.add(MediaStore.Images.Media.LATITUDE);
+        projection.add(MediaStore.Images.Media.LONGITUDE);
+        projection.add(MediaStore.Images.Media.ORIENTATION);
+        projection.add(MediaStore.Images.Media.SIZE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            projection.add(MediaStore.Images.Media.WIDTH);
+            projection.add(MediaStore.Images.Media.HEIGHT);
+        }
         Cursor cursor = contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Images.Media.DATA +"=?",
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection.toArray(new String[projection.size()]), MediaStore.Images.Media.DATA +"=?",
                 new String[]{originalPath}, null);
         MediaBean mediaBean = null;
         if(cursor != null && cursor.getCount() > 0) {
@@ -188,6 +211,30 @@ public class MediaUtils {
         mediaBean.setModifiedDate(modifiedDate);
         mediaBean.setThumbnailBigPath(createThumbnailBigFileName(context, originalPath).getAbsolutePath());
         mediaBean.setThumbnailSmallPath(createThumbnailSmallFileName(context, originalPath).getAbsolutePath());
+        int width = 0, height = 0;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            width = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.WIDTH));
+            height = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT));
+        } else {
+            try {
+                ExifInterface exifInterface = new ExifInterface(originalPath);
+                width = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0);
+                height = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0);
+            } catch (IOException e) {
+                Logger.e(e);
+            }
+        }
+        mediaBean.setWidth(width);
+        mediaBean.setHeight(height);
+        double latitude = cursor.getDouble(cursor.getColumnIndex(MediaStore.Images.Media.LATITUDE));
+        mediaBean.setLatitude(latitude);
+        double longitude = cursor.getDouble(cursor.getColumnIndex(MediaStore.Images.Media.LONGITUDE));
+        mediaBean.setLongitude(longitude);
+        int orientation = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.ORIENTATION));
+        mediaBean.setOrientation(orientation);
+        long length = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.SIZE));
+        mediaBean.setLength(length);
+
         return mediaBean;
     }
 
@@ -215,10 +262,33 @@ public class MediaUtils {
         mediaBean.setCreateDate(createDate);
         long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));
         mediaBean.setModifiedDate(modifiedDate);
+        long length = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.SIZE));
+        mediaBean.setLength(length);
 
         //创建缩略图文件
         mediaBean.setThumbnailBigPath(createThumbnailBigFileName(context, originalPath).getAbsolutePath());
         mediaBean.setThumbnailSmallPath(createThumbnailSmallFileName(context, originalPath).getAbsolutePath());
+
+        int width = 0, height = 0;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            width = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.WIDTH));
+            height = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.HEIGHT));
+        } else {
+            try {
+                ExifInterface exifInterface = new ExifInterface(originalPath);
+                width = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0);
+                height = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0);
+            } catch (IOException e) {
+                Logger.e(e);
+            }
+        }
+        mediaBean.setWidth(width);
+        mediaBean.setHeight(height);
+
+        double latitude = cursor.getDouble(cursor.getColumnIndex(MediaStore.Video.Media.LATITUDE));
+        mediaBean.setLatitude(latitude);
+        double longitude = cursor.getDouble(cursor.getColumnIndex(MediaStore.Video.Media.LONGITUDE));
+        mediaBean.setLongitude(longitude);
         return mediaBean;
     }
 
