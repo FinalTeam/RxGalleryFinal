@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,11 +87,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 Job job = new ImageThmbnailJobCreate(mContext, mediaBean).create();
                 RxJob.getDefault().addJob(job);
             }
-            String path;
+            String path = mediaBean.getThumbnailSmallPath();
+            if(TextUtils.isEmpty(path)) {
+                path = mediaBean.getThumbnailBigPath();
+            }
+            if(TextUtils.isEmpty(path)) {
                 path = mediaBean.getOriginalPath();
-
-
-
+            }
             mConfiguration.getImageLoader()
                     .displayImage(mContext, path, holder.mIvMediaImage, mDefaultImage, mImageSize, mImageSize);
         }

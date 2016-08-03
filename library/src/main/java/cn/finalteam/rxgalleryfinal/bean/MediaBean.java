@@ -3,6 +3,8 @@ package cn.finalteam.rxgalleryfinal.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.File;
+
 /**
  * Desction:Media Bean
  * Author:pengjianbo
@@ -167,7 +169,10 @@ public class MediaBean implements Parcelable {
     }
 
     public String getThumbnailBigPath() {
-        return thumbnailBigPath;
+        if(new File(thumbnailBigPath).exists()) {
+            return thumbnailBigPath;
+        }
+        return "";
     }
 
     public void setThumbnailBigPath(String thumbnailBigPath) {
@@ -175,7 +180,10 @@ public class MediaBean implements Parcelable {
     }
 
     public String getThumbnailSmallPath() {
-        return thumbnailSmallPath;
+        if(new File(thumbnailSmallPath).exists()) {
+            return thumbnailSmallPath;
+        }
+        return "";
     }
 
     public void setThumbnailSmallPath(String thumbnailSmallPath) {
