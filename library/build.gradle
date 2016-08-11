@@ -33,8 +33,6 @@ android {
 }
 
 dependencies {
-    apt 'com.google.dagger:dagger-compiler:2.6'
-    compile 'com.google.dagger:dagger:2.6'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'io.reactivex:rxandroid:1.2.1'

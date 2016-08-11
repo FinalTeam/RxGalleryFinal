@@ -12,6 +12,12 @@
     <attr name="gallery_toolbar_text_color" format="color"/>
     <!--标题栏字体大小-->
     <attr name="gallery_toolbar_text_size" format="dimension"/>
+    <!--标题栏分割线高度-->
+    <attr name="gallery_toolbar_divider_height" format="dimension"/>
+    <!--标题栏分割线背景-->
+    <attr name="gallery_toolbar_divider_bg" format="reference|color"/>
+    <!--标题栏bottomMargin-->
+    <attr name="gallery_toolbar_bottom_margin" format="reference|dimension"/>
     <!--标题栏对齐方式-->
     <attr name="gallery_toolbar_text_gravity">
         <!-- Push object to the top of its container, not changing its size. -->

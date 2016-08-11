@@ -9,6 +9,9 @@
     <dimen name="gallery_default_toolbar_over_button_text_size">12sp</dimen>
     <color name="gallery_default_toolbar_over_button_text_color">#ffffff</color>
     <dimen name="gallery_default_toolbar_text_size">@dimen/abc_text_size_title_material_toolbar</dimen>
+    <dimen name="gallery_default_toolbar_divider_height">0.3dp</dimen>
+    <dimen name="gallery_default_toolbar_bottom_margin">1dp</dimen>
+    <color name="gallery_default_toolbar_divider_bg">#151515</color>
     <color name="gallery_default_toolbar_text_color">#ffffff</color>
     <color name="gallery_default_color_toolbar_text">#fff</color>
     <color name="gallery_default_color_toolbar_icon">#fff</color>

@@ -2,6 +2,10 @@
 <resources>
 
     <!-- Theme Colors -->
+    <color name="theme_white_primary">#FFFFFF</color>
+    <color name="theme_white_dark">#FFFFFF</color>
+    <color name="theme_white_accent">#000000</color>
+
     <color name="theme_blue_primary">#2196F3</color>
     <color name="theme_blue_dark">#1976D2</color>
     <color name="theme_blue_accent">#FF4081</color>

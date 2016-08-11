@@ -454,7 +454,7 @@ public class OverlayView extends View {
     @SuppressWarnings("deprecation")
     private void initCropFrameStyle(@NonNull TypedArray a) {
         int cropFrameStrokeSize = a.getDimensionPixelSize(R.styleable.gallery_ucrop_UCropView_gallery_ucrop_frame_stroke_size,
-                getResources().getDimensionPixelSize(R.dimen.gallery_ucrop_default_crop_frame_stoke_width));
+                getResources().getDimensionPixelSize(R.dimen.gallery_ucrop_default_crop_frame_stroke_width));
         int cropFrameColor = a.getColor(R.styleable.gallery_ucrop_UCropView_gallery_ucrop_frame_color,
                 getResources().getColor(R.color.gallery_default_ucrop_color_default_crop_frame));
         mCropFramePaint.setStrokeWidth(cropFrameStrokeSize);
@@ -472,7 +472,7 @@ public class OverlayView extends View {
     @SuppressWarnings("deprecation")
     private void initCropGridStyle(@NonNull TypedArray a) {
         int cropGridStrokeSize = a.getDimensionPixelSize(R.styleable.gallery_ucrop_UCropView_gallery_ucrop_grid_stroke_size,
-                getResources().getDimensionPixelSize(R.dimen.gallery_ucrop_default_crop_grid_stoke_width));
+                getResources().getDimensionPixelSize(R.dimen.gallery_ucrop_default_crop_grid_stroke_width));
         int cropGridColor = a.getColor(R.styleable.gallery_ucrop_UCropView_gallery_ucrop_grid_color,
                 getResources().getColor(R.color.gallery_default_ucrop_color_default_crop_grid));
         mCropGridPaint.setStrokeWidth(cropGridStrokeSize);

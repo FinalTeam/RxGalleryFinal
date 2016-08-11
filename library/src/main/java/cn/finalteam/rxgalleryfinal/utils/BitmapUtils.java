@@ -188,6 +188,9 @@ public class BitmapUtils {
                 return;
             }
             String extension = FilenameUtils.getExtension(originalPath);
+
+            targetFile.getParentFile().mkdirs();
+
             fileOutputStream = new FileOutputStream(targetFile);
             if (rotate != 0) {
                 Matrix matrix = new Matrix();

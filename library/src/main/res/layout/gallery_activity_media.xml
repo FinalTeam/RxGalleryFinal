@@ -26,6 +26,11 @@
             android:layout_margin="8dp"/>
     </android.support.v7.widget.Toolbar>
 
+    <View
+        android:id="@+id/toolbar_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"

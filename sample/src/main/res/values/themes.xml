@@ -5,34 +5,21 @@
         <!--<item name="gallery_ucrop_title_text">@string/gallery_ucrop_menu_crop</item>-->
     </style>
 
+    <style name="Theme_Light.Default"/>
+
+    <style name="Theme_Light.White">
+        <item name="gallery_toolbar_bg">@color/theme_white_primary</item>
+        <item name="gallery_toolbar_close_color">#000000</item>
+        <item name="gallery_toolbar_widget_color">#000000</item>
+        <item name="gallery_toolbar_text_color">#000000</item>
+        <item name="gallery_page_bg">#FFFFFF</item>
+    </style>
+
     <style name="Theme_Light.Blue">
         <item name="colorPrimary">@color/theme_blue_primary</item>
         <item name="colorPrimaryDark">@color/theme_blue_dark</item>
         <item name="colorAccent">@color/theme_blue_accent</item>
         <item name="colorButtonNormal">@color/theme_blue_accent</item>
-        <!--<item name="gallery_toolbar_bg">@color/theme_blue_primary</item>-->
-        <!--<item name="gallery_toolbar_close_image">@drawable/ucrop_ic_cross</item>-->
-        <!--<item name="gallery_toolbar_close_color">@android:color/white</item>-->
-        <item name="gallery_toolbar_widget_color">@android:color/white</item>
-        <!--<item name="gallery_toolbar_text_color">@android:color/white</item>-->
-        <!--<item name="gallery_toolbar_text_size">@dimen/abc_text_size_title_material_toolbar</item>-->
-
-        <!--<item name="gallery_toolbar_over_button_pressed_color">#fb3478</item>-->
-        <!--<item name="gallery_toolbar_over_button_normal_color">@color/theme_blue_accent</item>-->
-        <!--<item name="gallery_toolbar_over_button_bg"></item>-->
-        <!--<item name="gallery_color_statusbar">@color/theme_blue_dark</item>-->
-        <!--<item name="gallery_color_active_widget">@color/theme_blue_primary</item>-->
-        <!--<item name="gallery_toolbar_over_button_text_size">12sp</item>-->
-        <!--<item name="gallery_toolbar_over_button_text_color">@android:color/white</item>-->
-        <!--<item name="gallery_checkbox_button_tint_color">#ff00ff</item>-->
-        <!--<item name="gallery_default_image">@drawable/gallery_default_image</item>-->
-
-        <!--uCrop-->
-        <!--<item name="gallery_ucrop_color_crop_background">@color/gallery_default_ucrop_color_crop_background</item>-->
-        <!--<item name="gallery_ucrop_vector_ic_crop">@drawable/gallery_ucrop_vector_ic_crop</item>-->
-        <!--<item name="gallery_ucrop_image_outer_frame_bg">@color/gallery_default_ucrop_color_default_dimmed</item>-->
-        <item name="gallery_ucrop_crop_frame_stroke_width">1dp</item>
-        <item name="gallery_ucrop_image_grid_stroke_size">1dp</item>
     </style>
 
     <style name="Theme_Light.Orange">
