@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
-import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
+import cn.finalteam.rxgalleryfinal.BuildConfig;
+import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 
 /**
@@ -20,6 +20,13 @@ import cn.finalteam.rxgalleryfinal.utils.Logger;
 public abstract class BaseFragment extends Fragment {
 
     private final String CLASS_NAME = getClass().getSimpleName();
+    public static final String EXTRA_PREFIX = BuildConfig.APPLICATION_ID;
+    public static final String EXTRA_CONFIGURATION = EXTRA_PREFIX +".Configuration";
+
+    protected Bundle mSaveDataBundle;
+    protected String BUNDLE_KEY = "KEY_" + CLASS_NAME;
+
+    protected Configuration mConfiguration;
 
     @Override
     public void onAttach(Context context) {
@@ -36,9 +43,32 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupComponent(RxGalleryFinal.getRxGalleryFinalComponent());
         printFragmentLife("onViewCreated");
+
+        Bundle argsBundle = getArguments();
+
+        if(savedInstanceState != null){
+            mConfiguration = savedInstanceState.getParcelable(EXTRA_CONFIGURATION);
+        }
+        if(mConfiguration == null && argsBundle != null) {
+            mConfiguration = argsBundle.getParcelable(EXTRA_CONFIGURATION);
+        }
+
+        if(mConfiguration != null){
+            if(argsBundle == null){
+                argsBundle = savedInstanceState;
+            }
+            onViewCreatedOk(view, argsBundle);
+            setTheme();
+        } else {
+            if(getActivity() != null && !getActivity().isFinishing()) {
+                getActivity().finish();
+            }
+        }
     }
+
+    public abstract void onViewCreatedOk(View view, @Nullable Bundle savedInstanceState);
+
 
     @Nullable
     @Override
@@ -48,16 +78,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        printFragmentLife("onActivityCreated");
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         printFragmentLife("onStart");
-        setTheme();
     }
 
     @Override
@@ -76,6 +99,7 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         printFragmentLife("onDestroyView");
+        saveStateToArguments();
     }
 
     @Override
@@ -92,13 +116,80 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract int getContentView();
 
-    protected abstract void setupComponent(RxGalleryFinalComponent rxGalleryFinalComponent);
-
     public void setTheme(){}
-
 
     private void printFragmentLife(String method){
         Logger.i(String.format("Fragment:%s Method:%s", CLASS_NAME, method));
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        printFragmentLife("onActivityCreated");
+        if (!restoreStateFromArguments()) {
+            onFirstTimeLaunched();
+        }
+    }
+
+    protected abstract void onFirstTimeLaunched();
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        printFragmentLife("onSaveInstanceState");
+        saveStateToArguments();
+    }
+
+    private void saveStateToArguments() {
+        if (getView() != null) {
+            mSaveDataBundle = saveState();
+        }
+
+        if (mSaveDataBundle != null) {
+            Bundle b = getArguments();
+            if(b != null) {
+                b.putBundle(BUNDLE_KEY, mSaveDataBundle);
+            }
+        }
+    }
+
+    private boolean restoreStateFromArguments() {
+        Bundle b = getArguments();
+        if(b != null) {
+            mSaveDataBundle = b.getBundle(BUNDLE_KEY);
+            if (mSaveDataBundle != null) {
+                restoreState();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Restore Instance State Here
+     */
+    private void restoreState() {
+        if (mSaveDataBundle != null) {
+            mConfiguration = mSaveDataBundle.getParcelable(EXTRA_CONFIGURATION);
+            onRestoreState(mSaveDataBundle);
+        }
+    }
+
+    /**
+     * 恢复数据
+     * @param savedInstanceState
+     */
+    protected abstract void onRestoreState(Bundle savedInstanceState);
+
+    /**
+     * Save Instance State Here
+     */
+    private Bundle saveState() {
+        Bundle state = new Bundle();
+        state.putParcelable(EXTRA_CONFIGURATION, mConfiguration);
+        onSaveState(state);
+        return state;
+    }
+
+    protected abstract void onSaveState(Bundle outState);
 }

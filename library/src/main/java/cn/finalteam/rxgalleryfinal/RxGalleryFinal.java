@@ -2,6 +2,7 @@ package cn.finalteam.rxgalleryfinal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
@@ -13,9 +14,7 @@ import com.yalantis.ucrop.model.AspectRatio;
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import cn.finalteam.rxgalleryfinal.di.component.DaggerRxGalleryFinalComponent;
-import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
-import cn.finalteam.rxgalleryfinal.di.module.RxGalleryFinalModule;
+import cn.finalteam.rxgalleryfinal.exception.UnknownImageLoaderTypeException;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
@@ -34,12 +33,11 @@ import rx.Subscription;
  */
 public class RxGalleryFinal {
 
-    private RxGalleryFinalComponent mRxGalleryFinalComponent;
-
     private RxGalleryFinal(){}
 
     Configuration configuration = new Configuration();
     static RxGalleryFinal instance;
+    RxBusResultSubscriber<BaseResultEvent> rxBusResultSubscriber;
 
     public static RxGalleryFinal with(@NonNull Context context) {
         instance = new RxGalleryFinal();
@@ -58,7 +56,7 @@ public class RxGalleryFinal {
     }
 
     public RxGalleryFinal filterMime(MediaType ...mediaTypes) {
-        configuration.setFilterMimes(mediaTypes);
+//        configuration.setFilterMimes(mediaTypes);
         return this;
     }
 
@@ -88,12 +86,11 @@ public class RxGalleryFinal {
     }
 
     public RxGalleryFinal imageLoader(@NonNull ImageLoaderType imageLoaderType) {
-        configuration.setImageLoaderType(imageLoaderType);
-        return this;
-    }
-
-    public RxGalleryFinal pauseOnScrollListener(PauseOnScrollListener pauseOnScrollListener) {
-        configuration.setPauseOnScrollListener(pauseOnScrollListener);
+        int type = 0;
+        if(imageLoaderType == ImageLoaderType.PICASSO){
+            type = 1;
+        }
+        configuration.setImageLoaderType(type);
         return this;
     }
 
@@ -203,14 +200,25 @@ public class RxGalleryFinal {
     }
 
     /**
+     * 设置裁剪结果最大宽度和高度
+     * @param width
+     * @param height
+     */
+    public RxGalleryFinal cropMaxResultSize(@IntRange(from = 100) int width, @IntRange(from = 100) int height) {
+        configuration.setMaxResultSize(width, height);
+        return this;
+    }
+
+    /**
      * 设置回调
      * @param rxBusResultSubscriber
      * @return
      */
     public RxGalleryFinal subscribe(@NonNull RxBusResultSubscriber<? extends BaseResultEvent> rxBusResultSubscriber) {
-        configuration.setResultSubscriber((RxBusResultSubscriber<BaseResultEvent>) rxBusResultSubscriber);
+        this.rxBusResultSubscriber = (RxBusResultSubscriber<BaseResultEvent>) rxBusResultSubscriber;
         return this;
     }
+
 
     public void openGallery(){
         execute();
@@ -226,33 +234,32 @@ public class RxGalleryFinal {
             return;
         }
 
-        mRxGalleryFinalComponent = DaggerRxGalleryFinalComponent.builder()
-                .rxGalleryFinalModule(new RxGalleryFinalModule(configuration))
-                .build();
+        if(configuration.getImageLoader() == null) {
+            throw new UnknownImageLoaderTypeException();
+        }
 
-        mRxGalleryFinalComponent.inject(this);
+        if(rxBusResultSubscriber == null){
+            return;
+        }
+
         Subscription subscription;
         if(configuration.isRadio()) {
             subscription = RxBus.getDefault()
                     .toObservable(ImageRadioResultEvent.class)
-                    .subscribe(configuration.getResultSubscriber());
+                    .subscribe(rxBusResultSubscriber);
         } else {
             subscription = RxBus.getDefault()
                     .toObservable(ImageMultipleResultEvent.class)
-                    .subscribe(configuration.getResultSubscriber());
+                    .subscribe(rxBusResultSubscriber);
         }
         RxBus.getDefault().add(subscription);
 
         Intent intent = new Intent(context, MediaActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(MediaActivity.EXTRA_CONFIGURATION, configuration);
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
-
-    public static RxGalleryFinalComponent getRxGalleryFinalComponent() {
-        if(instance == null) {
-            return null;
-        }
-        return instance.mRxGalleryFinalComponent;
-    }
 }

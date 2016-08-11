@@ -1,5 +1,9 @@
 package cn.finalteam.rxgalleryfinal.view;
 
+import java.util.ArrayList;
+
+import cn.finalteam.rxgalleryfinal.bean.MediaBean;
+
 /**
  * Desction:
  * Author:pengjianbo
@@ -8,6 +12,6 @@ package cn.finalteam.rxgalleryfinal.view;
 public interface ActivityFragmentView {
 
     void showMediaGridFragment();
-    void showMediaPageFragment();
+    void showMediaPageFragment(ArrayList<MediaBean> list, int position);
     void showMediaPreviewFragment();
 }

@@ -17,7 +17,8 @@ import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 public class PicassoImageLoader implements AbsImageLoader {
 
     @Override
-    public void displayImage(Object context, String path, FixImageView imageView, Drawable defaultDrawable, int width, int height) {
+    public void displayImage(Object context, String path, FixImageView imageView,
+                             Drawable defaultDrawable, int width, int height) {
         Context ctx = (Context) context;
         Picasso.with(ctx)
                 .load(new File(path))

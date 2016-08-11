@@ -15,25 +15,19 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import cn.finalteam.rxgalleryfinal.di.component.BaseComponent;
-import cn.finalteam.rxgalleryfinal.di.component.DaggerBaseComponent;
-import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
-import cn.finalteam.rxgalleryfinal.di.module.BaseModule;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaViewPagerChangedEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.SendMediaPageFragmentDataEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaPreviewAdapter;
+import cn.finalteam.rxgalleryfinal.utils.DeviceUtils;
+import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
-import rx.Subscription;
 
 /**
  * Desction:
@@ -43,15 +37,15 @@ import rx.Subscription;
 public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageChangeListener,
         View.OnClickListener{
 
-    @Inject
-    Configuration mConfiguration;
-    @Inject
+    private static final String EXTRA_MEDIA_LIST = EXTRA_PREFIX + ".MediaList";
+    private static final String EXTRA_ITEM_CLICK_POSITION = EXTRA_PREFIX +".ItemClickPosition";
+
     DisplayMetrics mScreenSize;
 
     private AppCompatCheckBox mCbCheck;
     private ViewPager mViewPager;
     private MediaPreviewAdapter mMediaPreviewAdapter;
-    private List<MediaBean> mMediaBeanList;
+    private ArrayList<MediaBean> mMediaBeanList;
     private RelativeLayout mRlRootView;
 
     private MediaActivity mMediaActivity;
@@ -65,8 +59,14 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
         }
     }
 
-    public static MediaPageFragment newInstance(){
-        return new MediaPageFragment();
+    public static MediaPageFragment newInstance(Configuration configuration, ArrayList<MediaBean> list, int position){
+        MediaPageFragment fragment = new MediaPageFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_CONFIGURATION, configuration);
+        bundle.putParcelableArrayList(EXTRA_MEDIA_LIST, list);
+        bundle.putInt(EXTRA_ITEM_CLICK_POSITION, position);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -75,57 +75,43 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
     }
 
     @Override
-    protected void setupComponent(RxGalleryFinalComponent rxGalleryFinalComponent) {
-        BaseComponent baseComponent = DaggerBaseComponent.builder()
-                .rxGalleryFinalComponent(rxGalleryFinalComponent)
-                .baseModule(new BaseModule())
-                .build();
-        baseComponent.inject(this);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreatedOk(View view, @Nullable Bundle savedInstanceState) {
         mCbCheck = (AppCompatCheckBox) view.findViewById(R.id.cb_page_check);
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager_page);
         mRlRootView = (RelativeLayout) view.findViewById(R.id.rl_page_root_view);
+        mScreenSize = DeviceUtils.getScreenSize(getContext());
 
         mMediaBeanList = new ArrayList<>();
+        if(savedInstanceState != null){
+            List<MediaBean> mediaList = savedInstanceState.getParcelableArrayList(EXTRA_MEDIA_LIST);
+            mItemClickPosition = savedInstanceState.getInt(EXTRA_ITEM_CLICK_POSITION);
+
+            if(mediaList != null) {
+                mMediaBeanList.addAll(mediaList);
+            }
+        }
         mMediaPreviewAdapter = new MediaPreviewAdapter(getContext(), mMediaBeanList,
                 mScreenSize.widthPixels, mScreenSize.heightPixels, mConfiguration);
         mViewPager.setAdapter(mMediaPreviewAdapter);
         mCbCheck.setOnClickListener(this);
-        subscribeEvent();
-
-    }
-
-    private void subscribeEvent() {
-        Subscription subscriptionSendMediaPageFragmentDataEvent = RxBus.getDefault().toObservableSticky(SendMediaPageFragmentDataEvent.class)
-                .subscribe(new RxBusSubscriber<SendMediaPageFragmentDataEvent>() {
-                    @Override
-                    protected void onEvent(SendMediaPageFragmentDataEvent sendMediaPageFragmentDataEvent) {
-                        mMediaBeanList.clear();
-                        mItemClickPosition = sendMediaPageFragmentDataEvent.getPosition();
-                        mMediaBeanList.addAll(sendMediaPageFragmentDataEvent.getMediaBeanList());
-                        mMediaPreviewAdapter.notifyDataSetChanged();
-                        RxBus.getDefault().post(new MediaViewPagerChangedEvent(mItemClickPosition, mMediaBeanList.size(), false));
-                    }
-                });
-        RxBus.getDefault().add(subscriptionSendMediaPageFragmentDataEvent);
+        mViewPager.setCurrentItem(mItemClickPosition);
+        mViewPager.addOnPageChangeListener(this);
     }
 
 
     @Override
     public void onStart() {
         super.onStart();
+        if(mConfiguration == null || mMediaBeanList.size() == 0
+                || mCbCheck == null || mViewPager == null) {
+            return;
+        }
         MediaBean mediaBean = mMediaBeanList.get(mItemClickPosition);
         if(mMediaActivity != null && mMediaActivity.getCheckedList() != null){
             if(mMediaActivity.getCheckedList().contains(mediaBean)) {
                 mCbCheck.setChecked(true);
             }
         }
-        mViewPager.setCurrentItem(mItemClickPosition, false);
-        mViewPager.addOnPageChangeListener(this);
     }
 
     @Override
@@ -141,12 +127,47 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
     }
 
     @Override
+    protected void onFirstTimeLaunched() {
+
+    }
+
+    @Override
+    protected void onRestoreState(Bundle savedInstanceState) {
+        if(savedInstanceState==null){
+            return;
+        }
+
+        List<MediaBean> mediaList = savedInstanceState.getParcelableArrayList(EXTRA_MEDIA_LIST);
+        mItemClickPosition = savedInstanceState.getInt(EXTRA_ITEM_CLICK_POSITION);
+
+        if(mediaList != null) {
+            mMediaBeanList.clear();
+            Logger.i("恢复数据:" + mediaList.size() +"  d=" + mediaList.get(0).getOriginalPath());
+            mMediaBeanList.addAll(mediaList);
+        } else{
+            Logger.i("恢复数据: null");
+        }
+        mViewPager.setCurrentItem(mItemClickPosition);
+        mMediaPreviewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onSaveState(Bundle outState) {
+        if(outState==null){
+            return;
+        }
+        outState.putParcelableArrayList(EXTRA_MEDIA_LIST, mMediaBeanList);
+        outState.putInt(EXTRA_ITEM_CLICK_POSITION, mItemClickPosition);
+    }
+
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
 
     @Override
     public void onPageSelected(int position) {
         mItemClickPosition = position;
+
         MediaBean mediaBean = mMediaBeanList.get(position);
         //判断是否选择
         if(mMediaActivity != null && mMediaActivity.getCheckedList() != null){
@@ -168,6 +189,10 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
      */
     @Override
     public void onClick(View view) {
+        if(mMediaBeanList.size() == 0){
+            return;
+        }
+
         int position = mViewPager.getCurrentItem();
         MediaBean mediaBean = mMediaBeanList.get(position);
         if(mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size()
@@ -184,7 +209,7 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
     public void onDestroyView() {
         super.onDestroyView();
         mItemClickPosition = 0;
-        RxBus.getDefault().removeStickyEvent(SendMediaPageFragmentDataEvent.class);
+        RxBus.getDefault().removeStickyEvent(OpenMediaPageFragmentEvent.class);
         RxBus.getDefault().post(new CloseMediaViewPageFragmentEvent());
     }
 }

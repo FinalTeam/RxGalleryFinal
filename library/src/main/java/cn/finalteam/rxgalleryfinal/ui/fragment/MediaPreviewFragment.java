@@ -15,21 +15,16 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import cn.finalteam.rxgalleryfinal.di.component.BaseComponent;
-import cn.finalteam.rxgalleryfinal.di.component.DaggerBaseComponent;
-import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
-import cn.finalteam.rxgalleryfinal.di.module.BaseModule;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaViewPagerChangedEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaPreviewAdapter;
+import cn.finalteam.rxgalleryfinal.utils.DeviceUtils;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
@@ -40,9 +35,8 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPageChangeListener,
         View.OnClickListener{
 
-    @Inject
-    Configuration mConfiguration;
-    @Inject
+    private static final String EXTRA_PAGE_INDEX = EXTRA_PREFIX + ".PageIndex";
+
     DisplayMetrics mScreenSize;
 
     private AppCompatCheckBox mCbCheck;
@@ -62,8 +56,13 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         }
     }
 
-    public static MediaPreviewFragment newInstance(){
-        return new MediaPreviewFragment();
+    public static MediaPreviewFragment newInstance(Configuration configuration, int position){
+        MediaPreviewFragment fragment = new MediaPreviewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_CONFIGURATION, configuration);
+        bundle.putInt(EXTRA_PAGE_INDEX, position);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -71,21 +70,13 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         return R.layout.gallery_fragment_media_preview;
     }
 
-    @Override
-    protected void setupComponent(RxGalleryFinalComponent rxGalleryFinalComponent) {
-        BaseComponent baseComponent = DaggerBaseComponent.builder()
-                .rxGalleryFinalComponent(rxGalleryFinalComponent)
-                .baseModule(new BaseModule())
-                .build();
-        baseComponent.inject(this);
-    }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreatedOk(View view, @Nullable Bundle savedInstanceState) {
         mCbCheck = (AppCompatCheckBox) view.findViewById(R.id.cb_check);
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mRlRootView = (RelativeLayout) view.findViewById(R.id.rl_root_view);
+        mScreenSize = DeviceUtils.getScreenSize(getContext());
         mMediaBeanList = new ArrayList<>();
         if(mMediaActivity.getCheckedList() != null){
             mMediaBeanList.addAll(mMediaActivity.getCheckedList());
@@ -94,7 +85,10 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
                 mScreenSize.widthPixels, mScreenSize.heightPixels, mConfiguration);
         mViewPager.setAdapter(mMediaPreviewAdapter);
         mCbCheck.setOnClickListener(this);
-        mPagerPosition = 0;
+
+        if(savedInstanceState != null) {
+            mPagerPosition = savedInstanceState.getInt(EXTRA_PAGE_INDEX);
+        }
     }
 
     @Override
@@ -114,6 +108,25 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
 
         int pageColor = ThemeUtils.resolveColor(getContext(), R.attr.gallery_page_bg, R.color.gallery_default_page_bg);
         mRlRootView.setBackgroundColor(pageColor);
+    }
+
+    @Override
+    protected void onFirstTimeLaunched() {
+
+    }
+
+    @Override
+    protected void onRestoreState(Bundle savedInstanceState) {
+        if(savedInstanceState != null){
+            mPagerPosition = savedInstanceState.getInt(EXTRA_PAGE_INDEX);
+        }
+    }
+
+    @Override
+    protected void onSaveState(Bundle outState) {
+        if(outState != null){
+            outState.putInt(EXTRA_PAGE_INDEX, mPagerPosition);
+        }
     }
 
     @Override

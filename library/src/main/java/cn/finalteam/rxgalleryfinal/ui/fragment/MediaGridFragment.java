@@ -3,7 +3,6 @@ package cn.finalteam.rxgalleryfinal.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,7 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.UCropActivity;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -29,31 +28,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
-
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
-import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.anim.Animation;
 import cn.finalteam.rxgalleryfinal.anim.SlideInUnderneathAnimation;
 import cn.finalteam.rxgalleryfinal.anim.SlideOutUnderneathAnimation;
 import cn.finalteam.rxgalleryfinal.bean.BucketBean;
 import cn.finalteam.rxgalleryfinal.bean.ImageCropBean;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import cn.finalteam.rxgalleryfinal.di.component.DaggerMediaGridComponent;
-import cn.finalteam.rxgalleryfinal.di.component.MediaGridComponent;
-import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
-import cn.finalteam.rxgalleryfinal.di.module.MediaGridModule;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.RequestStorageReadAccessPermissionEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.SendMediaPageFragmentDataEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.adapter.BucketAdapter;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaGridAdapter;
@@ -62,8 +53,8 @@ import cn.finalteam.rxgalleryfinal.ui.widget.HorizontalDividerItemDecoration;
 import cn.finalteam.rxgalleryfinal.ui.widget.MarginDecoration;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerViewFinal;
 import cn.finalteam.rxgalleryfinal.utils.CameraUtils;
+import cn.finalteam.rxgalleryfinal.utils.DeviceUtils;
 import cn.finalteam.rxgalleryfinal.utils.EmptyViewUtils;
-import cn.finalteam.rxgalleryfinal.utils.FilenameUtils;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
 import cn.finalteam.rxgalleryfinal.utils.MediaUtils;
@@ -86,17 +77,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     private final String IMAGE_STORE_FILE_NAME = "IMG_%s.jpg";
     private final int TAKE_IMAGE_REQUEST_CODE = 1001;
-
     private final String TAKE_URL_STORAGE_KEY = "take_url_storage_key";
     private final String BUCKET_ID_KEY = "bucket_id_key";
 
     private final int LIMIT = 23;
 
-    @Inject
     MediaGridPresenterImpl mMediaGridPresenter;
-    @Inject
-    Configuration mConfiguration;
-    @Inject
     DisplayMetrics mScreenSize;
 
     private List<MediaBean> mMediaBeanList;
@@ -125,8 +111,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private Subscription mSubscrCloseMediaViewPageFragmentEvent;
     private Subscription mSubscrRequestStorageReadAccessPermissionEvent;
 
-    public static MediaGridFragment newInstance() {
-        return new MediaGridFragment();
+    public static MediaGridFragment newInstance(Configuration configuration) {
+        MediaGridFragment fragment = new MediaGridFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_CONFIGURATION, configuration);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -149,9 +139,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    public void onViewCreatedOk(View view, @Nullable Bundle savedInstanceState) {
         mRvMedia = (RecyclerViewFinal) view.findViewById(R.id.rv_media);
         mLlEmptyView = (LinearLayout) view.findViewById(R.id.ll_empty_view);
         mRvBucket = (RecyclerView) view.findViewById(R.id.rv_bucket);
@@ -166,11 +154,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia.setOnLoadMoreListener(this);
         mRvMedia.setFooterViewHide(true);
 
-        if(mConfiguration.getPauseOnScrollListener() != null) {
-            mRvMedia.addOnScrollListener(mConfiguration.getPauseOnScrollListener());
-            mRvBucket.addOnScrollListener(mConfiguration.getPauseOnScrollListener());
-        }
-
         mTvFolderName = (TextView) view.findViewById(R.id.tv_folder_name);
         mTvFolderName.setOnClickListener(this);
         mTvPreview = (TextView) view.findViewById(R.id.tv_preview);
@@ -182,10 +165,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
 
         mMediaBeanList = new ArrayList<>();
-        mMediaGridAdapter = new MediaGridAdapter(getContext(), mMediaBeanList, mMediaActivity.getCheckedList(),
+        mScreenSize = DeviceUtils.getScreenSize(getContext());
+        mMediaGridAdapter = new MediaGridAdapter(mMediaActivity, mMediaBeanList,
                 mScreenSize.widthPixels, mConfiguration);
         mRvMedia.setAdapter(mMediaGridAdapter);
-
+        mMediaGridPresenter = new MediaGridPresenterImpl(getContext(), mConfiguration.isImage());
         mMediaGridPresenter.setMediaGridView(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -264,6 +248,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         RxBus.getDefault().add(mSubscrRequestStorageReadAccessPermissionEvent);
 
     }
+
     @Override
     public void setTheme() {
         super.setTheme();
@@ -272,12 +257,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     @Override
-    protected void setupComponent(RxGalleryFinalComponent rxGalleryFinalComponent) {
-        MediaGridComponent mediaGridComponent = DaggerMediaGridComponent.builder()
-                .rxGalleryFinalComponent(RxGalleryFinal.getRxGalleryFinalComponent())
-                .mediaGridModule(new MediaGridModule(getContext(), true))
-                .build();
-        mediaGridComponent.inject(this);
+    protected void onFirstTimeLaunched() {
+
     }
 
     @Override
@@ -370,64 +351,29 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                     RxBus.getDefault().post(new ImageRadioResultEvent(bean));
                     getActivity().finish();
                 } else {
-                    String ext = FilenameUtils.getExtension(mediaBean.getOriginalPath());
-                    Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-                    if (ext != null && TextUtils.equals(ext.toLowerCase(), "png")) {
-                        format = Bitmap.CompressFormat.PNG;
-                    } else if (ext != null && TextUtils.equals(ext.toLowerCase(), "webp")) {
-                        format = Bitmap.CompressFormat.WEBP;
-                    }
-                    try {
-                        String originalPath = mediaBean.getOriginalPath();
-                        File file = new File(originalPath);
-                        UCrop uCrop = UCrop.of(mediaBean, Uri.fromFile(new File(mImageStoreCropDir, file.getName())));
-                        uCrop = uCrop.useSourceImageAspectRatio();
-                        UCrop.Options options = new UCrop.Options();
-                        options.setHideBottomControls(mConfiguration.isHideBottomControls());
-                        options.setCompressionFormat(format);
-                        if (mConfiguration.getCompressionQuality() != 0) {
-                            options.setCompressionQuality(mConfiguration.getCompressionQuality());
-                        }
-
-                        if (mConfiguration.getMaxBitmapSize() != 0) {
-                            options.setMaxBitmapSize(mConfiguration.getMaxBitmapSize());
-                        }
-
-                        int[] gestures = mConfiguration.getAllowedGestures();
-                        if (gestures != null && gestures.length == 3) {
-                            options.setAllowedGestures(gestures[0], gestures[1], gestures[2]);
-                        }
-                        if (mConfiguration.getMaxScaleMultiplier() != 0) {
-                            options.setMaxScaleMultiplier(mConfiguration.getMaxScaleMultiplier());
-                        }
-                        //设置等比缩放
-                        if (mConfiguration.getAspectRatioX() != 0 && mConfiguration.getAspectRatioY() != 0) {
-                            options.withAspectRatio(mConfiguration.getAspectRatioX(), mConfiguration.getAspectRatioY());
-                        }
-                        //设置等比缩放默认值索引及等比缩放值列表
-                        if (mConfiguration.getAspectRatio() != null && mConfiguration.getSelectedByDefault() > mConfiguration.getAspectRatio().length) {
-                            options.setAspectRatioOptions(mConfiguration.getSelectedByDefault(), mConfiguration.getAspectRatio());
-                        }
-                        options.setFreeStyleCropEnabled(mConfiguration.isFreestyleCropEnabled());
-                        options.setOvalDimmedLayer(mConfiguration.isOvalDimmedLayer());
-
-                        uCrop = uCrop.withOptions(options);
-                        uCrop.start(getActivity());
-
-                    } catch (Exception e) {
-                        Logger.e(e);
-                    }
+                    String originalPath = mediaBean.getOriginalPath();
+                    File file = new File(originalPath);
+                    Uri outUri = Uri.fromFile(new File(mImageStoreCropDir, file.getName()));
+                    Intent intent = new Intent(getContext(), UCropActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(UCropActivity.EXTRA_OUTPUT_URI, outUri);
+                    bundle.putParcelable(UCropActivity.EXTRA_INPUT_BEAN, mediaBean);
+                    bundle.putParcelable(UCropActivity.EXTRA_CONFIGURATION, mConfiguration);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 }
             } else {
-                RxBus.getDefault().post(new OpenMediaPageFragmentEvent());
                 MediaBean firstBean = mMediaBeanList.get(0);
-                List<MediaBean> gridMediaList = mMediaBeanList;
+                ArrayList<MediaBean> gridMediaList = new ArrayList<>();
+                gridMediaList.addAll(mMediaBeanList);
                 int pos = position;
                 if(firstBean.getId() == Integer.MIN_VALUE) {
                     pos = position - 1;
-                    gridMediaList = mMediaBeanList.subList(1, mMediaBeanList.size());
+                    gridMediaList.clear();
+                    List<MediaBean> list = mMediaBeanList.subList(1, mMediaBeanList.size());
+                    gridMediaList.addAll(list);
                 }
-                RxBus.getDefault().postSticky(new SendMediaPageFragmentDataEvent(gridMediaList, pos));
+                RxBus.getDefault().post(new OpenMediaPageFragmentEvent(gridMediaList, pos));
             }
         }
     }
@@ -466,6 +412,16 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if(!TextUtils.isEmpty(mBucketId)) {
             outState.putString(BUCKET_ID_KEY, mBucketId);
         }
+    }
+
+    @Override
+    protected void onRestoreState(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    protected void onSaveState(Bundle outState) {
+
     }
 
     @Override

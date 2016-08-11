@@ -15,20 +15,14 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import cn.finalteam.rxgalleryfinal.di.component.ActivityFragmentComponent;
-import cn.finalteam.rxgalleryfinal.di.component.DaggerActivityFragmentComponent;
-import cn.finalteam.rxgalleryfinal.di.component.RxGalleryFinalComponent;
-import cn.finalteam.rxgalleryfinal.di.module.ActivityFragmentModule;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
@@ -36,9 +30,9 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.CloseRxMediaGridPageEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaViewPagerChangedEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.RequestStorageReadAccessPermissionEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPageFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPreviewFragment;
@@ -57,9 +51,12 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
 
     public static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
 
-    @Inject
-    Configuration mConfiguration;
-    @Inject
+    private static final String EXTRA_CHECKED_LIST = EXTRA_PREFIX + ".CheckedList";
+    private static final String EXTRA_SELECTED_INDEX = EXTRA_PREFIX + ".SelectedIndex";
+    private static final String EXTRA_PAGE_MEDIA_LIST = EXTRA_PREFIX + ".PageMediaList";
+    private static final String EXTRA_PAGE_POSITION = EXTRA_PREFIX + ".PagePosition";
+    private static final String EXTRA_PREVIEW_POSITION = EXTRA_PREFIX + ".PreviewPosition";
+
     MediaGridFragment mMediaGridFragment;
     MediaPageFragment mMediaPageFragment;
     MediaPreviewFragment mMediaPreviewFragment;
@@ -67,17 +64,22 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     private Toolbar mToolbar;
     private TextView mTvToolbarTitle;
     private TextView mTvOverAction;
+    private View mToolbarDivider;
 
-    private List<MediaBean> mCheckedList;
+    private ArrayList<MediaBean> mCheckedList;
+    private int mSelectedIndex = 0;
+    private ArrayList<MediaBean> mPageMediaList;
+    private int mPagePosition;
+    private int mPreviewPosition;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.gallery_activity_media);
+    public int getContentView() {
+        return R.layout.gallery_activity_media;
+    }
 
-        findViews();
-        setTheme();
-
+    @Override
+    protected void onCreateOk(@Nullable Bundle savedInstanceState) {
+        mMediaGridFragment = MediaGridFragment.newInstance(mConfiguration);
         if(!mConfiguration.isRadio()) {
             mTvOverAction.setOnClickListener(view -> {
                 if(mCheckedList != null && mCheckedList.size() > 0) {
@@ -97,7 +99,6 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         }
 
         showMediaGridFragment();
-
         subscribeEvent();
     }
 
@@ -107,6 +108,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         mToolbar.setTitle("");
         mTvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         mTvOverAction = (TextView) findViewById(R.id.tv_over_action);
+        mToolbarDivider = findViewById(R.id.toolbar_divider);
     }
 
     @Override
@@ -147,7 +149,54 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         int statusBarColor = ThemeUtils.resolveColor(this, R.attr.gallery_color_statusbar, R.color.gallery_default_color_statusbar);
         ThemeUtils.setStatusBarColor(statusBarColor, getWindow());
 
+        int dividerHeight = (int) ThemeUtils.resolveDimen(this, R.attr.gallery_toolbar_divider_height, R.dimen.gallery_default_toolbar_divider_height);
+        int dividerBottomMargin = (int) ThemeUtils.resolveDimen(this, R.attr.gallery_toolbar_bottom_margin, R.dimen.gallery_default_toolbar_bottom_margin);
+        LayoutParams dividerLP = new LayoutParams(LayoutParams.MATCH_PARENT, dividerHeight);
+        dividerLP.bottomMargin = dividerBottomMargin;
+        mToolbarDivider.setLayoutParams(dividerLP);
+
+        Drawable dividerDrawable = ThemeUtils.resolveDrawable(this, R.attr.gallery_toolbar_divider_bg, R.color.gallery_default_toolbar_divider_bg);
+        OsCompat.setBackgroundDrawableCompat(mToolbarDivider, dividerDrawable);
+
         setSupportActionBar(mToolbar);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mCheckedList != null) {
+            outState.putParcelableArrayList(EXTRA_CHECKED_LIST, mCheckedList);
+        }
+        outState.putInt(EXTRA_SELECTED_INDEX, mSelectedIndex);
+        if(mPageMediaList != null) {
+            outState.putParcelableArrayList(EXTRA_PAGE_MEDIA_LIST, mPageMediaList);
+        }
+        outState.putInt(EXTRA_PAGE_POSITION, mPagePosition);
+        outState.putInt(EXTRA_PREVIEW_POSITION, mPreviewPosition);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        List<MediaBean> list = savedInstanceState.getParcelableArrayList(EXTRA_CHECKED_LIST);
+        if(list != null && list.size() > 0){
+            mCheckedList.clear();
+            mCheckedList.addAll(list);
+        }
+        mPageMediaList = savedInstanceState.getParcelableArrayList(EXTRA_PAGE_MEDIA_LIST);
+        mPagePosition = savedInstanceState.getInt(EXTRA_PAGE_POSITION);
+        mPreviewPosition = savedInstanceState.getInt(EXTRA_PREVIEW_POSITION);
+        mSelectedIndex = savedInstanceState.getInt(EXTRA_SELECTED_INDEX);
+        if(!mConfiguration.isRadio()) {
+            switch (mSelectedIndex) {
+                case 1:
+                    showMediaPageFragment(mPageMediaList, mPagePosition);
+                    break;
+                case 2:
+                    showMediaPreviewFragment();
+                    break;
+            }
+        }
     }
 
     @Override
@@ -162,6 +211,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     public void showMediaGridFragment() {
         mMediaPreviewFragment = null;
         mMediaPageFragment = null;
+        mSelectedIndex = 0;
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mMediaGridFragment);
@@ -182,38 +232,34 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     }
 
     @Override
-    public void showMediaPageFragment() {
+    public void showMediaPageFragment(ArrayList<MediaBean> list, int position) {
+        mSelectedIndex = 1;
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        mMediaPageFragment = MediaPageFragment.newInstance();
+        mMediaPageFragment = MediaPageFragment.newInstance(mConfiguration, list, position);
         ft.add(R.id.fragment_container, mMediaPageFragment);
         mMediaPreviewFragment = null;
         ft.hide(mMediaGridFragment);
         ft.show(mMediaPageFragment);
         ft.commit();
+
+        String title = getString(R.string.gallery_page_title, position + 1, list.size());
+        mTvToolbarTitle.setText(title);
     }
 
     @Override
     public void showMediaPreviewFragment() {
+        mSelectedIndex = 2;
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        mMediaPreviewFragment = MediaPreviewFragment.newInstance();
+        mMediaPreviewFragment = MediaPreviewFragment.newInstance(mConfiguration, mPreviewPosition);
         ft.add(R.id.fragment_container, mMediaPreviewFragment);
         mMediaPageFragment = null;
         ft.hide(mMediaGridFragment);
         ft.show(mMediaPreviewFragment);
         ft.commit();
 
-        mTvToolbarTitle.setText(getString(R.string.gallery_page_title, 1, mCheckedList.size()));
+        String title = getString(R.string.gallery_page_title, mPreviewPosition, mCheckedList.size());
+        mTvToolbarTitle.setText(title);
     }
-
-    @Override
-    protected void setupComponent(RxGalleryFinalComponent rxGalleryFinalComponent) {
-        ActivityFragmentComponent activityFragmentComponent = DaggerActivityFragmentComponent.builder()
-            .rxGalleryFinalComponent(rxGalleryFinalComponent)
-            .activityFragmentModule(new ActivityFragmentModule())
-            .build();
-        activityFragmentComponent.inject(this);
-    }
-
 
     private void subscribeEvent() {
         Subscription subscriptionOpenMediaPreviewEvent = RxBus.getDefault().toObservable(OpenMediaPreviewFragmentEvent.class)
@@ -221,6 +267,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                 .subscribe(new RxBusSubscriber<OpenMediaPreviewFragmentEvent>() {
                     @Override
                     protected void onEvent(OpenMediaPreviewFragmentEvent openMediaPreviewFragmentEvent) {
+                        mPreviewPosition = 0;
                         showMediaPreviewFragment();
                     }
                 });
@@ -258,20 +305,16 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                     protected void onEvent(MediaViewPagerChangedEvent mediaPreviewViewPagerChangedEvent) {
                         int curIndex = mediaPreviewViewPagerChangedEvent.getCurIndex();
                         int totalSize = mediaPreviewViewPagerChangedEvent.getTotalSize();
+                        if(mediaPreviewViewPagerChangedEvent.isPreview()) {
+                            mPreviewPosition = curIndex;
+                        } else {
+                            mPagePosition = curIndex;
+                        }
                         String title = getString(R.string.gallery_page_title, curIndex + 1, totalSize);
                         mTvToolbarTitle.setText(title);
                     }
                 });
         RxBus.getDefault().add(subscriptionMediaViewPagerChangedEvent);
-
-        Subscription subscriptionOpenMediaPageFragmentEvent = RxBus.getDefault().toObservable(OpenMediaPageFragmentEvent.class)
-                .subscribe(new RxBusSubscriber<OpenMediaPageFragmentEvent>() {
-                    @Override
-                    protected void onEvent(OpenMediaPageFragmentEvent openMediaPageFragmentEvent) throws Exception {
-                        showMediaPageFragment();
-                    }
-                });
-        RxBus.getDefault().add(subscriptionOpenMediaPageFragmentEvent);
 
         Subscription subscriptionCloseRxMediaGridPageEvent = RxBus.getDefault().toObservable(CloseRxMediaGridPageEvent.class)
                 .subscribe(new RxBusSubscriber<CloseRxMediaGridPageEvent>() {
@@ -281,6 +324,18 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                     }
                 });
         RxBus.getDefault().add(subscriptionCloseRxMediaGridPageEvent);
+
+        Subscription subscriptionOpenMediaPageFragmentEvent = RxBus.getDefault().toObservable(OpenMediaPageFragmentEvent.class)
+                .subscribe(new RxBusSubscriber<OpenMediaPageFragmentEvent>() {
+                    @Override
+                    protected void onEvent(OpenMediaPageFragmentEvent openMediaPageFragmentEvent) {
+                        mPageMediaList = openMediaPageFragmentEvent.getMediaBeanList();
+                        mPagePosition = openMediaPageFragmentEvent.getPosition();
+
+                        showMediaPageFragment(mPageMediaList, mPagePosition);
+                    }
+                });
+        RxBus.getDefault().add(subscriptionOpenMediaPageFragmentEvent);
     }
 
     public List<MediaBean> getCheckedList() {

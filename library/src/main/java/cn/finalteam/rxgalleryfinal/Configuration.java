@@ -1,53 +1,51 @@
 package cn.finalteam.rxgalleryfinal;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.IntRange;
 
 import com.yalantis.ucrop.UCropActivity;
 import com.yalantis.ucrop.model.AspectRatio;
+import com.yalantis.ucrop.view.CropImageView;
+import com.yalantis.ucrop.view.OverlayView;
 
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.imageloader.AbsImageLoader;
-import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.imageloader.PicassoImageLoader;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
-import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
-import cn.finalteam.rxgalleryfinal.utils.MediaType;
 
 /**
  * Desction:配置信息
  * Author:pengjianbo
  * Date:16/5/7 下午3:58
  */
-public class Configuration {
+public class Configuration implements Parcelable{
 
     protected Configuration() {
     }
 
     private boolean image = true;
     private Context context;
-    private MediaType []filterMimes;
     private List<MediaBean> selectedList;
     private boolean radio;
     private boolean crop;
     private int maxSize = 1;
-    private ImageLoaderType imageLoaderType;
-    private PauseOnScrollListener pauseOnScrollListener;
-    private RxBusResultSubscriber<BaseResultEvent> resultSubscriber;
+
+    private int imageLoaderType;
 
     //==========UCrop START==========
     //是否隐藏裁剪页面底部控制栏,默认显示
     private boolean hideBottomControls;
     //图片压缩质量,默认不压缩
-    private int compressionQuality;
+    private int compressionQuality = 90;
     //手势方式,默认all
     private int []gestures;
     //设置图片最大值,默认根据屏幕得出
-    private int maxBitmapSize;
+    private int maxBitmapSize = CropImageView.DEFAULT_MAX_BITMAP_SIZE;
     //设置最大缩放值,默认10.f
-    private float maxScaleMultiplier;
+    private float maxScaleMultiplier = CropImageView.DEFAULT_MAX_SCALE_MULTIPLIER;
     //宽高比
     private float aspectRatioX;
     private float aspectRatioY;
@@ -56,10 +54,47 @@ public class Configuration {
     //等比缩放值表,默认1:1,3:4,原图比例,3:2,16:9
     private AspectRatio []aspectRatio;
     //是否允许改变裁剪大小
-    private boolean freestyleCropEnabled;
+    private boolean freestyleCropEnabled = OverlayView.DEFAULT_FREESTYLE_CROP_ENABLED;
     //是否显示裁剪框半透明椭圆浮层
-    private boolean ovalDimmedLayer;
+    private boolean ovalDimmedLayer = OverlayView.DEFAULT_OVAL_DIMMED_LAYER;
+    private int maxResultWidth;
+    private int maxResultHeight;
+
     //==========UCrop END==========
+
+    protected Configuration(Parcel in) {
+        image = in.readByte() != 0;
+        selectedList = in.createTypedArrayList(MediaBean.CREATOR);
+        radio = in.readByte() != 0;
+        crop = in.readByte() != 0;
+        maxSize = in.readInt();
+        hideBottomControls = in.readByte() != 0;
+        compressionQuality = in.readInt();
+        gestures = in.createIntArray();
+        maxBitmapSize = in.readInt();
+        maxScaleMultiplier = in.readFloat();
+        aspectRatioX = in.readFloat();
+        aspectRatioY = in.readFloat();
+        selectedByDefault = in.readInt();
+        aspectRatio = in.createTypedArray(AspectRatio.CREATOR);
+        freestyleCropEnabled = in.readByte() != 0;
+        ovalDimmedLayer = in.readByte() != 0;
+        maxResultWidth = in.readInt();
+        maxResultHeight = in.readInt();
+        imageLoaderType = in.readInt();
+    }
+
+    public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
+        @Override
+        public Configuration createFromParcel(Parcel in) {
+            return new Configuration(in);
+        }
+
+        @Override
+        public Configuration[] newArray(int size) {
+            return new Configuration[size];
+        }
+    };
 
     public boolean isImage() {
         return image;
@@ -75,14 +110,6 @@ public class Configuration {
 
     protected void setContext(Context context) {
         this.context = context;
-    }
-
-    public MediaType[] getFilterMimes() {
-        return filterMimes;
-    }
-
-    protected void setFilterMimes(MediaType[] filterMimes) {
-        this.filterMimes = filterMimes;
     }
 
     public List<MediaBean> getSelectedList() {
@@ -110,23 +137,16 @@ public class Configuration {
     }
 
     public AbsImageLoader getImageLoader() {
+
         AbsImageLoader imageLoader = null;
-        if(imageLoaderType == ImageLoaderType.PICASSO) {
+        if(imageLoaderType == 1) {
             imageLoader = new PicassoImageLoader();
         }
         return imageLoader;
     }
 
-    protected void setImageLoaderType(ImageLoaderType imageLoaderType) {
+    protected void setImageLoaderType(int imageLoaderType) {
         this.imageLoaderType = imageLoaderType;
-    }
-
-    public PauseOnScrollListener getPauseOnScrollListener() {
-        return pauseOnScrollListener;
-    }
-
-    protected void setPauseOnScrollListener(PauseOnScrollListener pauseOnScrollListener) {
-        this.pauseOnScrollListener = pauseOnScrollListener;
     }
 
     public boolean isHideBottomControls() {
@@ -230,11 +250,44 @@ public class Configuration {
         this.crop = crop;
     }
 
-    public RxBusResultSubscriber<BaseResultEvent> getResultSubscriber() {
-        return resultSubscriber;
+    public void setMaxResultSize(@IntRange(from = 100) int width, @IntRange(from = 100) int height) {
+        this.maxResultWidth = width;
+        this.maxResultHeight = height;
     }
 
-    public void setResultSubscriber(@NonNull RxBusResultSubscriber<BaseResultEvent> resultSubscriber) {
-        this.resultSubscriber = resultSubscriber;
+    public int getMaxResultHeight() {
+        return maxResultHeight;
+    }
+
+    public int getMaxResultWidth() {
+        return maxResultWidth;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeByte((byte) (image ? 1 : 0));
+        parcel.writeTypedList(selectedList);
+        parcel.writeByte((byte) (radio ? 1 : 0));
+        parcel.writeByte((byte) (crop ? 1 : 0));
+        parcel.writeInt(maxSize);
+        parcel.writeByte((byte) (hideBottomControls ? 1 : 0));
+        parcel.writeInt(compressionQuality);
+        parcel.writeIntArray(gestures);
+        parcel.writeInt(maxBitmapSize);
+        parcel.writeFloat(maxScaleMultiplier);
+        parcel.writeFloat(aspectRatioX);
+        parcel.writeFloat(aspectRatioY);
+        parcel.writeInt(selectedByDefault);
+        parcel.writeTypedArray(aspectRatio, i);
+        parcel.writeByte((byte) (freestyleCropEnabled ? 1 : 0));
+        parcel.writeByte((byte) (ovalDimmedLayer ? 1 : 0));
+        parcel.writeInt(maxResultWidth);
+        parcel.writeInt(maxResultHeight);
+        parcel.writeInt(imageLoaderType);
     }
 }

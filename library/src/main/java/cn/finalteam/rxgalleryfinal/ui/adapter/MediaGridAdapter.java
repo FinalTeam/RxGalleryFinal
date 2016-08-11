@@ -24,6 +24,7 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxjob.Job;
 import cn.finalteam.rxgalleryfinal.rxjob.RxJob;
 import cn.finalteam.rxgalleryfinal.rxjob.job.ImageThmbnailJobCreate;
+import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
@@ -34,29 +35,27 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
  */
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.GridViewHolder> {
 
-    private Context mContext;
+    private MediaActivity mMediaActivity;
     private List<MediaBean> mMediaBeanList;
     private LayoutInflater mInflater;
     private int mImageSize;
     private Configuration mConfiguration;
     private Drawable mDefaultImage;
-    private List<MediaBean> mCheckedList;
 
-    public MediaGridAdapter(Context context, List<MediaBean> list, List<MediaBean> checkedList, int screenWidth, Configuration configuration) {
-        this.mContext = context;
+    public MediaGridAdapter(MediaActivity mediaActivity, List<MediaBean> list, int screenWidth, Configuration configuration) {
+        this.mMediaActivity = mediaActivity;
         this.mMediaBeanList = list;
-        this.mCheckedList = checkedList;
-        this.mInflater = LayoutInflater.from(context);
+        this.mInflater = LayoutInflater.from(mediaActivity);
         this.mImageSize = screenWidth/3;
-        int defaultResId = ThemeUtils.resolveDrawableRes(context, R.attr.gallery_default_image, R.drawable.gallery_default_image);
-        this.mDefaultImage = context.getResources().getDrawable(defaultResId);
+        int defaultResId = ThemeUtils.resolveDrawableRes(mediaActivity, R.attr.gallery_default_image, R.drawable.gallery_default_image);
+        this.mDefaultImage = mediaActivity.getResources().getDrawable(defaultResId);
         this.mConfiguration = configuration;
     }
 
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.gallery_adapter_media_grid_item, parent, false);
-        return new GridViewHolder(mContext, view);
+        return new GridViewHolder(mMediaActivity, view);
     }
 
     @Override
@@ -75,7 +74,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             }
             holder.mIvMediaImage.setVisibility(View.VISIBLE);
             holder.mLlCamera.setVisibility(View.GONE);
-            if(mCheckedList != null && mCheckedList.contains(mediaBean)){
+            if(mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean)){
                 holder.mCbCheck.setChecked(true);
             } else {
                 holder.mCbCheck.setChecked(false);
@@ -84,7 +83,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             String smallPath = mediaBean.getThumbnailSmallPath();
 
             if(!new File(bitPath).exists() || !new File(smallPath).exists()) {
-                Job job = new ImageThmbnailJobCreate(mContext, mediaBean).create();
+                Job job = new ImageThmbnailJobCreate(mMediaActivity, mediaBean).create();
                 RxJob.getDefault().addJob(job);
             }
             String path = mediaBean.getThumbnailSmallPath();
@@ -95,7 +94,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 path = mediaBean.getOriginalPath();
             }
             mConfiguration.getImageLoader()
-                    .displayImage(mContext, path, holder.mIvMediaImage, mDefaultImage, mImageSize, mImageSize);
+                    .displayImage(mMediaActivity, path, holder.mIvMediaImage, mDefaultImage, mImageSize, mImageSize);
         }
     }
 
@@ -114,10 +113,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         @Override
         public void onClick(View view) {
-            if(mConfiguration.getMaxSize() == mCheckedList.size() && !mCheckedList.contains(mediaBean)) {
+            if(mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size() &&
+                    !mMediaActivity.getCheckedList().contains(mediaBean)) {
                 AppCompatCheckBox checkBox = (AppCompatCheckBox) view;
                 checkBox.setChecked(false);
-                Toast.makeText(mContext, mContext.getResources()
+                Toast.makeText(mMediaActivity, mMediaActivity.getResources()
                         .getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()), Toast.LENGTH_SHORT).show();
             } else {
                 RxBus.getDefault().post(new MediaCheckChangeEvent(mediaBean));
