@@ -23,9 +23,11 @@
     <color name="gallery_default_page_bg">#151515</color>
 
     <color name="gallery_bucket_list_item_normal_color">#F2F2F2</color>
+    <color name="gallery_bucket_list_decoration_color">#D8D8D8</color>
     <color name="gallery_bucket_list_item_pressed_color">#D8D8D8</color>
     <color name="gallery_media_grid_block_color">#D9000000</color>
     <color name="gallery_take_image_item_bg">#E2E2E2</color>
+    <color name="gallery_default_take_image_text_color">#E2E2E2</color>
 
     <!--uCrop默认颜色 start-->
     <color name="gallery_default_ucrop_color_widget_active">#FF6E40</color>

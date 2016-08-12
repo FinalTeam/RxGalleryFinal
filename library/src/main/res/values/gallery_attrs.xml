@@ -79,6 +79,14 @@
     <attr name="gallery_page_bg" format="color"/>
     <!--默认图-->
     <attr name="gallery_default_image" format="dimension"/>
+    <!--图片背景-->
+    <attr name="gallery_imageview_bg" format="dimension|color"/>
+    <!--拍照图片-->
+    <attr name="gallery_camera_image" format="dimension"/>
+    <!--拍照图片背景-->
+    <attr name="gallery_camera_bg" format="dimension|color"/>
+    <!--拍照文字颜色-->
+    <attr name="gallery_take_image_text_color" format="color"/>
     <!--请求读取相册授权提示语-->
     <attr name="gallery_request_storage_access_permission_tips" format="dimension|string"/>
     <!--没有任何图片提示语-->

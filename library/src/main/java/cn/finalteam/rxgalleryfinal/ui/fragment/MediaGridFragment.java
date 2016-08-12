@@ -175,7 +175,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRvBucket.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
-                .color(getResources().getColor(R.color.gallery_bucket_list_item_normal_color))
+                .color(getResources().getColor(R.color.gallery_bucket_list_decoration_color))
                 .size(getResources().getDimensionPixelSize(R.dimen.gallery_divider_decoration_height))
                 .margin(getResources().getDimensionPixelSize(R.dimen.gallery_bucket_margin),
                         getResources().getDimensionPixelSize(R.dimen.gallery_bucket_margin))

@@ -10,7 +10,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -26,6 +28,7 @@ import cn.finalteam.rxgalleryfinal.rxjob.RxJob;
 import cn.finalteam.rxgalleryfinal.rxjob.job.ImageThmbnailJobCreate;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView;
+import cn.finalteam.rxgalleryfinal.utils.OsCompat;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
@@ -41,7 +44,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private int mImageSize;
     private Configuration mConfiguration;
     private Drawable mDefaultImage;
-
+    private Drawable mImageViewBg;
+    private Drawable mCameraImage;
+    private int mCameraTextColor;
     public MediaGridAdapter(MediaActivity mediaActivity, List<MediaBean> list, int screenWidth, Configuration configuration) {
         this.mMediaActivity = mediaActivity;
         this.mMediaBeanList = list;
@@ -50,6 +55,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         int defaultResId = ThemeUtils.resolveDrawableRes(mediaActivity, R.attr.gallery_default_image, R.drawable.gallery_default_image);
         this.mDefaultImage = mediaActivity.getResources().getDrawable(defaultResId);
         this.mConfiguration = configuration;
+
+        this.mImageViewBg = ThemeUtils.resolveDrawable(mMediaActivity,
+                R.attr.gallery_imageview_bg, R.drawable.gallery_default_image);
+        this.mCameraImage = ThemeUtils.resolveDrawable(mMediaActivity, R.attr.gallery_camera_bg,
+                R.drawable.gallery_ic_camera);
+        this.mCameraTextColor = ThemeUtils.resolveColor(mMediaActivity, R.attr.gallery_take_image_text_color,
+                R.color.gallery_default_take_image_text_color);
     }
 
     @Override
@@ -65,6 +77,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mCbCheck.setVisibility(View.GONE);
             holder.mIvMediaImage.setVisibility(View.GONE);
             holder.mLlCamera.setVisibility(View.VISIBLE);
+            holder.mIvCameraImage.setImageDrawable(mCameraImage);
+            holder.mTvCameraTxt.setTextColor(mCameraTextColor);
         } else {
             if(mConfiguration.isRadio()) {
                 holder.mCbCheck.setVisibility(View.GONE);
@@ -93,6 +107,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if(TextUtils.isEmpty(path)) {
                 path = mediaBean.getOriginalPath();
             }
+
+            OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
+
             mConfiguration.getImageLoader()
                     .displayImage(mMediaActivity, path, holder.mIvMediaImage, mDefaultImage, mImageSize, mImageSize);
         }
@@ -131,12 +148,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         AppCompatCheckBox mCbCheck;
 
         LinearLayout mLlCamera;
+        TextView mTvCameraTxt;
+        ImageView mIvCameraImage;
 
         public GridViewHolder(Context context, View itemView) {
             super(itemView);
             mIvMediaImage = (RecyclerImageView) itemView.findViewById(R.id.iv_media_image);
             mCbCheck = (AppCompatCheckBox) itemView.findViewById(R.id.cb_check);
+
             mLlCamera = (LinearLayout) itemView.findViewById(R.id.ll_camera);
+            mTvCameraTxt = (TextView) itemView.findViewById(R.id.tv_camera_txt);
+            mIvCameraImage = (ImageView) itemView.findViewById(R.id.iv_camera_image);
 
             int checkTint = ThemeUtils.resolveColor(context, R.attr.gallery_checkbox_button_tint_color, R.color.gallery_default_checkbox_button_tint_color);
             CompoundButtonCompat.setButtonTintList(mCbCheck, ColorStateList.valueOf(checkTint));
