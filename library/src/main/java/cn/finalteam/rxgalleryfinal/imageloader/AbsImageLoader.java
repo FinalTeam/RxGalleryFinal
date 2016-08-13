@@ -10,5 +10,5 @@ import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
  * Date:16/6/17 下午1:05
  */
 public interface AbsImageLoader {
-    void displayImage(Object context, String path, FixImageView imageView, Drawable defaultDrawable, int width, int height);
+    void displayImage(Object context, String path, FixImageView imageView, Drawable defaultDrawable, int width, int height, int rotate);
 }

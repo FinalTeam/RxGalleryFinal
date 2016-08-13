@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.utils;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,10 +8,16 @@ import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextUtils;
+
+import com.yalantis.ucrop.callback.BitmapLoadCallback;
+import com.yalantis.ucrop.util.BitmapLoadUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -247,5 +254,38 @@ public class BitmapUtils {
         final Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
         DrawableCompat.setTintList(wrappedDrawable, colors);
         return wrappedDrawable;
+    }
+
+    public void decodeBitmapInBackground(@NonNull Context context, @NonNull Uri uri, @Nullable Uri outputUri, BitmapLoadCallback loadCallback) {
+        int maxBitmapSize = BitmapLoadUtils.calculateMaxBitmapSize(context);
+        decodeBitmapInBackground(context, uri, outputUri, maxBitmapSize, maxBitmapSize, loadCallback);
+    }
+
+    /**
+     * 获取图片Bitmap
+     * @param context
+     * @param uri
+     * @param outputUri
+     * @param requiredWidth
+     * @param requiredHeight
+     * @param loadCallback
+     */
+    public void decodeBitmapInBackground(@NonNull Context context, @NonNull Uri uri, @Nullable Uri outputUri,
+                                         int requiredWidth, int requiredHeight, BitmapLoadCallback loadCallback) {
+        BitmapLoadUtils.decodeBitmapInBackground(context, uri, outputUri, requiredWidth, requiredHeight, loadCallback);
+    }
+
+    /**
+     * 图片压缩旋转
+     * @param context
+     * @param uri
+     * @param outputUri
+     * @param requiredWidth
+     * @param requiredHeight
+     * @param loadCallback
+     */
+    public void rotateImage(@NonNull Context context, @NonNull Uri uri, @Nullable Uri outputUri,
+                            int requiredWidth, int requiredHeight, BitmapLoadCallback loadCallback) {
+
     }
 }

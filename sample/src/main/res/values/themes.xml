@@ -9,9 +9,9 @@
 
     <style name="Theme_Light.White">
         <item name="gallery_toolbar_bg">@color/theme_white_primary</item>
-        <item name="gallery_toolbar_close_color">#000000</item>
-        <item name="gallery_toolbar_widget_color">#000000</item>
-        <item name="gallery_toolbar_text_color">#000000</item>
+        <item name="gallery_toolbar_close_color">#2A2A2F</item>
+        <item name="gallery_toolbar_widget_color">#2A2A2F</item>
+        <item name="gallery_toolbar_text_color">#2A2A2F</item>
         <item name="gallery_page_bg">#FFFFFF</item>
         <item name="gallery_default_image">@mipmap/ic_launcher</item>
         <item name="gallery_imageview_bg">#FFFFFF</item>

@@ -55,10 +55,10 @@ public class RxGalleryFinal {
         return this;
     }
 
-    public RxGalleryFinal filterMime(MediaType ...mediaTypes) {
+//    public RxGalleryFinal filterMime(MediaType ...mediaTypes) {
 //        configuration.setFilterMimes(mediaTypes);
-        return this;
-    }
+//        return this;
+//    }
 
     public RxGalleryFinal radio(){
         configuration.setRadio(true);

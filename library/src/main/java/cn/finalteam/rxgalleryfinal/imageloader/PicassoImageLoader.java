@@ -18,13 +18,14 @@ public class PicassoImageLoader implements AbsImageLoader {
 
     @Override
     public void displayImage(Object context, String path, FixImageView imageView,
-                             Drawable defaultDrawable, int width, int height) {
+                             Drawable defaultDrawable, int width, int height, int rotate) {
         Context ctx = (Context) context;
         Picasso.with(ctx)
                 .load(new File(path))
                 .placeholder(defaultDrawable)
                 .error(defaultDrawable)
                 .resize(width, height)
+                .rotate(rotate)
                 .tag(context)
                 .into(imageView);
     }
