@@ -6,5 +6,5 @@ package cn.finalteam.rxgalleryfinal.imageloader;
  * Date:16/7/25 下午3:36
  */
 public enum ImageLoaderType {
-    PICASSO
+    PICASSO,GLIDE,FRESCO,UNIVERSAL
 }

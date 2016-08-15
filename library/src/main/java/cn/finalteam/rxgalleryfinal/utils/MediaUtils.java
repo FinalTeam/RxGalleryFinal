@@ -337,6 +337,7 @@ public class MediaUtils {
                     MediaStore.Images.Media.BUCKET_ID,
                     MediaStore.Images.Media.DATA,
                     MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                    MediaStore.Images.Media.ORIENTATION,
             };
         } else {
             projection = new String[] {
@@ -377,6 +378,8 @@ public class MediaUtils {
                     bucketBean.setBucketName(bucketDisplayName);
                     bucketKey = MediaStore.Images.Media.BUCKET_ID;
                     cover = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                    int orientation = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.ORIENTATION));
+                    bucketBean.setOrientation(orientation);
                 } else {
                     bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_ID));
                     bucketBean.setBucketId(bucketId);

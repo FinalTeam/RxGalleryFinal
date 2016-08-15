@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
 
@@ -18,15 +19,17 @@ public class PicassoImageLoader implements AbsImageLoader {
 
     @Override
     public void displayImage(Object context, String path, FixImageView imageView,
-                             Drawable defaultDrawable, int width, int height, int rotate) {
+                             Drawable defaultDrawable, boolean resize, int width, int height, int rotate) {
         Context ctx = (Context) context;
-        Picasso.with(ctx)
+        RequestCreator creator = Picasso.with(ctx)
                 .load(new File(path))
                 .placeholder(defaultDrawable)
                 .error(defaultDrawable)
-                .resize(width, height)
                 .rotate(rotate)
-                .tag(context)
-                .into(imageView);
+                .tag(context);
+        if(resize){
+            creator = creator.resize(width, height);
+        }
+       creator.into(imageView);
     }
 }

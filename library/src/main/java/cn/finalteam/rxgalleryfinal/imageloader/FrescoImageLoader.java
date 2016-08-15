@@ -10,7 +10,7 @@ import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 public class FrescoImageLoader implements AbsImageLoader {
 
     @Override
-    public void displayImage(Object context, String path, FixImageView imageView, Drawable defaultDrawable, int width, int height, int rotate) {
+    public void displayImage(Object context, String path, FixImageView imageView, Drawable defaultDrawable, boolean resize, int width, int height, int rotate) {
 
     }
 }

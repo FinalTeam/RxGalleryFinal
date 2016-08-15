@@ -12,6 +12,8 @@ public class BucketBean {
     private String bucketName;
     private int imageCount;
     private String cover;
+    //图片方向
+    private int orientation;
 
     public String getBucketId() {
         return bucketId;
@@ -46,6 +48,14 @@ public class BucketBean {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public int getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
     }
 
     @Override
