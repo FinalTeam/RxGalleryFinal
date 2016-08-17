@@ -3,6 +3,7 @@ package cn.finalteam.rxgalleryfinal.imageloader;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -26,6 +27,7 @@ public class PicassoImageLoader implements AbsImageLoader {
                 .placeholder(defaultDrawable)
                 .error(defaultDrawable)
                 .rotate(rotate)
+                .networkPolicy(NetworkPolicy.NO_STORE)
                 .tag(context);
         if(resize){
             creator = creator.resize(width, height);

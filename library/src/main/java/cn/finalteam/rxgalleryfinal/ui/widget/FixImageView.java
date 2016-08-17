@@ -5,6 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+
+import com.facebook.drawee.view.DraweeHolder;
 
 /**
  * Desction:为了兼容fresco框架而自定义的ImageView
@@ -36,6 +39,7 @@ public class FixImageView extends AppCompatImageView {
         void onAttach();
         boolean verifyDrawable(Drawable dr) ;
         void onDraw(Canvas canvas);
+        boolean onTouchEvent(MotionEvent event);
     }
 
     @Override
@@ -87,4 +91,10 @@ public class FixImageView extends AppCompatImageView {
             mOnImageViewListener.onDraw(canvas);
         }
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return mOnImageViewListener.onTouchEvent(event) || super.onTouchEvent(event);
+    }
+
 }

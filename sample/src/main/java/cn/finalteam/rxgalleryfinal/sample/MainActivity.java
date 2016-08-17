@@ -6,6 +6,11 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
@@ -21,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initImageLoader();
 
         mBtnOpen = (Button) findViewById(R.id.btn_open);
         mRbRadio = (RadioButton) findViewById(R.id.rb_radio);
@@ -33,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                         .image()
                         .radio()
                         .crop()
-                        .imageLoader(ImageLoaderType.PICASSO)
+                        .imageLoader(ImageLoaderType.UNIVERSAL)
                         .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
                             @Override
                             protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
@@ -47,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                         .image()
                         .multiple()
                         .maxSize(8)
-                        .imageLoader(ImageLoaderType.PICASSO)
+                        .imageLoader(ImageLoaderType.UNIVERSAL)
                         .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
                             @Override
                             protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
@@ -58,6 +64,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void initImageLoader() {
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        ImageLoader.getInstance().init(config.build());
     }
 
 

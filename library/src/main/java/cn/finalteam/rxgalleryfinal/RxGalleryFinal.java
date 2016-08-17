@@ -89,6 +89,12 @@ public class RxGalleryFinal {
         int type = 0;
         if(imageLoaderType == ImageLoaderType.PICASSO){
             type = 1;
+        } else if(imageLoaderType == ImageLoaderType.GLIDE){
+            type = 2;
+        } else if(imageLoaderType == ImageLoaderType.FRESCO){
+            type = 3;
+        } else if(imageLoaderType == ImageLoaderType.UNIVERSAL){
+            type = 4;
         }
         configuration.setImageLoaderType(type);
         return this;
