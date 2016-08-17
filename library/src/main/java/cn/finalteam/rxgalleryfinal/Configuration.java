@@ -1,6 +1,7 @@
 package cn.finalteam.rxgalleryfinal;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntRange;
@@ -37,6 +38,7 @@ public class Configuration implements Parcelable{
     private int maxSize = 1;
 
     private int imageLoaderType;
+    private int imageConfig;
 
     //==========UCrop START==========
     //是否隐藏裁剪页面底部控制栏,默认显示
@@ -85,6 +87,8 @@ public class Configuration implements Parcelable{
         maxResultWidth = in.readInt();
         maxResultHeight = in.readInt();
         imageLoaderType = in.readInt();
+        imageConfig = in.readInt();
+
     }
 
     public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
@@ -163,6 +167,24 @@ public class Configuration implements Parcelable{
 
     protected void setImageLoaderType(int imageLoaderType) {
         this.imageLoaderType = imageLoaderType;
+    }
+
+    public Bitmap.Config getImageConfig() {
+        switch (imageConfig){
+            case 1:
+                return Bitmap.Config.ALPHA_8;
+            case 2:
+                return Bitmap.Config.ARGB_4444;
+            case 3:
+                return Bitmap.Config.ARGB_8888;
+            case 4:
+                return Bitmap.Config.RGB_565;
+        }
+        return Bitmap.Config.ARGB_8888;
+    }
+
+    public void setImageConfig(int imageConfig) {
+        this.imageConfig = imageConfig;
     }
 
     public boolean isHideBottomControls() {
@@ -305,5 +327,6 @@ public class Configuration implements Parcelable{
         parcel.writeInt(maxResultWidth);
         parcel.writeInt(maxResultHeight);
         parcel.writeInt(imageLoaderType);
+        parcel.writeInt(imageConfig);
     }
 }

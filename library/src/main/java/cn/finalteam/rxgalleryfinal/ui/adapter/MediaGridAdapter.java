@@ -111,7 +111,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
 
             mConfiguration.getImageLoader()
-                    .displayImage(mMediaActivity, path, holder.mIvMediaImage, mDefaultImage,true, mImageSize, mImageSize, mediaBean.getOrientation());
+                    .displayImage(mMediaActivity, path, holder.mIvMediaImage, mDefaultImage, mConfiguration.getImageConfig(),
+                            true, mImageSize, mImageSize, mediaBean.getOrientation());
         }
     }
 

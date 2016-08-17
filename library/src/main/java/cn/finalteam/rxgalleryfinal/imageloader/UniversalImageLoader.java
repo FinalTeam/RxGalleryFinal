@@ -16,10 +16,10 @@ import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 public class UniversalImageLoader implements AbsImageLoader {
 
     @Override
-    public void displayImage(Object context, String path, FixImageView imageView, Drawable defaultDrawable, boolean resize, int width, int height, int rotate) {
+    public void displayImage(Object context, String path, FixImageView imageView, Drawable defaultDrawable, Bitmap.Config config, boolean resize, int width, int height, int rotate) {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(false)
-                .bitmapConfig(Bitmap.Config.ARGB_4444)
+                .bitmapConfig(config)
                 .showImageOnFail(defaultDrawable)
                 .showImageOnLoading(defaultDrawable)
                 .showImageForEmptyUri(defaultDrawable)

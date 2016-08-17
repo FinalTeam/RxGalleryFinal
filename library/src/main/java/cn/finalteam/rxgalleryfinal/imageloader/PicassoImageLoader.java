@@ -1,6 +1,7 @@
 package cn.finalteam.rxgalleryfinal.imageloader;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.squareup.picasso.NetworkPolicy;
@@ -20,7 +21,7 @@ public class PicassoImageLoader implements AbsImageLoader {
 
     @Override
     public void displayImage(Object context, String path, FixImageView imageView,
-                             Drawable defaultDrawable, boolean resize, int width, int height, int rotate) {
+                             Drawable defaultDrawable, Bitmap.Config config, boolean resize, int width, int height, int rotate) {
         Context ctx = (Context) context;
         RequestCreator creator = Picasso.with(ctx)
                 .load(new File(path))
@@ -28,6 +29,7 @@ public class PicassoImageLoader implements AbsImageLoader {
                 .error(defaultDrawable)
                 .rotate(rotate)
                 .networkPolicy(NetworkPolicy.NO_STORE)
+                .config(config)
                 .tag(context);
         if(resize){
             creator = creator.resize(width, height);

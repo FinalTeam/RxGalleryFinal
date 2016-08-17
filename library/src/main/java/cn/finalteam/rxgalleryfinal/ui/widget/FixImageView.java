@@ -7,8 +7,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.facebook.drawee.view.DraweeHolder;
-
 /**
  * Desction:为了兼容fresco框架而自定义的ImageView
  * Author:pengjianbo
@@ -88,6 +86,7 @@ public class FixImageView extends AppCompatImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if(mOnImageViewListener != null) {
+
             mOnImageViewListener.onDraw(canvas);
         }
     }

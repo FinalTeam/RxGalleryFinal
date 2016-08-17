@@ -2,6 +2,7 @@ package cn.finalteam.rxgalleryfinal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
@@ -22,7 +23,6 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
-import cn.finalteam.rxgalleryfinal.utils.MediaType;
 import cn.finalteam.rxgalleryfinal.utils.StorageUtils;
 import rx.Subscription;
 
@@ -82,6 +82,28 @@ public class RxGalleryFinal {
 
     public RxGalleryFinal selected(@NonNull List<MediaBean> list) {
         configuration.setSelectedList(list);
+        return this;
+    }
+
+    public RxGalleryFinal imageConfig(@NonNull Bitmap.Config config) {
+        int c = 3;
+        switch (config){
+            case ALPHA_8:
+                c = 1;
+                break;
+            case ARGB_4444:
+                c = 2;
+                break;
+            case ARGB_8888:
+                c = 3;
+                break;
+            case RGB_565:
+                c = 4;
+                break;
+        }
+
+        configuration.setImageConfig(c);
+
         return this;
     }
 
