@@ -1,4 +1,4 @@
-package cn.finalteam.rxgalleryfinal.imageloader.rotate;
+package cn.finalteam.rxgalleryfinal.sample.imageloader.rotate;
 
 import android.content.Context;
 import android.graphics.Bitmap;

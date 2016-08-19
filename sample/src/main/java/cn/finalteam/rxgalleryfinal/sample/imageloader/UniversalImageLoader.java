@@ -1,4 +1,4 @@
-package cn.finalteam.rxgalleryfinal.imageloader;
+package cn.finalteam.rxgalleryfinal.sample.imageloader;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -8,6 +8,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
+import cn.finalteam.rxgalleryfinal.imageloader.AbsImageLoader;
 import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 
 /**

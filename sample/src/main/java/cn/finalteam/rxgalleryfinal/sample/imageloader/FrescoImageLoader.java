@@ -1,4 +1,4 @@
-package cn.finalteam.rxgalleryfinal.imageloader;
+package cn.finalteam.rxgalleryfinal.sample.imageloader;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
+import cn.finalteam.rxgalleryfinal.imageloader.AbsImageLoader;
 import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 
 /**

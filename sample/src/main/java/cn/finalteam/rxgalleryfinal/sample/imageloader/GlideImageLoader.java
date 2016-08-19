@@ -1,4 +1,4 @@
-package cn.finalteam.rxgalleryfinal.imageloader;
+package cn.finalteam.rxgalleryfinal.sample.imageloader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,7 +10,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 
-import cn.finalteam.rxgalleryfinal.imageloader.rotate.RotateTransformation;
+import cn.finalteam.rxgalleryfinal.imageloader.AbsImageLoader;
+import cn.finalteam.rxgalleryfinal.sample.imageloader.rotate.RotateTransformation;
 import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 
 /**

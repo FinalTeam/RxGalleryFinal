@@ -13,9 +13,9 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
-import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
+import cn.finalteam.rxgalleryfinal.sample.imageloader.FrescoImageLoader;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                         .image()
                         .radio()
                         .crop()
-                        .imageLoader(ImageLoaderType.FRESCO)
+                        .imageLoader(FrescoImageLoader.class)
                         .asObservable()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(data -> {
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                         .image()
                         .multiple()
                         .maxSize(8)
-                        .imageLoader(ImageLoaderType.FRESCO)
+                        .imageLoader(FrescoImageLoader.class)
                         .asObservable()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(data -> {

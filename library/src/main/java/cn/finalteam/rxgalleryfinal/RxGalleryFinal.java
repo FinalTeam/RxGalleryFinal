@@ -16,7 +16,7 @@ import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.exception.UnknownImageLoaderTypeException;
-import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
+import cn.finalteam.rxgalleryfinal.imageloader.AbsImageLoader;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
@@ -106,18 +106,8 @@ public class RxGalleryFinal {
         return this;
     }
 
-    public RxGalleryFinal imageLoader(@NonNull ImageLoaderType imageLoaderType) {
-        int type = 0;
-        if(imageLoaderType == ImageLoaderType.PICASSO){
-            type = 1;
-        } else if(imageLoaderType == ImageLoaderType.GLIDE){
-            type = 2;
-        } else if(imageLoaderType == ImageLoaderType.FRESCO){
-            type = 3;
-        } else if(imageLoaderType == ImageLoaderType.UNIVERSAL){
-            type = 4;
-        }
-        configuration.setImageLoaderType(type);
+    public RxGalleryFinal imageLoader(@NonNull Class<? extends AbsImageLoader> imageLoaderType) {
+        configuration.setImageLoaderType(imageLoaderType);
         return this;
     }
 
@@ -250,7 +240,7 @@ public class RxGalleryFinal {
             return null;
         }
 
-        if(configuration.getImageLoader() == null) {
+        if(configuration.getImageLoaderType() == null) {
             throw new UnknownImageLoaderTypeException();
         }
 
