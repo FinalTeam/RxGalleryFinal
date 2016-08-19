@@ -15,10 +15,6 @@ import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.imageloader.AbsImageLoader;
-import cn.finalteam.rxgalleryfinal.imageloader.FrescoImageLoader;
-import cn.finalteam.rxgalleryfinal.imageloader.GlideImageLoader;
-import cn.finalteam.rxgalleryfinal.imageloader.PicassoImageLoader;
-import cn.finalteam.rxgalleryfinal.imageloader.UniversalImageLoader;
 
 /**
  * Desction:配置信息
@@ -37,7 +33,7 @@ public class Configuration implements Parcelable{
     private boolean crop;
     private int maxSize = 1;
 
-    private int imageLoaderType;
+    private Class<? extends AbsImageLoader> imageLoaderType;
     private int imageConfig;
 
     //==========UCrop START==========
@@ -86,7 +82,7 @@ public class Configuration implements Parcelable{
         ovalDimmedLayer = in.readByte() != 0;
         maxResultWidth = in.readInt();
         maxResultHeight = in.readInt();
-        imageLoaderType = in.readInt();
+        imageLoaderType = (Class<? extends AbsImageLoader>) in.readSerializable();
         imageConfig = in.readInt();
 
     }
@@ -143,29 +139,24 @@ public class Configuration implements Parcelable{
         this.maxSize = maxSize;
     }
 
-    public AbsImageLoader getImageLoader() {
-        AbsImageLoader imageLoader = null;
-        switch (imageLoaderType){
-            case 1:
-                imageLoader = new PicassoImageLoader();
-                break;
-            case 2:
-                imageLoader = new GlideImageLoader();
-                break;
-            case 3:
-                imageLoader = new FrescoImageLoader();
-                break;
-            case 4:
-                imageLoader = new UniversalImageLoader();
-                break;
-            case 5:
+    public Class<? extends AbsImageLoader> getImageLoaderType() {
+        return imageLoaderType;
+    }
 
-                break;
+    public AbsImageLoader getImageLoader() {
+        if (imageLoaderType == null) {
+            return null;
+        }
+        AbsImageLoader imageLoader = null;
+        try {
+            imageLoader = imageLoaderType.newInstance();
+        } catch (InstantiationException e) {
+        } catch (IllegalAccessException e) {
         }
         return imageLoader;
     }
 
-    protected void setImageLoaderType(int imageLoaderType) {
+    public void setImageLoaderType(Class<? extends AbsImageLoader> imageLoaderType) {
         this.imageLoaderType = imageLoaderType;
     }
 
@@ -326,7 +317,7 @@ public class Configuration implements Parcelable{
         parcel.writeByte((byte) (ovalDimmedLayer ? 1 : 0));
         parcel.writeInt(maxResultWidth);
         parcel.writeInt(maxResultHeight);
-        parcel.writeInt(imageLoaderType);
+        parcel.writeSerializable(imageLoaderType);
         parcel.writeInt(imageConfig);
     }
 }
