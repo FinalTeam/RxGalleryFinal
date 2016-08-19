@@ -45,3 +45,7 @@ dependencies {
     provided 'com.github.bumptech.glide:glide:3.7.0'
     provided 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }
+
+retrolambda {
+    javaVersion JavaVersion.VERSION_1_7
+}
