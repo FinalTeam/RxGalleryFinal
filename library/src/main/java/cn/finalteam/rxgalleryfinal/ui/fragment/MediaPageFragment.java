@@ -22,7 +22,6 @@ import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaViewPagerChangedEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaPreviewAdapter;
 import cn.finalteam.rxgalleryfinal.utils.DeviceUtils;
@@ -209,7 +208,6 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
     public void onDestroyView() {
         super.onDestroyView();
         mItemClickPosition = 0;
-        RxBus.getDefault().removeStickyEvent(OpenMediaPageFragmentEvent.class);
         RxBus.getDefault().post(new CloseMediaViewPageFragmentEvent());
     }
 }

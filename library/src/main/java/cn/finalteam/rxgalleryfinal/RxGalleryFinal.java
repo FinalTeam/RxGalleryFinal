@@ -18,13 +18,13 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.exception.UnknownImageLoaderTypeException;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.utils.StorageUtils;
-import rx.Subscription;
+import rx.Observable;
+import rx.subjects.BehaviorSubject;
 
 /**
  * Desction:
@@ -37,7 +37,6 @@ public class RxGalleryFinal {
 
     Configuration configuration = new Configuration();
     static RxGalleryFinal instance;
-    RxBusResultSubscriber<BaseResultEvent> rxBusResultSubscriber;
 
     public static RxGalleryFinal with(@NonNull Context context) {
         instance = new RxGalleryFinal();
@@ -238,56 +237,53 @@ public class RxGalleryFinal {
     }
 
     /**
-     * 设置回调
-     * @param rxBusResultSubscriber
-     * @return
+     * 转换为rx可观察对象
+     * @return rx.Observable
      */
-    public RxGalleryFinal subscribe(@NonNull RxBusResultSubscriber<? extends BaseResultEvent> rxBusResultSubscriber) {
-        this.rxBusResultSubscriber = (RxBusResultSubscriber<BaseResultEvent>) rxBusResultSubscriber;
-        return this;
-    }
-
-
-    public void openGallery(){
-        execute();
-    }
-
-    private void execute() {
+    public Observable<? extends BaseResultEvent> asObservable() {
         Context context = configuration.getContext();
         if(context == null) {
-            return;
+            return null;
         }
         if(!StorageUtils.existSDcard()){
             Toast.makeText(context, "没有找到SD卡", Toast.LENGTH_SHORT).show();
-            return;
+            return null;
         }
 
         if(configuration.getImageLoader() == null) {
             throw new UnknownImageLoaderTypeException();
         }
 
-        if(rxBusResultSubscriber == null){
-            return;
-        }
-
-        Subscription subscription;
+        Observable<? extends BaseResultEvent> observable;
         if(configuration.isRadio()) {
-            subscription = RxBus.getDefault()
-                    .toObservable(ImageRadioResultEvent.class)
-                    .subscribe(rxBusResultSubscriber);
+            observable = RxBus.getDefault().register(ImageRadioResultEvent.class);
         } else {
-            subscription = RxBus.getDefault()
-                    .toObservable(ImageMultipleResultEvent.class)
-                    .subscribe(rxBusResultSubscriber);
+            observable = RxBus.getDefault().register(ImageMultipleResultEvent.class);
         }
-        RxBus.getDefault().add(subscription);
 
-        Intent intent = new Intent(context, MediaActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(MediaActivity.EXTRA_CONFIGURATION, configuration);
-        intent.putExtras(bundle);
-        context.startActivity(intent);
+        return observable
+                .doOnSubscribe(() -> {
+                    Intent intent = new Intent(context, MediaActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(MediaActivity.EXTRA_CONFIGURATION, configuration);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                })
+                .compose(new SingleOnNextCompose());
+    }
+
+    /**
+     * 只处理一次onNext()
+     */
+    private static class SingleOnNextCompose<T> implements Observable.Transformer<T, T> {
+        @Override
+        public Observable<T> call(Observable<T> observable) {
+            BehaviorSubject<Integer> behavior = BehaviorSubject.create();
+            return observable
+                    .takeUntil(behavior.skipWhile(status -> status!=0))
+                    .doOnNext(data -> behavior.onNext(0));
+        }
     }
 
 }

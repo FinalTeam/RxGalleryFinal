@@ -14,9 +14,10 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
+import cn.finalteam.rxgalleryfinal.utils.Logger;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,13 +43,14 @@ public class MainActivity extends AppCompatActivity {
                         .radio()
                         .crop()
                         .imageLoader(ImageLoaderType.FRESCO)
-                        .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
-                            @Override
-                            protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                                Toast.makeText(getBaseContext(), imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .openGallery();
+                        .asObservable()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(data -> {
+                            ImageRadioResultEvent imageRadioResultEvent = (ImageRadioResultEvent) data;
+                            Toast.makeText(getBaseContext(), imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
+                            Logger.d("原始："+imageRadioResultEvent.getResult().getOriginalPath());
+                            Logger.d("裁剪："+imageRadioResultEvent.getResult().getCropPath());
+                        });
             } else {
                 RxGalleryFinal
                         .with(MainActivity.this)
@@ -56,13 +58,13 @@ public class MainActivity extends AppCompatActivity {
                         .multiple()
                         .maxSize(8)
                         .imageLoader(ImageLoaderType.FRESCO)
-                        .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
-                            @Override
-                            protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                                Toast.makeText(getBaseContext(), "已选择" + imageMultipleResultEvent.getResult().size() +"张图片", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .openGallery();
+                        .asObservable()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(data -> {
+                            ImageMultipleResultEvent imageMultipleResultEvent = (ImageMultipleResultEvent) data;
+                            Toast.makeText(getBaseContext(), "已选择" + imageMultipleResultEvent.getResult().size() +"张图片", Toast.LENGTH_SHORT).show();
+                            Logger.d("已选择" + imageMultipleResultEvent.getResult().size() +"张图片");
+                        });
             }
         });
 
