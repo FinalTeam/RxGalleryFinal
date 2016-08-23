@@ -98,4 +98,5 @@
 -keep interface android.support.design.** { *; }
 -keep public class android.support.design.R$* { *; }
 
+#9.picasso
 -dontwarn com.squareup.okhttp.**

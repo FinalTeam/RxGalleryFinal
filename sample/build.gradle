@@ -43,5 +43,5 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile project(':library')
+    compile project(':library') 
 }

@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                         .image()
                         .multiple()
                         .maxSize(8)
-                        .imageLoader(ImageLoaderType.FRESCO)
+                        .imageLoader(ImageLoaderType.GLIDE)
                         .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
                             @Override
                             protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {

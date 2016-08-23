@@ -109,7 +109,6 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        // it is the name that appears in bintray when logged
         name = "RxGalleryFinal"
         websiteUrl = siteUrl
         vcsUrl = gitUrl

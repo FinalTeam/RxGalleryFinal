@@ -5,7 +5,7 @@ import android.util.Log;
 import cn.finalteam.rxgalleryfinal.BuildConfig;
 
 /**
- * Desction:
+ * Desction:日志工具
  * Author:pengjianbo
  * Date:16/5/23 下午3:12
  */
