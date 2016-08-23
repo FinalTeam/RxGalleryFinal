@@ -6,8 +6,9 @@ RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、�
 ## 使用
 ### 下载或添加依赖
   在module gradle中项目依赖代码：
-  ```java
-    compile 'cn.finalteam.rxgalleryfinal:library:0.0.1'
+  
+  ```gradle
+    compile 'cn.finalteam.rxgalleryfinal:library:0.0.2'
     //rxgalleryfinal依赖appcompat-v7和recyclerview-v7扩展卡库
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
@@ -18,13 +19,17 @@ RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、�
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
   ```
+  
 ### 配置manifest
+
   * 添加权限
+  
   ```xml
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   ```
   * 注册activity
+  
   ```xml
   <application
         ...

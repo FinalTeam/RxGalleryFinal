@@ -93,6 +93,9 @@ public class FixImageView extends AppCompatImageView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(mOnImageViewListener == null){
+            return super.onTouchEvent(event);
+        }
         return mOnImageViewListener.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
