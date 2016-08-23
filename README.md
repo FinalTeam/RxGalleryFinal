@@ -22,48 +22,48 @@ RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、�
   
 ### 配置manifest
 
-  * 添加权限
+* 添加权限
   
-  ```xml
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-  ```
-  * 注册activity
+```xml
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+```
+* 注册activity
   
-  ```xml
-  <application
-        ...
-        android:theme="@style/Theme_Light">
-    <activity
-        android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
-        android:screenOrientation="portrait"
-        android:exported="true"
-        android:theme="@style/Theme_Light.Default"/>
-    <activity
-        android:name="com.yalantis.ucrop.UCropActivity"
-        android:screenOrientation="portrait"
-        android:theme="@style/Theme_Light.Default"/>
-  </application
-  ```
-  这里可以配置主题
+```xml
+<application
+    ...
+    android:theme="@style/Theme_Light">
+<activity
+    android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
+    android:screenOrientation="portrait"
+    android:exported="true"
+    android:theme="@style/Theme_Light.Default"/>
+<activity
+    android:name="com.yalantis.ucrop.UCropActivity"
+    android:screenOrientation="portrait"
+    android:theme="@style/Theme_Light.Default"/>
+</application
+```
+这里可以配置主题
 * 打开图片浏览器
 
-  ```java
-  RxGalleryFinal
-    .with(context)
-    .image()
-    .radio()
-    .crop()
-    .imageLoader(ImageLoaderType.GLIDE)
-    .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
-        @Override
-        protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-            //图片选择结果
-            .....
-        }
-    })
-    .openGallery();
-  ```
+```java
+RxGalleryFinal
+.with(context)
+.image()
+.radio()
+.crop()
+.imageLoader(ImageLoaderType.GLIDE)
+.subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+    @Override
+    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+        //图片选择结果
+        .....
+    }
+})
+.openGallery();
+```
 
 ## 自定义主题
 
@@ -147,6 +147,6 @@ RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、�
 ```
 
 ## Q&A
-    * 1、出现图片倒立问题，如何解决
+* 1、出现图片倒立问题，如何解决
 
-    * 2、如何压缩图片
+* 2、如何压缩图片
