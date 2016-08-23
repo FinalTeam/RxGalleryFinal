@@ -25,13 +25,7 @@
     public <init>(android.content.Context);
 }
 
-#2.support-design
--dontwarn android.support.design.**
--keep class android.support.design.** { *; }
--keep interface android.support.design.** { *; }
--keep public class android.support.design.R$* { *; }
-
-#3.rxjava
+#2.rxjava
 -keep class rx.schedulers.Schedulers {
     public static <methods>;
 }
@@ -56,23 +50,23 @@
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 
-#4.retrolambda
+#3.retrolambda
 -dontwarn java.lang.invoke.*
 
-#5.support-v4
+#4.support-v4
 -keep class android.support.v4.** { *; }
 -keep interface android.support.v4.** { *; }
 
-#6.ucrop
+#5.ucrop
 -dontwarn com.yalantis.ucrop**
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
 
-#7.photoview
+#6.photoview
 -keep class uk.co.senab.photoview** { *; }
 -keep interface uk.co.senab.photoview** { *; }
 
-#8.rxgalleryfinal
+#7.rxgalleryfinal
 -keep class cn.finalteam.rxgalleryfinal.ui.widget** { *; }
 
 -keepclassmembers class * extends android.app.Activity {
@@ -97,5 +91,11 @@
    void set*(***);
    *** get*();
 }
+
+#8.support-design
+-dontwarn android.support.design.**
+-keep class android.support.design.** { *; }
+-keep interface android.support.design.** { *; }
+-keep public class android.support.design.R$* { *; }
 
 -dontwarn com.squareup.okhttp.**

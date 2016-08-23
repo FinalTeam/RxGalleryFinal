@@ -1,7 +1,9 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "com.jfrog.bintray"
+
+version = "0.0.1"
 
 android {
     compileSdkVersion 24
@@ -11,7 +13,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
 
         vectorDrawables.useSupportLibrary = true
     }
@@ -45,4 +47,78 @@ dependencies {
     provided 'com.facebook.fresco:fresco:0.12.0'
     provided 'com.github.bumptech.glide:glide:3.7.0'
     provided 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+}
+
+//===================================upload jcenter=================================================
+def siteUrl = 'https://github.com/FinalTeam/RxGalleryFinal'
+def gitUrl = 'https://github.com/FinalTeam/RxGalleryFinal.git'
+group = "cn.finalteam.rxgalleryfinal"
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+
+                // Add your description here
+                name 'RxGalleryFinal'
+                description = 'android gallery'
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'pengjianbo'
+                        name 'pengjianbo'
+                        email '172340021@qq.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        // it is the name that appears in bintray when logged
+        name = "RxGalleryFinal"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+        version {
+            gpg {
+                passphrase = properties.getProperty("bintray.gpg.password")
+            }
+        }
+    }
 }
