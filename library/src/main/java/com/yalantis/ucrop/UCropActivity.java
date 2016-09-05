@@ -362,6 +362,9 @@ public class UCropActivity extends BaseActivity {
             setupAspectRatioWidget();
             setupRotateWidget();
             setupScaleWidget();
+        } else {
+            findViewById(R.id.wrapper_controls).setVisibility(View.GONE);
+            findViewById(R.id.wrapper_states).setVisibility(View.GONE);
         }
     }
 
