@@ -8,7 +8,7 @@ RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、�
   在module gradle中项目依赖代码：
   
   ```gradle
-    compile 'cn.finalteam.rxgalleryfinal:library:0.0.2'
+    compile 'cn.finalteam.rxgalleryfinal:library:0.0.3'
     //rxgalleryfinal依赖appcompat-v7和recyclerview-v7扩展卡库
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
