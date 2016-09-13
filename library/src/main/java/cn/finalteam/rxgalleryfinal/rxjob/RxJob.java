@@ -24,4 +24,8 @@ public class RxJob {
     public void addJob(Job job) {
         jobManager.addJob(job);
     }
+
+    public void clearJob() {
+        jobManager.clear();
+    }
 }

@@ -24,12 +24,14 @@ public class JobManager {
     }
 
     public void addJob(Job job) {
-        if(jobQueue.isEmpty() && queueFree){
-            jobQueue.offer(job);
-            start();
-        } else {
-            jobQueue.offer(job);
-        }
+        try {
+            if (jobQueue.isEmpty() && queueFree) {
+                jobQueue.offer(job);
+                start();
+            } else {
+                jobQueue.offer(job);
+            }
+        }catch (Exception e){}
 
     }
 
@@ -61,5 +63,11 @@ public class JobManager {
             public void onNext(Job job) {
             }
         });
+    }
+
+    public void clear() {
+        try {
+            jobQueue.clear();
+        }catch (Exception e){}
     }
 }

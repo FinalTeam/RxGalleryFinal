@@ -33,6 +33,7 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.MediaViewPagerChangedEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.RequestStorageReadAccessPermissionEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
+import cn.finalteam.rxgalleryfinal.rxjob.RxJob;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPageFragment;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaPreviewFragment;
@@ -365,6 +366,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         super.onDestroy();
         RxBus.getDefault().removeAllStickyEvents();
         RxBus.getDefault().clear();
+        RxJob.getDefault().clearJob();
     }
 
     private StateListDrawable createDefaultOverButtonBgDrawable() {
@@ -405,4 +407,5 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
 }
