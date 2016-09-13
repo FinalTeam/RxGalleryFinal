@@ -268,11 +268,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onRequestMediaCallback(List<MediaBean> list) {
-        if (mPage == 1 && TextUtils.equals(mBucketId, String.valueOf(Integer.MIN_VALUE))) {
-            MediaBean takePhotoBean = new MediaBean();
-            takePhotoBean.setId(Integer.MIN_VALUE);
-            takePhotoBean.setBucketId(String.valueOf(Integer.MIN_VALUE));
-            mMediaBeanList.add(takePhotoBean);
+        if(!mConfiguration.isHideCamera()) {
+            if (mPage == 1 && TextUtils.equals(mBucketId, String.valueOf(Integer.MIN_VALUE))) {
+                MediaBean takePhotoBean = new MediaBean();
+                takePhotoBean.setId(Integer.MIN_VALUE);
+                takePhotoBean.setBucketId(String.valueOf(Integer.MIN_VALUE));
+                mMediaBeanList.add(takePhotoBean);
+            }
         }
         if (list != null && list.size() > 0) {
             mMediaBeanList.addAll(list);
@@ -345,23 +347,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
         } else {
             if (mConfiguration.isRadio()) {
-                if(!mConfiguration.isCrop()){
-                    ImageCropBean bean = new ImageCropBean();
-                    bean.copyMediaBean(mediaBean);
-                    RxBus.getDefault().post(new ImageRadioResultEvent(bean));
-                    getActivity().finish();
-                } else {
-                    String originalPath = mediaBean.getOriginalPath();
-                    File file = new File(originalPath);
-                    Uri outUri = Uri.fromFile(new File(mImageStoreCropDir, file.getName()));
-                    Intent intent = new Intent(getContext(), UCropActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(UCropActivity.EXTRA_OUTPUT_URI, outUri);
-                    bundle.putParcelable(UCropActivity.EXTRA_INPUT_BEAN, mediaBean);
-                    bundle.putParcelable(UCropActivity.EXTRA_CONFIGURATION, mConfiguration);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
+                radioNext(mediaBean);
             } else {
                 MediaBean firstBean = mMediaBeanList.get(0);
                 ArrayList<MediaBean> gridMediaList = new ArrayList<>();
@@ -375,6 +361,26 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 }
                 RxBus.getDefault().post(new OpenMediaPageFragmentEvent(gridMediaList, pos));
             }
+        }
+    }
+
+    private void radioNext(MediaBean mediaBean) {
+        if(!mConfiguration.isCrop()){
+            ImageCropBean bean = new ImageCropBean();
+            bean.copyMediaBean(mediaBean);
+            RxBus.getDefault().post(new ImageRadioResultEvent(bean));
+            getActivity().finish();
+        } else {
+            String originalPath = mediaBean.getOriginalPath();
+            File file = new File(originalPath);
+            Uri outUri = Uri.fromFile(new File(mImageStoreCropDir, file.getName()));
+            Intent intent = new Intent(getContext(), UCropActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(UCropActivity.EXTRA_OUTPUT_URI, outUri);
+            bundle.putParcelable(UCropActivity.EXTRA_INPUT_BEAN, mediaBean);
+            bundle.putParcelable(UCropActivity.EXTRA_CONFIGURATION, mConfiguration);
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
     }
 
@@ -496,10 +502,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
             @Override
             public void onNext(MediaBean mediaBean) {
+
                 if(!isDetached() && mediaBean != null) {
                     mMediaBeanList.add(1, mediaBean);
                     mMediaGridAdapter.notifyDataSetChanged();
                 }
+
             }
         });
     }

@@ -39,6 +39,7 @@ public class Configuration implements Parcelable{
 
     private int imageLoaderType;
     private int imageConfig;
+    private boolean hideCamera;
 
     //==========UCrop START==========
     //是否隐藏裁剪页面底部控制栏,默认显示
@@ -88,7 +89,7 @@ public class Configuration implements Parcelable{
         maxResultHeight = in.readInt();
         imageLoaderType = in.readInt();
         imageConfig = in.readInt();
-
+        hideCamera = in.readByte() != 0;
     }
 
     public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
@@ -141,6 +142,14 @@ public class Configuration implements Parcelable{
 
     protected void setMaxSize(int maxSize) {
         this.maxSize = maxSize;
+    }
+
+    public boolean isHideCamera() {
+        return hideCamera;
+    }
+
+    public void setHideCamera(boolean hideCamera) {
+        this.hideCamera = hideCamera;
     }
 
     public AbsImageLoader getImageLoader() {
@@ -328,5 +337,6 @@ public class Configuration implements Parcelable{
         parcel.writeInt(maxResultHeight);
         parcel.writeInt(imageLoaderType);
         parcel.writeInt(imageConfig);
+        parcel.writeByte((byte) (hideCamera ? 1 : 0));
     }
 }

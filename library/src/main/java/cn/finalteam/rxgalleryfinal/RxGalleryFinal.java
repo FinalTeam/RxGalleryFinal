@@ -123,6 +123,15 @@ public class RxGalleryFinal {
     }
 
     /**
+     * 隐藏相机
+     * @return
+     */
+    public RxGalleryFinal hideCamera() {
+        configuration.setHideCamera(true);
+        return this;
+    }
+
+    /**
      * set to true to hide the bottom controls (shown by default)
      * @param hide
      * @return
