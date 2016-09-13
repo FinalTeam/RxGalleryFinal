@@ -47,8 +47,8 @@ public class MediaPreviewAdapter extends RecyclingPagerAdapter {
         MediaBean mediaBean = mMediaList.get(position);
         View view = mInflater.inflate(R.layout.gallery_media_image_preview_item, null);
         PhotoView ivImage = (PhotoView) view.findViewById(R.id.iv_media_image);
-        String path = mediaBean.getThumbnailSmallPath();
-        if(TextUtils.isEmpty(path)) {
+        String path = null;
+        if(mediaBean.getWidth() > 1200 || mediaBean.getHeight() > 1200){
             path = mediaBean.getThumbnailBigPath();
         }
         if(TextUtils.isEmpty(path)) {

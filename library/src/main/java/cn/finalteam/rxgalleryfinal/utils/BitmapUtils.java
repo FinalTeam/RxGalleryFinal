@@ -64,15 +64,15 @@ public class BitmapUtils {
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
             if (maxValue > 3000) {
-                options.inSampleSize = scale * 6;
-            } else if (maxValue > 2000 && maxValue <= 3000) {
                 options.inSampleSize = scale * 5;
-            } else if (maxValue > 1500 && maxValue <= 2000) {
+            } else if (maxValue > 2000 && maxValue <= 3000) {
                 options.inSampleSize = scale * 4;
+            } else if (maxValue > 1500 && maxValue <= 2000) {
+                options.inSampleSize = (int)(scale * 2.5);
             } else if (maxValue > 1000 && maxValue <= 1500) {
-                options.inSampleSize = scale * 3;
-            } else if (maxValue > 400 && maxValue <= 1000) {
-                options.inSampleSize = scale * 2;
+                options.inSampleSize = (int)(scale * 1.3);
+//            } else if (maxValue > 400 && maxValue <= 1000) {
+//                options.inSampleSize = scale * 2;
             } else {
                 options.inSampleSize = scale;
             }
@@ -172,15 +172,15 @@ public class BitmapUtils {
             //3、计算图片压缩inSampleSize
             int maxValue = Math.max(originalImageWidth, originalImageHeight);
             if (maxValue > 3000) {
-                options.inSampleSize = scale * 6;
-            } else if (maxValue > 2000 && maxValue <= 3000) {
                 options.inSampleSize = scale * 5;
-            } else if (maxValue > 1500 && maxValue <= 2000) {
+            } else if (maxValue > 2000 && maxValue <= 3000) {
                 options.inSampleSize = scale * 4;
+            } else if (maxValue > 1500 && maxValue <= 2000) {
+                options.inSampleSize = (int)(scale * 2.5);
             } else if (maxValue > 1000 && maxValue <= 1500) {
-                options.inSampleSize = scale * 3;
-            } else if (maxValue > 400 && maxValue <= 1000) {
-                options.inSampleSize = scale * 2;
+                options.inSampleSize = (int)(scale * 1.3);
+//            } else if (maxValue > 400 && maxValue <= 1000) {
+//                options.inSampleSize = scale * 2;
             } else {
                 options.inSampleSize = scale;
             }
@@ -236,12 +236,18 @@ public class BitmapUtils {
      * @return
      * @throws IOException
      */
-    public static int getImageOrientation(String uri) throws IOException {
-        ExifInterface exif = new ExifInterface(uri);
-        int orientation = exif.getAttributeInt(
-                ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL);
-        return orientation;
+    public static int getImageOrientation(String uri) {
+        if(!new File(uri).exists()){
+            return 0;
+        }
+        try {
+            ExifInterface exif = new ExifInterface(uri);
+            int orientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+            return orientation;
+        }catch (Exception e){}
+        return 0;
     }
 
     /**
