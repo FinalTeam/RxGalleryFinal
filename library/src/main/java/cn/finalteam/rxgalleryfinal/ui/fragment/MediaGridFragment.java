@@ -308,6 +308,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             return;
         }
 
+        mBucketBeanList.clear();
         mBucketBeanList.addAll(list);
         mBucketAdapter.setSelectedBucket(list.get(0));
         mBucketAdapter.notifyDataSetChanged();
@@ -482,6 +483,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Logger.i("images empty");
             return;
         }
+
+        mMediaGridPresenter.getBucketList();
 
         Observable.create((Observable.OnSubscribe<MediaBean>) subscriber -> {
             MediaBean mediaBean = MediaUtils.getMediaBeanWithImage(getContext(), images[0]);
