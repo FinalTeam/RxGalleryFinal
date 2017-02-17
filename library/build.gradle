@@ -52,7 +52,7 @@ dependencies {
 //===================================upload jcenter=================================================
 def siteUrl = 'https://github.com/FinalTeam/RxGalleryFinal'
 def gitUrl = 'https://github.com/FinalTeam/RxGalleryFinal.git'
-group = "cn.finalteam.rxgalleryfinal"
+group = "com.mg.RxCustomizedImagePicker"
 
 install {
     repositories.mavenInstaller {
@@ -61,7 +61,7 @@ install {
                 packaging 'aar'
 
                 // Add your description here
-                name 'RxGalleryFinal'
+                name 'RxCustomizedImagePicker'
                 description = 'android gallery'
                 url siteUrl
 
@@ -74,9 +74,9 @@ install {
                 }
                 developers {
                     developer {
-                        id 'pengjianbo'
-                        name 'pengjianbo'
-                        email '172340021@qq.com'
+                        id 'liukefu2050'
+                        name 'liukefu2050'
+                        email 'liukefu2050@sina.com'
                     }
                 }
                 scm {
@@ -109,15 +109,11 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "RxGalleryFinal"
+        name = "RxCustomizedImagePicker"
+        userOrg = 'mgice'
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         publish = true
-        version {
-            gpg {
-                passphrase = properties.getProperty("bintray.gpg.password")
-            }
-        }
     }
 }
