@@ -3,7 +3,7 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: "com.jfrog.bintray"
 
-version = "0.0.3"
+
 
 android {
     compileSdkVersion 24
@@ -50,53 +50,81 @@ dependencies {
 }
 
 //===================================upload jcenter=================================================
-def siteUrl = 'https://github.com/FinalTeam/RxGalleryFinal'
-def gitUrl = 'https://github.com/FinalTeam/RxGalleryFinal.git'
+def siteUrl = 'https://github.com/liukefu2050/RxGalleryFinal'
+def gitUrl = 'https://github.com/liukefu2050/RxGalleryFinal.git'
+
 group = "com.mg.RxCustomizedImagePicker"
-
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-
-                // Add your description here
-                name 'RxCustomizedImagePicker'
-                description = 'android gallery'
-                url siteUrl
-
-                // Set your license
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'liukefu2050'
-                        name 'liukefu2050'
-                        email 'liukefu2050@sina.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-
-                }
-            }
-        }
-    }
-}
+version = "0.0.3"
+project.archivesBaseName = "library"
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
 }
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += configurations.compile
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+javadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version true
+        links "https://androiddoc.qiniudn.com/reference/"
+        title "RxCustomizedImagePicker 0.0.3"
+    }
+}
 
 artifacts {
     archives sourcesJar
+   // archives javadocJar
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            name "RxCustomizedImagePicker"
+            description "android gallery"
+            url siteUrl
+            inceptionYear '2017'
+
+            packaging 'aar'
+            groupId "com.mg.RxCustomizedImagePicker"
+            artifactId "library"
+            version "0.0.3"
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            developers {
+                developer {
+                    id "liukefu2020"
+                    name "liukefu2020"
+                    email "liukefu2050@sina.com"
+                }
+            }
+            scm {
+                connection gitUrl
+                developerConnection gitUrl
+                url siteUrl
+            }
+
+        }
+    }
 }
 
 Properties properties = new Properties()
@@ -110,10 +138,20 @@ bintray {
     pkg {
         repo = "maven"
         name = "RxCustomizedImagePicker"
-        userOrg = 'mgice'
+        userOrg = user
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         publish = true
+        version {
+            name = '0.0.3'
+            desc = 'android gallery'
+            released  = new Date()
+            vcsTag = '0.0.3'
+            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+            gpg {
+                passphrase = properties.getProperty("bintray.gpg.password")
+            }
+        }
     }
-}
+}/**/
