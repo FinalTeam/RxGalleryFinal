@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="gallery_ucrop_label_original">Original proportion</string>
+    <string name="gallery_ucrop_label_original">Default</string>
     <string name="gallery_ucrop_label_edit_photo">Cut</string>
 
     <string name="gallery_ucrop_menu_crop">Cut</string>

@@ -17,4 +17,6 @@
     <string name="gallery_all_image">All pictures</string>
     <string name="gallery_all_video">All video</string>
     <string name="gallery_take_image">Photograph</string>
+    <string name="gallery_image_selected">Selected</string>
+    <string name="gallery_image_unit">pictures</string>
 </resources>
