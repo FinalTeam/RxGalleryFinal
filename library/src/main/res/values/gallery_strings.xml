@@ -17,4 +17,6 @@
     <string name="gallery_all_image">所有图片</string>
     <string name="gallery_all_video">所有视频</string>
     <string name="gallery_take_image">拍摄照片</string>
+    <string name="gallery_image_selected">选中</string>
+    <string name="gallery_image_unit">张</string>
 </resources>
