@@ -3,7 +3,7 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: "com.jfrog.bintray"
 
-version = "0.0.3"
+version = "0.0.4"
 
 android {
     compileSdkVersion 24
@@ -74,9 +74,9 @@ install {
                 }
                 developers {
                     developer {
-                        id 'pengjianbo'
-                        name 'pengjianbo'
-                        email '172340021@qq.com'
+                        id 'dujinyang'
+                        name 'dujinyang'
+                        email '309933706@qq.com'
                     }
                 }
                 scm {

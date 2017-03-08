@@ -1,13 +1,17 @@
 package cn.finalteam.rxgalleryfinal.ui.fragment;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -384,18 +388,37 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
     }
 
+    /**
+     * @Author:Karl-dujinyang
+     * 兼容7.0打开路径问题
+     */
     private void openCamera() {
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (captureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
             String filename = String.format(IMAGE_STORE_FILE_NAME, dateFormat.format(new Date()));
-            mImagePath = new File(mImageStoreDir, filename).getAbsolutePath();
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mImagePath)));
-            startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
+            File fileImagePath = new File(mImageStoreDir, filename);
+            mImagePath = fileImagePath.getAbsolutePath();
+            if(mImagePath!=null){
+                    /*获取当前系统的android版本号*/
+                int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+                if (currentapiVersion<24){
+                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
+                    startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
+                }else {
+                    ContentValues contentValues = new ContentValues(1);
+                    contentValues.put(MediaStore.Images.Media.DATA, mImagePath );
+                    Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
+                }
+            }
         } else {
             Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -66,6 +66,7 @@ public class RxBus {
         mInstance = null;
     }
 
+
     /**
      * 是否被取消订阅
      * @return
