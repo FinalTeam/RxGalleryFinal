@@ -1,24 +1,8 @@
 # RxGalleryFinal
 
-## 简介
-RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、单选、拍摄和裁剪，主题可自定义，无强制绑定第三方图片加载器。
+##功能描述
+   RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、单选、拍摄和裁剪，主题可自定义，无强制绑定第三方图片加载器。
 
-## 使用
-### 下载或添加依赖
-  在module gradle中项目依赖代码：
-  
-  ```gradle
-    compile 'cn.finalteam.rxgalleryfinal:library:0.0.3'
-    //rxgalleryfinal依赖appcompat-v7和recyclerview-v7扩展卡库
-    compile 'com.android.support:recyclerview-v7:24.2.0'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-
-    //支持以下主流图片加载器，开发者自行选择
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.facebook.fresco:fresco:0.12.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-  ```
   
 ### 配置manifest
 
@@ -65,7 +49,22 @@ RxGalleryFinal
 .openGallery();
 ```
 
-## 自定义主题
+## 使用
+### 下载或添加依赖
+  在module gradle中项目依赖代码：
+
+  ```gradle
+    compile 'cn.finalteam.rxgalleryfinal:library:0.0.3'
+    //rxgalleryfinal依赖appcompat-v7和recyclerview-v7扩展卡库
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+
+    //支持以下主流图片加载器，开发者自行选择
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.facebook.fresco:fresco:0.12.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+  ```
 
 ## 混淆配置
 ```xml
@@ -148,5 +147,13 @@ RxGalleryFinal
 
 ## Q&A
 * 1、出现图片倒立问题，如何解决
-
 * 2、如何压缩图片
+* 3、Android 7.0闪退
+
+## 联系
+    如果有紧急事件可联系作者或加Q群：
+    - Q群号： 218801658
+    - Q群号： 246231638
+
+
+
