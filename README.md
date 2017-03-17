@@ -73,6 +73,14 @@ RxGalleryFinal
         });
 ```
 
+<hr/>
+```java
+  //手动打开日志。
+        ModelUtils.setDebugModel(true);
+```
+
+ 截图：
+
 ![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/a1.png)
 
 
