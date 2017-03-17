@@ -4,7 +4,7 @@
 
    RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、单选、拍摄和裁剪，主题可自定义，无强制绑定第三方图片加载器。
 
-### 新版本 V0.08
+### 新版本 V 0.0.8
 
     1.增加日志输出的debug功能，防止多层DebugConfig的问题
     2.去掉Toast，图片多选给到自定义的事件
@@ -73,10 +73,13 @@ RxGalleryFinal
         });
 ```
 
-<hr/>
+----
+
 ```java
+
   //手动打开日志。
         ModelUtils.setDebugModel(true);
+
 ```
 
  截图：
