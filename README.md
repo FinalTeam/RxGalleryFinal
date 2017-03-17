@@ -12,6 +12,8 @@
   
 ### 配置manifest
 
+<a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/sample/src/main/java/cn/finalteam/rxgalleryfinal/sample/MainActivity.java" targer="_blank"> 查看 Sample 代码</a>
+
 * 添加权限
   
 ```xml
@@ -55,7 +57,6 @@ RxGalleryFinal
 .openGallery();
 ```
 ----
-<a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/sample/src/main/java/cn/finalteam/rxgalleryfinal/sample/MainActivity.java" targer="_blank">Sample 代码</a>
 
 
 ```java
