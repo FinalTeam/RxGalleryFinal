@@ -1,9 +1,11 @@
 # RxGalleryFinal
 
-##功能描述
+## 功能描述
+
    RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、单选、拍摄和裁剪，主题可自定义，无强制绑定第三方图片加载器。
 
-##新版本 V0.08
+### 新版本 V0.08
+
     1.增加日志输出的debug功能，防止多层DebugConfig的问题
     2.去掉Toast，图片多选给到自定义的事件
     3.解决7.0奔溃的问题
@@ -58,18 +60,17 @@ RxGalleryFinal
 
 ```java
  //得到图片多选的事件
-                 RxGalleryListener.getInstance().setMultiImageCheckedListener(new IMultiImageCheckedListener() {
-                    @Override
-                    public void selectedImg(Object t, boolean isChecked) {
-                        //这个主要点击或者按到就会触发，所以不建议在这里进行Toast
-                      /*  Toast.makeText(getBaseContext(),"->"+isChecked,Toast.LENGTH_SHORT).show();*/
-                    }
-
-                    @Override
-                    public void selectedImgMax(Object t, boolean isChecked, int maxSize) {
-                        Toast.makeText(getBaseContext(), "你最多只能选择" + maxSize + "张图片", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        RxGalleryListener.getInstance().setMultiImageCheckedListener(new IMultiImageCheckedListener() {
+                 @Override
+                 public void selectedImg(Object t, boolean isChecked) {
+                   //这个主要点击或者按到就会触发，所以不建议在这里进行Toast
+                    /*  Toast.makeText(getBaseContext(),"->"+isChecked,Toast.LENGTH_SHORT).show();*/
+                 }
+                 @Override
+                 public void selectedImgMax(Object t, boolean isChecked, int maxSize) {
+                    Toast.makeText(getBaseContext(), "你最多只能选择" + maxSize + "张图片", Toast.LENGTH_SHORT).show();
+                 }
+        });
 ```
 
 
