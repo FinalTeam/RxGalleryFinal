@@ -3,11 +3,12 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: "com.jfrog.bintray"
 
-version = "0.0.4"
-
+version = "0.0.6"
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.1'
+    buildToolsVersion '24.0.2'
+
+
 
     defaultConfig {
         minSdkVersion 14
@@ -21,15 +22,22 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        }
+
+        debug{
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     lintOptions {
         abortOnError false
+        checkReleaseBuilds false
     }
 
     resourcePrefix "gallery_"
@@ -42,7 +50,6 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.9'
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
-
     provided 'com.squareup.picasso:picasso:2.5.2'
     provided 'com.facebook.fresco:fresco:0.12.0'
     provided 'com.github.bumptech.glide:glide:3.7.0'
@@ -62,7 +69,7 @@ install {
 
                 // Add your description here
                 name 'RxGalleryFinal'
-                description = 'android gallery'
+                description = 'dujinyang desc'
                 url siteUrl
 
                 // Set your license

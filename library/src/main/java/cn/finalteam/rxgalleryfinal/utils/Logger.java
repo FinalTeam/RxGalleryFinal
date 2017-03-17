@@ -12,7 +12,7 @@ import cn.finalteam.rxgalleryfinal.BuildConfig;
 public class Logger {
 
     public static final String TAG = "RxGalleryFinal";
-    public static final boolean DEBUG = BuildConfig.DEBUG;
+    public static boolean DEBUG = BuildConfig.DEBUG;
     
     public static void d(String value){
         if(DEBUG) {

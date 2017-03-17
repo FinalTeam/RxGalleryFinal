@@ -23,6 +23,8 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
+import cn.finalteam.rxgalleryfinal.utils.Logger;
+import cn.finalteam.rxgalleryfinal.utils.ModelUtils;
 import cn.finalteam.rxgalleryfinal.utils.StorageUtils;
 import rx.Subscription;
 
@@ -258,6 +260,8 @@ public class RxGalleryFinal {
 
 
     public void openGallery(){
+        //提示
+        ModelUtils.logDebug();
         execute();
     }
 
@@ -267,7 +271,8 @@ public class RxGalleryFinal {
             return;
         }
         if(!StorageUtils.existSDcard()){
-            Toast.makeText(context, "没有找到SD卡", Toast.LENGTH_SHORT).show();
+             Logger.i("没有找到SD卡");
+             Toast.makeText(context, "没有找到SD卡", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -298,5 +303,7 @@ public class RxGalleryFinal {
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
+
+
 
 }

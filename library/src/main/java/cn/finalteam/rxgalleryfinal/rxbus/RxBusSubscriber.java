@@ -16,11 +16,14 @@ public abstract class RxBusSubscriber<T> extends Subscriber<T> {
             onEvent(t);
         } catch (Exception e) {
             e.printStackTrace();
+            onError(e);
         }
     }
 
+
     @Override
     public void onCompleted() {
+
     }
 
     @Override
@@ -29,4 +32,5 @@ public abstract class RxBusSubscriber<T> extends Subscriber<T> {
     }
 
     protected abstract void onEvent(T t) throws Exception;
+
 }
