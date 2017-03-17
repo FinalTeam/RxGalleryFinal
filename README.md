@@ -73,6 +73,8 @@ RxGalleryFinal
         });
 ```
 
+![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/a1.png)
+
 
 ## 使用
 ### 下载或添加依赖
