@@ -21,12 +21,20 @@ public class GlideImageLoader implements AbsImageLoader {
     @Override
     public void displayImage(Object context, String path, FixImageView imageView, Drawable defaultDrawable, Bitmap.Config config,  boolean resize, int width, int height, int rotate) {
         Context ctx = (Context) context;
-        DrawableRequestBuilder builder = Glide.with(ctx)
-                .load(new File(path))
-                .placeholder(defaultDrawable);
-                if(resize) {
-                    builder = builder.override(width, height);
-                }
+        DrawableRequestBuilder builder = null;
+        if(path!=null) {
+            builder = Glide.with(ctx)
+                    .load(new File(path))
+                    .placeholder(defaultDrawable);
+
+        }else{
+            builder = Glide.with(ctx)
+                    .load(new File("/sdcard"))
+                    .placeholder(defaultDrawable);
+        }
+        if (resize) {
+            builder = builder.override(width, height);
+        }
         builder.crossFade()
                 .transform(new RotateTransformation(ctx, rotate))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)

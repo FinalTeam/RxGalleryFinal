@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui;
 
+import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaGridAdapter;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
 

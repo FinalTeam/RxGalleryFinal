@@ -169,7 +169,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 Logger.i("选中：" + mMediaActivity.getResources().getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()));
                 iMultiImageCheckedListener.selectedImgMax(buttonView, isChecked, mConfiguration.getMaxSize());
             } else {
-                iMultiImageCheckedListener.selectedImg(buttonView, isChecked);
+                if(iMultiImageCheckedListener!=null)
+                    iMultiImageCheckedListener.selectedImg(buttonView, isChecked);
             }
 
         }

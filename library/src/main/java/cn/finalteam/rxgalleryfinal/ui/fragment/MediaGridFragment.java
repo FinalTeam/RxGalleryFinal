@@ -339,6 +339,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onItemClick(RecyclerView.ViewHolder holder, int position) {
+       onObItemClick(position);
+    }
+
+    public void onObItemClick( int position) {
         MediaBean mediaBean = mMediaBeanList.get(position);
         if (mediaBean.getId() == Integer.MIN_VALUE) {
 
@@ -347,7 +351,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 return;
             }
 
-            openCamera();
+            openCamera(getActivity());
 
         } else {
             if (mConfiguration.isRadio()) {
@@ -392,9 +396,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
      * @Author:Karl-dujinyang
      * 兼容7.0打开路径问题
      */
-    private void openCamera() {
+    public void openCamera(Context context) {
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (captureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+        if (captureIntent.resolveActivity(context.getPackageManager()) != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
             String filename = String.format(IMAGE_STORE_FILE_NAME, dateFormat.format(new Date()));
             File fileImagePath = new File(mImageStoreDir, filename);
@@ -417,6 +421,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 
