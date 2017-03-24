@@ -1,7 +1,7 @@
 # RxGalleryFinal
 
-## 功能描述
-   要求：JDK1.8
+## 功能描述（JDK1.8）
+
    RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、单选、拍摄和裁剪，主题可自定义，无强制绑定第三方图片加载器。
 
 ### 待完善
@@ -10,13 +10,13 @@
 
 ### 新版本 V 0.0.9
 
-    --    compile 'cn.finalteam.rxgalleryfinal:library:0.0.9'
+    -- compile 'cn.finalteam.rxgalleryfinal:library:0.0.9'
     1.增加直接打开相机的功能
     2.去掉 char[] java.lang.String.toCharArray()
 
 ### 新版本 V 0.0.8
 
-    --    compile 'cn.finalteam.rxgalleryfinal:library:0.0.8'
+    -- compile 'cn.finalteam.rxgalleryfinal:library:0.0.8'
     1.增加日志输出的debug功能，防止多层DebugConfig的问题
     2.去掉Toast，图片多选给到自定义的事件
     3.解决7.0奔溃的问题
