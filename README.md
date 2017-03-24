@@ -9,8 +9,17 @@
     1.增加日志输出的debug功能，防止多层DebugConfig的问题
     2.去掉Toast，图片多选给到自定义的事件
     3.解决7.0奔溃的问题
-  
+    4.去掉 char[] java.lang.String.toCharArray()
+
+### 待完善
+    1.视频选择器的回调
+
 ### 配置manifest
+
+ 截图：
+
+![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/a1.png)
+
 
 <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/sample/src/main/java/cn/finalteam/rxgalleryfinal/sample/MainActivity.java" targer="_blank"> 查看 Sample 代码</a>
 
@@ -38,9 +47,13 @@
 </application
 ```
 这里可以配置主题
+
+![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-03-24-181216.png)
+
 * 打开图片浏览器
 
 ```java
+//自定义单选
 RxGalleryFinal
 .with(context)
 .image()
@@ -56,7 +69,32 @@ RxGalleryFinal
 })
 .openGallery();
 ```
-----
+
+```java
+   //自定义多选
+  RxGalleryFinal
+                    .with(MainActivity.this)
+                    .image()
+                    .multiple()
+                    .maxSize(8)
+                    .imageLoader(ImageLoaderType.UNIVERSAL)
+                    .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+
+                        @Override
+                        protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
+                            Toast.makeText(getBaseContext(), "已选择" + imageMultipleResultEvent.getResult().size() + "张图片", Toast.LENGTH_SHORT).show();
+                        }
+                        @Override
+                        public void onCompleted() {
+                            super.onCompleted();
+                            Toast.makeText(getBaseContext(), "OVER", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .openGallery();
+
+```
+
+---
 
 
 ```java
@@ -73,6 +111,19 @@ RxGalleryFinal
                  }
         });
 ```
+----
+
+```java
+//注解诠释
+ RxGalleryFinal.with(context)
+                    .image()//图片
+                    .radio()//单选
+                    .crop()//裁剪
+                    .video()//视频
+                    .imageLoader(ImageLoaderType.GLIDE)//里面可以选择主流图片工具  PICASSO  GLIDE  FRESCO UNIVERSAL(ImageLoader)
+                    .subscribe(rxBusResultSubscriber)
+                    .openGallery();
+```
 
 ----
 
@@ -83,9 +134,16 @@ RxGalleryFinal
 
 ```
 
- 截图：
+* 提供了相关的Api
 
-![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/a1.png)
+** 请查看MainActivity的示例代码
+
+```java
+        //调用图片选择器Api
+        initClickSelImgListener();//三选一
+        //调用视频选择器Api
+        initClickSelVDListener();//三选一
+```
 
 
 ## 使用
