@@ -1,7 +1,7 @@
 # RxGalleryFinal
 
 ## 功能描述
-
+   要求：JDK1.8
    RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、单选、拍摄和裁剪，主题可自定义，无强制绑定第三方图片加载器。
 
 ### 待完善
@@ -10,16 +10,34 @@
 
 ### 新版本 V 0.0.9
 
+    --    compile 'cn.finalteam.rxgalleryfinal:library:0.0.9'
     1.增加直接打开相机的功能
     2.去掉 char[] java.lang.String.toCharArray()
 
 ### 新版本 V 0.0.8
 
+    --    compile 'cn.finalteam.rxgalleryfinal:library:0.0.8'
     1.增加日志输出的debug功能，防止多层DebugConfig的问题
     2.去掉Toast，图片多选给到自定义的事件
     3.解决7.0奔溃的问题
     4.去掉 相关NULL引起的问题
 
+## 使用
+### 下载或添加依赖
+  在module gradle中项目依赖代码：
+
+  ```gradle
+    compile 'cn.finalteam.rxgalleryfinal:library:0.0.8'
+    //rxgalleryfinal依赖appcompat-v7和recyclerview-v7扩展卡库
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+
+    //支持以下主流图片加载器，开发者自行选择
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.facebook.fresco:fresco:0.12.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+  ```
 
 
 ### 配置manifest
@@ -156,22 +174,6 @@ RxGalleryFinal
 ```
 
 
-## 使用
-### 下载或添加依赖
-  在module gradle中项目依赖代码：
-
-  ```gradle
-    compile 'cn.finalteam.rxgalleryfinal:library:0.0.8'
-    //rxgalleryfinal依赖appcompat-v7和recyclerview-v7扩展卡库
-    compile 'com.android.support:recyclerview-v7:24.2.0'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-
-    //支持以下主流图片加载器，开发者自行选择
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.facebook.fresco:fresco:0.12.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-  ```
 
 ## 混淆配置
 ```xml
