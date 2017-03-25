@@ -85,7 +85,7 @@
 ```
 这里可以配置主题
 
-![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-03-24-181216.png =700x700)
+![img-w50](https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-03-24-181216.png)
 
 * 打开图片浏览器
 
