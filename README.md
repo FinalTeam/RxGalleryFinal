@@ -46,6 +46,17 @@
 
 ![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/a1.png)
 
+* 提供了相关的Api
+
+* 请查看MainActivity的示例代码
+
+```java
+        //调用图片选择器Api
+        initClickSelImgListener();//三选一
+        //调用视频选择器Api
+        initClickSelVDListener();//三选一
+```
+
 
 <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/sample/src/main/java/cn/finalteam/rxgalleryfinal/sample/MainActivity.java" targer="_blank"> 查看 Sample 代码</a>
 
@@ -74,7 +85,7 @@
 ```
 这里可以配置主题
 
-![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-03-24-181216.png)
+![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-03-24-181216.png =700x700)
 
 * 打开图片浏览器
 
@@ -162,17 +173,6 @@ RxGalleryFinal
 
 ```
 ----
-* 提供了相关的Api
-
-* 请查看MainActivity的示例代码
-
-```java
-        //调用图片选择器Api
-        initClickSelImgListener();//三选一
-        //调用视频选择器Api
-        initClickSelVDListener();//三选一
-```
-
 
 
 ## 混淆配置
