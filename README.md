@@ -50,6 +50,7 @@
 
 * 请查看MainActivity的示例代码
 
+    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/sample/src/main/java/cn/finalteam/rxgalleryfinal/sample/MainActivity.java" targer="_blank"> 查看 Sample 代码</a>
 ```java
         //调用图片选择器Api
         initClickSelImgListener();//三选一
@@ -58,34 +59,8 @@
 ```
 
 
-<a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/sample/src/main/java/cn/finalteam/rxgalleryfinal/sample/MainActivity.java" targer="_blank"> 查看 Sample 代码</a>
-
-* 添加权限
-  
-```xml
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-```
-* 注册activity
-  
-```xml
-<application
-    ...
-    android:theme="@style/Theme_Light">
-<activity
-    android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
-    android:screenOrientation="portrait"
-    android:exported="true"
-    android:theme="@style/Theme_Light.Default"/>
-<activity
-    android:name="com.yalantis.ucrop.UCropActivity"
-    android:screenOrientation="portrait"
-    android:theme="@style/Theme_Light.Default"/>
-</application
-```
 这里可以配置主题
-
-![img-w50](https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-03-24-181216.png)
+<img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-03-24-181216.png" style="zoom:50%" />
 
 * 打开图片浏览器
 
@@ -174,6 +149,30 @@ RxGalleryFinal
 ```
 ----
 
+
+* 添加权限
+
+```xml
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+```
+* 注册activity
+
+```xml
+<application
+    ...
+    android:theme="@style/Theme_Light">
+<activity
+    android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
+    android:screenOrientation="portrait"
+    android:exported="true"
+    android:theme="@style/Theme_Light.Default"/>
+<activity
+    android:name="com.yalantis.ucrop.UCropActivity"
+    android:screenOrientation="portrait"
+    android:theme="@style/Theme_Light.Default"/>
+</application
+```
 
 ## 混淆配置
 ```xml
