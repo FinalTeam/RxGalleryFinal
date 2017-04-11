@@ -62,7 +62,7 @@ public class Configuration implements Parcelable{
     //是否允许改变裁剪大小
     private boolean freestyleCropEnabled = OverlayView.DEFAULT_FREESTYLE_CROP_ENABLED;
     //是否显示裁剪框半透明椭圆浮层
-    private boolean ovalDimmedLayer = OverlayView.DEFAULT_OVAL_DIMMED_LAYER;
+    private boolean ovalDimmedLayer = OverlayView.DEFAULT_CIRCLE_DIMMED_LAYER;//DEFAULT_OVAL_DIMMED_LAYER
     private int maxResultWidth;
     private int maxResultHeight;
 

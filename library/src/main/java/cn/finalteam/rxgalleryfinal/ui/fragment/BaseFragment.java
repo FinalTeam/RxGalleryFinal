@@ -1,12 +1,18 @@
 package cn.finalteam.rxgalleryfinal.ui.fragment;
 
+import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.List;
+import java.util.Stack;
 
 import cn.finalteam.rxgalleryfinal.BuildConfig;
 import cn.finalteam.rxgalleryfinal.Configuration;
@@ -76,6 +82,35 @@ public abstract class BaseFragment extends Fragment {
         printFragmentLife("onCreateView");
         return inflater.inflate(getContentView(), container, false);
     }
+
+
+    private static Stack<BaseFragment> fragmentStack = new Stack<>();
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        Fragment parentFragment = getParentFragment();
+        if (null != parentFragment) {
+            fragmentStack.push(this);
+            parentFragment.startActivityForResult(intent, requestCode);
+        } else {
+            super.startActivityForResult(intent, requestCode);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        BaseFragment fragment = fragmentStack.isEmpty() ? null : fragmentStack.pop();
+        if (null != fragment) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+
+
+
 
     @Override
     public void onStart() {

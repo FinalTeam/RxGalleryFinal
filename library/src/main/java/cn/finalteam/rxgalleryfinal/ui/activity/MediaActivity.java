@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -51,6 +52,7 @@ import rx.Subscription;
 public class MediaActivity extends BaseActivity implements ActivityFragmentView {
 
     public static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
+    public static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102;
 
     private static final String EXTRA_CHECKED_LIST = EXTRA_PREFIX + ".CheckedList";
     private static final String EXTRA_SELECTED_INDEX = EXTRA_PREFIX + ".SelectedIndex";
@@ -403,9 +405,18 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                     finish();
                 }
                 break;
+            case REQUEST_STORAGE_WRITE_ACCESS_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    RxBus.getDefault().post(new RequestStorageReadAccessPermissionEvent(true));
+                } else {
+                    finish();
+                }
+                break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+
 
 }

@@ -1,11 +1,9 @@
 package cn.finalteam.rxgalleryfinal.ui.fragment;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,15 +21,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+import java.util.Random;
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.anim.Animation;
@@ -75,6 +73,8 @@ import rx.schedulers.Schedulers;
  * Desction:
  * Author:pengjianbo
  * Date:16/5/7 上午10:02
+ * Author:KARL-Dujinyang
+ * Date:2017.
  */
 public class MediaGridFragment extends BaseFragment implements MediaGridView, RecyclerViewFinal.OnLoadMoreListener,
         FooterAdapter.OnItemClickListener,View.OnClickListener, MediaScanner.ScanCallback, BucketAdapter.OnRecyclerViewItemClickListener {
@@ -104,8 +104,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private MediaScanner mMediaScanner;
 
     private int mPage = 1;
-    private File mImageStoreDir;
-    private File mImageStoreCropDir;
+    //预留公开命名接口
+    public static File mImageStoreDir;
+    public static File mImageStoreCropDir; //裁剪目录
+
     private String mImagePath;
 
     private String mBucketId = String.valueOf(Integer.MIN_VALUE);
@@ -129,7 +131,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if(context instanceof MediaActivity) {
             mMediaActivity = (MediaActivity) context;
         }
-        mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/RxGalleryFinal/");
+        mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/IMMQY/");
         mImageStoreCropDir = new File(mImageStoreDir, "crop");
         if (!mImageStoreCropDir.exists()) {
             mImageStoreCropDir.mkdirs();
@@ -212,6 +214,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if(success) {
             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
         }
+
     }
 
     private void subscribeEvent() {
@@ -263,6 +266,15 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     @Override
     protected void onFirstTimeLaunched() {
 
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        //直接刷新一次
+        refreshUI();
     }
 
     @Override
@@ -372,25 +384,44 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
     }
 
+
+    File mCropPath  = null;
     private void radioNext(MediaBean mediaBean) {
+        Logger.i("us :" + mConfiguration.isCrop());
         if(!mConfiguration.isCrop()){
-            ImageCropBean bean = new ImageCropBean();
-            bean.copyMediaBean(mediaBean);
-            RxBus.getDefault().post(new ImageRadioResultEvent(bean));
-            getActivity().finish();
-        } else {
-            String originalPath = mediaBean.getOriginalPath();
-            File file = new File(originalPath);
-            Uri outUri = Uri.fromFile(new File(mImageStoreCropDir, file.getName()));
-            Intent intent = new Intent(getContext(), UCropActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(UCropActivity.EXTRA_OUTPUT_URI, outUri);
-            bundle.putParcelable(UCropActivity.EXTRA_INPUT_BEAN, mediaBean);
-            bundle.putParcelable(UCropActivity.EXTRA_CONFIGURATION, mConfiguration);
-            intent.putExtras(bundle);
-            startActivity(intent);
+                ImageCropBean bean = new ImageCropBean();
+                bean.copyMediaBean(mediaBean);
+                RxBus.getDefault().post(new ImageRadioResultEvent(bean));
+                getActivity().finish();
+            } else {
+                String originalPath = mediaBean.getOriginalPath();
+                File file = new File(originalPath);
+                Random ran = new Random(1024);
+                String outName = ran.nextInt()+"-"+file.getName();
+                mCropPath =  new File(mImageStoreCropDir,outName );
+                Uri outUri = Uri.fromFile(mCropPath);
+                if(!file.exists()){
+                    file.mkdirs();
+                }
+                Uri inputUri = Uri.fromFile(new File(mediaBean.getOriginalPath()));
+                Intent intent = new Intent(getContext(), UCropActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(UCrop.EXTRA_OUTPUT_URI, outUri);
+                //bundle.putParcelable(UCropActivity.EXTRA_INPUT_BEAN, mediaBean);//EXTRA_INPUT_BEAN
+                bundle.putParcelable(UCrop.EXTRA_INPUT_URI, inputUri);
+                Logger.i("--->" + outUri.getPath() );
+                Logger.i("--->" + inputUri.getPath());
+                //AspectRatio []aspectRatios =  mConfiguration.getAspectRatio();
+                //bundle.putParcelableArrayList(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS,arrayList);//EXTRA_CONFIGURATION
+                intent.putExtras(bundle);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivityForResult(intent, -1);//无效
         }
     }
+
+
+
+
 
     /**
      * @Author:Karl-dujinyang
@@ -423,15 +454,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
 
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.i("onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
         if (requestCode == TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Logger.i(String.format("拍照成功,图片存储路径:%s", mImagePath));
-
             //刷新相册数据库
             mMediaScanner.scanFile(mImagePath, "image/jpeg", this);
         }
@@ -446,6 +474,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if(!TextUtils.isEmpty(mBucketId)) {
             outState.putString(BUCKET_ID_KEY, mBucketId);
         }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshUI();
     }
 
     @Override
@@ -501,6 +536,23 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                         })
                         .animate();
             }
+        }
+    }
+
+
+    /**
+     * 刷新图库
+     */
+    public void refreshUI(){
+        try {
+            //刷新相册数据库
+            if(!TextUtils.isEmpty(mImagePath))
+                mMediaScanner.scanFile(mImagePath, "image/jpeg", this);
+            if(mCropPath !=null)
+                mMediaScanner.scanFile(mCropPath.getPath(), "image/jpeg", this);
+
+        }catch (Exception e ){
+            Logger.e(e.getMessage());
         }
     }
 

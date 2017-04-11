@@ -1,18 +1,26 @@
 package cn.finalteam.rxgalleryfinal;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.widget.Toast;
+
+import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.UCropActivity;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
@@ -283,10 +291,12 @@ public class RxGalleryFinalApi {
 
     //***********************************************************************//
     public static final int TAKE_IMAGE_REQUEST_CODE = 19001;
-    public static File fileImagePath;
+    public static File fileImagePath;//拍照图片
+    public static File cropImagePath;//裁剪图片
     private static int currentapiVersion = 0;
     //***********************************************************************//
     /**
+     * 打开相机
      * @Author:Karl-dujinyang
      * 兼容7.0打开路径问题
      */
@@ -327,6 +337,21 @@ public class RxGalleryFinalApi {
     }
 
     /**
+     * 打开相机
+     * @Author:Karl-dujinyang
+     * 兼容7.0打开路径问题
+     */
+    public static void openZKCameraAndCrop(Activity context) {
+            openZKCamera(context);
+
+    }
+
+
+
+
+
+
+    /**
      * 处理拍照返回
      * @param context
      * @param mediaScanner
@@ -358,6 +383,73 @@ public class RxGalleryFinalApi {
                 Logger.e("Failed to write MediaStore"+ e);
             }
             context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + RxGalleryFinalApi.fileImagePath.getPath().toString())));
+        }
+    }
+
+
+    /**
+     * 快速生成图片的路径
+     * @return
+     */
+    public static String getModelPath(){
+        File fileImagePath = null;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+            String imageName = "immqy_%s_%s.jpg";
+            Random random = new Random(1024);
+            String filename = String.format(imageName, dateFormat.format(new Date()),""+random.nextInt());
+            File mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/IMMQY/");
+            if(!mImageStoreDir.exists()){
+                mImageStoreDir.mkdirs();
+            }
+            fileImagePath = new File(mImageStoreDir, filename);
+            //mImagePath = fileImagePath.getPath();
+            Logger.i("Test Path:"+fileImagePath.getPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.e("e=>"+e.getMessage());
+        }
+        return fileImagePath.getPath();
+    }
+
+
+
+    /**
+     * 裁剪指定的路径-
+     * onActivityResult或者其它地方调用RxGalleryFinalApi.cropActivityForResult方法去刷新图库
+     * @param context
+     * @param outPPath 输出
+     * @param inputPath 输入
+     * @see RxGalleryFinalApi.cropActivityForResult()|
+     */
+    public static void cropScannerForResult(Activity context,String outPPath,String inputPath){
+        if(TextUtils.isEmpty(inputPath)){
+            Logger.e("-裁剪没有图片-");
+            return;
+        }
+        Uri outUri = Uri.fromFile(new File(outPPath));
+        Uri inputUri = Uri.fromFile(new File(inputPath));
+        Intent intent = new Intent(context, UCropActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(UCrop.EXTRA_OUTPUT_URI, outUri);
+        bundle.putParcelable(UCrop.EXTRA_INPUT_URI, inputUri);
+        cropImagePath = new File(outUri.getPath());
+        Logger.i("输出：" + outUri.getPath());
+        Logger.i("原图：" + inputUri.getPath());
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivityForResult(intent, -1);//无效
+
+    }
+    public static final String ACTION_MEDIA_SCANNER_SCAN_DIR = "android.intent.action.MEDIA_SCANNER_SCAN_DIR";
+    /**
+     * 扫描指定的图片路径--刷新图库
+     * @param context
+     */
+    public static void cropActivityForResult(Activity context,MediaScanner.ScanCallback imgScanner){
+        if(cropImagePath!=null) {
+                MediaScanner scanner = new MediaScanner(context);
+                scanner.scanFile(RxGalleryFinalApi.cropImagePath.getPath().toString(), "image/jpeg", imgScanner);
         }
     }
 

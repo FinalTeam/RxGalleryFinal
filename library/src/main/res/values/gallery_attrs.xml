@@ -89,6 +89,8 @@
     <attr name="gallery_take_image_text_color" format="color"/>
     <!--请求读取相册授权提示语-->
     <attr name="gallery_request_storage_access_permission_tips" format="dimension|string"/>
+    <!--请求读取相册授权提示语-->
+    <attr name="gallery_request_storage_write_permission_tips" format="dimension|string"/>
     <!--没有任何图片提示语-->
     <attr name="gallery_media_empty_tips" format="dimension|string"/>
 
