@@ -72,7 +72,7 @@
 
 
 这里可以配置主题
-<img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:30%" />
+    <img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:30%"  width=256 height=256/>
 
 * 打开图片浏览器
 
@@ -98,8 +98,7 @@ RxGalleryFinal
 
 ```java
    //自定义多选
-  RxGalleryFinal
-                    .with(MainActivity.this)
+  RxGalleryFinal.with(MainActivity.this)
                     .image()
                     .multiple()
                     .maxSize(8)
