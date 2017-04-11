@@ -4,33 +4,35 @@
 
    RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、单选、拍摄和裁剪，主题可自定义，无强制绑定第三方图片加载器。
 
+##版本描述
+
+
 ### 待完善
 
     1.视频选择器的回调
     2.RxJAVA 升级
 
+    ### 新版本 V 1.0.1
 
-### 新版本 V 1.0.1
-
-    -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.1'
-    1.升级UCrop裁剪库 - 2.2.0
-    2.增加直接开启裁剪的Api
-    3.工程上保留ucrop,未引用。如有需要可结合自身需求改成本地lib
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.1'
+        1.升级UCrop裁剪库 - 2.2.0
+        2.增加直接开启裁剪的Api
+        3.工程上保留ucrop,未引用。如有需要可结合自身需求改成本地lib
 
 
-### 新版本 V 0.0.9
+    ### 新版本 V 0.0.9
 
-    -- compile 'cn.finalteam.rxgalleryfinal:library:0.0.9'
-    1.增加直接打开相机的功能
-    2.去掉 char[] java.lang.String.toCharArray()
+        -- compile 'cn.finalteam.rxgalleryfinal:library:0.0.9'
+        1.增加直接打开相机的功能
+        2.去掉 char[] java.lang.String.toCharArray()
 
-### 新版本 V 0.0.8
+    ### 新版本 V 0.0.8
 
-    -- compile 'cn.finalteam.rxgalleryfinal:library:0.0.8'
-    1.增加日志输出的debug功能，防止多层DebugConfig的问题
-    2.去掉Toast，图片多选给到自定义的事件
-    3.解决7.0奔溃的问题
-    4.去掉 相关NULL引起的问题
+        -- compile 'cn.finalteam.rxgalleryfinal:library:0.0.8'
+        1.增加日志输出的debug功能，防止多层DebugConfig的问题
+        2.去掉Toast，图片多选给到自定义的事件
+        3.解决7.0奔溃的问题
+        4.去掉 相关NULL引起的问题
 
 ## 使用
 ### 下载或添加依赖
@@ -70,7 +72,7 @@
 
 
 这里可以配置主题
-<img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:50%" />
+<img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:30%" />
 
 * 打开图片浏览器
 
@@ -267,6 +269,7 @@ RxGalleryFinal
 * 1、出现图片倒立问题，如何解决
 * 2、如何压缩图片
 * 3、Android 7.0闪退
+* 4、授权说明
 
 ## 联系
     如果有紧急事件可联系作者或加Q群：
