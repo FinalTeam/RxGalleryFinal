@@ -7,6 +7,16 @@
 ### 待完善
 
     1.视频选择器的回调
+    2.RxJAVA 升级
+
+
+### 新版本 V 1.0.1
+
+    -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.1'
+    1.升级UCrop裁剪库 - 2.2.0
+    2.增加直接开启裁剪的Api
+    3.工程上保留ucrop,未引用。如有需要可结合自身需求改成本地lib
+
 
 ### 新版本 V 0.0.9
 
@@ -60,7 +70,7 @@
 
 
 这里可以配置主题
-<img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-03-24-181216.png" style="zoom:50%" />
+<img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:50%" />
 
 * 打开图片浏览器
 
