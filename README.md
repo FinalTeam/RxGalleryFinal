@@ -39,7 +39,7 @@
   在module gradle中项目依赖代码：
 
   ```gradle
-    compile 'cn.finalteam.rxgalleryfinal:library:0.0.8'
+    compile 'cn.finalteam.rxgalleryfinal:library:1.0.1'
     //rxgalleryfinal依赖appcompat-v7和recyclerview-v7扩展卡库
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
@@ -82,7 +82,7 @@
 ```
 
 这里可以配置主题
-    <img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:30%"  width=720 height=1080/>
+    <img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:40%"  width=720 height=1080/>
 
 * 打开图片浏览器
 
