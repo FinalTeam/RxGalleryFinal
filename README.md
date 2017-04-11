@@ -64,20 +64,30 @@
 
     <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/sample/src/main/java/cn/finalteam/rxgalleryfinal/sample/MainActivity.java" targer="_blank"> 查看 Sample 代码</a>
 ```java
-        //调用图片选择器Api
-        initClickSelImgListener();//三选一
-        //调用视频选择器Api
-        initClickSelVDListener();//三选一
+           //自定义方法的使用
+           onClickZDListener();
+           //调用图片选择器Api
+           onClickSelImgListener();
+           //调用视频选择器Api
+           onClickSelVDListener();
+           //调用裁剪Api
+           onClickImgCropListener();
 ```
 
+```java
+
+  //手动打开日志。
+        ModelUtils.setDebugModel(true);
+
+```
 
 这里可以配置主题
-    <img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:30%"  width=256 height=256/>
+    <img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:30%"  width=720 height=1080/>
 
 * 打开图片浏览器
 
 ```java
-//自定义单选
+//自定义方法的单选
 RxGalleryFinal
 .with(context)
 .image()
@@ -97,7 +107,7 @@ RxGalleryFinal
 ----
 
 ```java
-   //自定义多选
+//自定义方法的多选
   RxGalleryFinal.with(MainActivity.this)
                     .image()
                     .multiple()
@@ -151,12 +161,10 @@ RxGalleryFinal
 ```
 
 ----
-
 ```java
 
-  //手动打开日志。
-        ModelUtils.setDebugModel(true);
-
+    //调用裁剪.RxGalleryFinalApi.getModelPath()为默认的输出路径
+    RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), inputImg);
 ```
 ----
 

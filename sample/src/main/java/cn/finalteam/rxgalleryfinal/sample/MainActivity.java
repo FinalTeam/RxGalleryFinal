@@ -106,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
      *  调用裁剪
      */
     private void onClickImgCropListener() {
-        mBtnOpenVD.setOnClickListener(view -> {
+        mBtnOpenCrop.setOnClickListener(view -> {
             if(mRbCropZD.isChecked()){
                 //直接裁剪
                 String inputImg = "";
-                RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(),"");//调用裁剪.RxGalleryFinalApi.getModelPath()为模拟的输出路径
                 Toast.makeText(MainActivity.this, "没有图片演示，请选择‘拍照裁剪’功能", Toast.LENGTH_SHORT).show();
+              //  RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), inputImg);//调用裁剪.RxGalleryFinalApi.getModelPath()为模拟的输出路径
             }else{
                 //拍照并裁剪
                 mFlagOpenCrop = true;
@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                             Logger.i(String.format("拍照成功,图片存储路径:%s", strings[0]));
                             if (mFlagOpenCrop) {
                                 Logger.d("演示拍照后进行图片裁剪，根据实际开发需求可去掉上面的判断");
-                                RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), strings[0]);//调用裁剪.RxGalleryFinalApi.getModelPath()为模拟的输出路径
+                                RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), strings[0]);//调用裁剪.RxGalleryFinalApi.getModelPath()为默认的输出路径
                             }
                         }
                     });
