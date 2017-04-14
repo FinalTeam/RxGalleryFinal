@@ -14,11 +14,11 @@
 
       ### 新版本 V 1.0.2
 
-            -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.2'
-            1.解决 裁剪图片"只有一张的问题"
-            2.增加 裁剪图片的回调
-            3.增加 可设置保存和裁剪路径, 不设置则自动存储到默认路径
-            4.配置主题 - gallery_attrs.xml
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.2'
+        1.解决 裁剪图片"只有一张的问题"
+        2.增加 裁剪图片的回调
+        3.增加 可设置保存和裁剪路径, 不设置则自动存储到默认路径
+        4.配置主题 - gallery_attrs.xml
 
     ### 新版本 V 1.0.1
 
@@ -93,12 +93,12 @@
 
 ```
 
-这里可以配置主题
+* 这里可以配置主题
     <img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:40%"  width=720 height=1080/>
 
 <hr/>
 
-* 打开图片浏览器
+* Code
 
 ```java
 //自定义方法的单选
@@ -153,7 +153,7 @@ RxGalleryFinal.with(MainActivity.this)
        }
        @Override
        public void selectedImgMax(Object t, boolean isChecked, int maxSize) {
-           Toast.makeText(getBaseContext(), "你最多只能选择" + maxSize + "张图片", Toast.LENGTH_SHORT).show();
+           toast("你最多只能选择" + maxSize + "张图片");
        }
 });
 ```
@@ -191,7 +191,7 @@ RxGalleryFinal.with(MainActivity.this)
     //图片自动会存储到下面，裁剪会自动生成路径；也可以手动设置裁剪的路径；
     RxGalleryFinalApi.setImgSaveRxSDCard("dujinyang");
 ```
-
+----
 
 * 添加权限
 
