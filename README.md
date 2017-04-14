@@ -15,9 +15,10 @@
       ### 新版本 V 1.0.2
 
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.2'
-        1.解决 裁剪图片"只有一张的问题"
+        1.解决 裁剪图片"只有一张的问题",无需设置可多次裁剪
         2.增加 裁剪图片的回调
         3.增加 可设置保存和裁剪路径, 不设置则自动存储到默认路径
+        4.解决 出现黑图问题
         4.配置主题 - gallery_attrs.xml
 
     ### 新版本 V 1.0.1
@@ -130,7 +131,7 @@ RxGalleryFinal.with(MainActivity.this)
 .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
        @Override
        protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-           Toast.makeText(getBaseContext(), "已选择" + imageMultipleResultEvent.getResult().size() + "张图片", Toast.LENGTH_SHORT).show();
+          toast("已选择" + imageMultipleResultEvent.getResult().size() + "张图片");
        }
        @Override
        public void onCompleted() {

@@ -26,8 +26,10 @@ import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
+import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
+import cn.finalteam.rxgalleryfinal.utils.SimpleDateUtils;
 
 /**
  * 设置回调
@@ -312,15 +314,14 @@ public class RxGalleryFinalApi {
             }
             fileImagePath = new File(mImageStoreDir, filename);
             String mImagePath = fileImagePath.getAbsolutePath();
-            Logger.i("->test:"+mImagePath);
+            Logger.i("->mImagePath:"+mImagePath);
             if(mImagePath!=null){
                     /*获取当前系统的android版本号*/
                 currentapiVersion = android.os.Build.VERSION.SDK_INT;
-                Logger.i("->test:"+currentapiVersion);
+                Logger.i("->VERSION:"+currentapiVersion);
                 if (currentapiVersion<24){
                     captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
                     /*captureIntent.putExtra(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");*/
-                    Logger.i("->test:" + Uri.fromFile(fileImagePath));
                     context.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
                 }else {
                     ContentValues contentValues = new ContentValues(1);
@@ -345,9 +346,6 @@ public class RxGalleryFinalApi {
             openZKCamera(context);
 
     }
-
-
-
 
 
 
@@ -389,19 +387,18 @@ public class RxGalleryFinalApi {
 
     /**
      * 快速生成图片的路径
-     * @return
+     * @return 虚拟路径
      */
     public static String getModelPath(){
         File fileImagePath = null;
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
             String imageName = "immqy_%s_%s.jpg";
-            Random random = new Random(1024);
-            String filename = String.format(imageName, dateFormat.format(new Date()),""+random.nextInt());
+            Random random = new Random();
+            String filename = String.format(imageName, SimpleDateUtils.getNowTime(),""+random.nextInt(1024));
             File mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/IMMQY/");
-            if(!mImageStoreDir.exists()){
+          /*  if(!mImageStoreDir.exists()){
                 mImageStoreDir.mkdirs();
-            }
+            }*/
             fileImagePath = new File(mImageStoreDir, filename);
             //mImagePath = fileImagePath.getPath();
             Logger.i("Test Path:"+fileImagePath.getPath());
@@ -417,10 +414,10 @@ public class RxGalleryFinalApi {
     /**
      * 裁剪指定的路径-
      * onActivityResult或者其它地方调用RxGalleryFinalApi.cropActivityForResult方法去刷新图库
+     * RxGalleryFinalApi.cropActivityForResult()
      * @param context
      * @param outPPath 输出
-     * @param inputPath 输入
-     * @see RxGalleryFinalApi.cropActivityForResult()|
+     * @param inputPath 输入     *
      */
     public static void cropScannerForResult(Activity context,String outPPath,String inputPath){
         if(TextUtils.isEmpty(inputPath)){
@@ -439,9 +436,8 @@ public class RxGalleryFinalApi {
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivityForResult(intent, -1);//无效
-
     }
-    public static final String ACTION_MEDIA_SCANNER_SCAN_DIR = "android.intent.action.MEDIA_SCANNER_SCAN_DIR";
+
     /**
      * 扫描指定的图片路径--刷新图库
      * @param context
@@ -453,5 +449,85 @@ public class RxGalleryFinalApi {
         }
     }
 
+
+    /**
+     * 扫描指定的图片路径--刷新图库
+     * @param context
+     * @param  path 路径
+     */
+    public static void cropActivityForResult(Activity context,String path,MediaScanner.ScanCallback imgScanner){
+        if(cropImagePath!=null) {
+            MediaScanner scanner = new MediaScanner(context);
+            scanner.scanFile(path.trim(), "image/jpeg", imgScanner);
+        }
+    }
+
+    /**
+     * 设置图片存储的路径
+     * @param file 返回原来的File
+     */
+    public static File setImgSaveRxDir(File file){
+        MediaGridFragment.setImageStoreDir(file);
+        return file;
+    }
+
+    /**
+     * 设置图片存储到sd卡 -- 取文件夹名称
+     */
+    public static void setImgSaveRxSDCard(String name){
+        MediaGridFragment.setImageStoreDir(name);
+    }
+
+
+
+    /**
+     * 设置裁剪存储的路径
+     * @param file 返回原来的File
+     */
+    public static File setImgSaveRxCropDir(File file){
+        MediaGridFragment.setImageStoreCropDir(file);
+        return file;
+    }
+
+    /**
+     * 设置裁剪存储到sd卡 -- 取文件夹名称
+     */
+    public static void setImgSaveRxCropSDCard(String name){
+        MediaGridFragment.setImageStoreCropDir(name);
+    }
+
+
+    /**
+     * 获取裁剪存储的路径
+     */
+    public static String getImgSaveRxCropDirByStr(){
+        return MediaGridFragment.getImageStoreCropDirByStr();
+    }
+
+
+    /**
+     * 获取裁剪存储的路径
+     * @return String
+     */
+    public static File getImgSaveRxCropDirByFile(){
+        return MediaGridFragment.getImageStoreCropDirByFile();
+    }
+
+
+    /**
+     * 获取图片存储的路径
+     * @return String 路径
+     */
+    public static String getImgSaveRxDirByStr(){
+        return MediaGridFragment.getImageStoreDirByStr();
+    }
+
+    /**
+     * 获取图片存储的路径
+     * @return  File 路径
+     */
+    public static File getImgSaveRxDirByFile(){
+        return MediaGridFragment.getImageStoreDirByFile();
+    }
 
 }

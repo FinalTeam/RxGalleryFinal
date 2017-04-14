@@ -39,11 +39,12 @@ import cn.finalteam.rxgalleryfinal.utils.ModelUtils;
 public class MainActivity extends AppCompatActivity {
 
     RadioButton mRbRadioIMG, mRbMutiIMG, mRbOpenC,mRbRadioVD,mRbMutiVD,mRbCropZD,mRbCropZVD;
-    Button mBtnOpenDefRadio,mBtnOpenDefMulti,mBtnOpenIMG,mBtnOpenVD,mBtnOpenCrop;
+    Button mBtnOpenSetDir,mBtnOpenDefRadio,mBtnOpenDefMulti,mBtnOpenIMG,mBtnOpenVD,mBtnOpenCrop;
     boolean mFlagOpenCrop =false ; //是否拍照并裁剪
 
     //ID
     private void initView() {
+        mBtnOpenSetDir = (Button) findViewById(R.id.btn_open_set_path);
         mBtnOpenIMG = (Button) findViewById(R.id.btn_open_img);
         mBtnOpenVD = (Button) findViewById(R.id.btn_open_vd);
         mBtnOpenDefRadio = (Button) findViewById(R.id.btn_open_def_radio);
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         Fresco.initialize(this);
     }
 
-
+    //*************************************************************************//
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,12 +240,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     /**
      * 如果不使用api定义好的，则自己定义使用
      * ImageLoaderType :自己选择使用
      */
     private void onClickZDListener() {
+
+        mBtnOpenSetDir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RxGalleryFinalApi.setImgSaveRxSDCard("dujinyang");//图片自动会存储到下面，裁剪会自动生成路径；也可以手动设置裁剪的路径；
+                RxGalleryFinalApi.setImgSaveRxCropSDCard("dujinyang/crop");
+            }
+        });
+
         mBtnOpenDefRadio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

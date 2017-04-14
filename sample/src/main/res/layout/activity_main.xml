@@ -19,6 +19,18 @@
 
 
     <Button
+        android:id="@+id/btn_open_set_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义-输出路径"/>
+
+
+    <View android:layout_height="2dip"
+        android:layout_width="match_parent"
+        android:layout_margin="5dip"
+        android:background="@color/theme_cyan_dark"/>
+
+    <Button
         android:id="@+id/btn_open_def_radio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
