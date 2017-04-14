@@ -12,6 +12,14 @@
     1.视频选择器的回调
     2.RxJAVA 升级
 
+      ### 新版本 V 1.0.2
+
+            -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.2'
+            1.解决 裁剪图片"只有一张的问题"
+            2.增加 裁剪图片的回调
+            3.增加 可设置保存和裁剪路径, 不设置则自动存储到默认路径
+            4.配置主题 - gallery_attrs.xml
+
     ### 新版本 V 1.0.1
 
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.1'
@@ -61,31 +69,34 @@
 
 ![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/a1.png)
 
+
 * 提供了相关的Api
 
-* 请查看MainActivity的示例代码
+* 请查看MainActivity的示例代码 <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/sample/src/main/java/cn/finalteam/rxgalleryfinal/sample/MainActivity.java" targer="_blank"> 查看 Sample 代码</a>
 
-    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/sample/src/main/java/cn/finalteam/rxgalleryfinal/sample/MainActivity.java" targer="_blank"> 查看 Sample 代码</a>
+
 ```java
-           //自定义方法的使用
-           onClickZDListener();
-           //调用图片选择器Api
-           onClickSelImgListener();
-           //调用视频选择器Api
-           onClickSelVDListener();
-           //调用裁剪Api
-           onClickImgCropListener();
+   //自定义方法的使用
+   onClickZDListener();
+   //调用图片选择器Api
+   onClickSelImgListener();
+   //调用视频选择器Api
+   onClickSelVDListener();
+   //调用裁剪Api
+   onClickImgCropListener();
 ```
 
 ```java
 
-  //手动打开日志。
-        ModelUtils.setDebugModel(true);
+   //手动打开日志。
+   ModelUtils.setDebugModel(true);
 
 ```
 
 这里可以配置主题
     <img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:40%"  width=720 height=1080/>
+
+<hr/>
 
 * 打开图片浏览器
 
@@ -111,24 +122,22 @@ RxGalleryFinal
 
 ```java
 //自定义方法的多选
-  RxGalleryFinal.with(MainActivity.this)
-                    .image()
-                    .multiple()
-                    .maxSize(8)
-                    .imageLoader(ImageLoaderType.UNIVERSAL)
-                    .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
-
-                        @Override
-                        protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                            Toast.makeText(getBaseContext(), "已选择" + imageMultipleResultEvent.getResult().size() + "张图片", Toast.LENGTH_SHORT).show();
-                        }
-                        @Override
-                        public void onCompleted() {
-                            super.onCompleted();
-                            Toast.makeText(getBaseContext(), "OVER", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .openGallery();
+RxGalleryFinal.with(MainActivity.this)
+.image()
+.multiple()
+.maxSize(8)
+.imageLoader(ImageLoaderType.UNIVERSAL)
+.subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+       @Override
+       protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
+           Toast.makeText(getBaseContext(), "已选择" + imageMultipleResultEvent.getResult().size() + "张图片", Toast.LENGTH_SHORT).show();
+       }
+       @Override
+       public void onCompleted() {
+       super.onCompleted();
+           Toast.makeText(getBaseContext(), "OVER", Toast.LENGTH_SHORT).show();
+       }
+}).openGallery();
 
 ```
 
@@ -137,39 +146,51 @@ RxGalleryFinal
 
 ```java
  //得到图片多选的事件
-        RxGalleryListener.getInstance().setMultiImageCheckedListener(new IMultiImageCheckedListener() {
-                 @Override
-                 public void selectedImg(Object t, boolean isChecked) {
-                   //这个主要点击或者按到就会触发，所以不建议在这里进行Toast
-                    /*  Toast.makeText(getBaseContext(),"->"+isChecked,Toast.LENGTH_SHORT).show();*/
-                 }
-                 @Override
-                 public void selectedImgMax(Object t, boolean isChecked, int maxSize) {
-                    Toast.makeText(getBaseContext(), "你最多只能选择" + maxSize + "张图片", Toast.LENGTH_SHORT).show();
-                 }
-        });
+ RxGalleryListener.getInstance().setMultiImageCheckedListener(new IMultiImageCheckedListener() {
+       @Override
+       public void selectedImg(Object t, boolean isChecked) {
+            //这个主要点击或者按到就会触发，所以不建议在这里进行Toast
+       }
+       @Override
+       public void selectedImgMax(Object t, boolean isChecked, int maxSize) {
+           Toast.makeText(getBaseContext(), "你最多只能选择" + maxSize + "张图片", Toast.LENGTH_SHORT).show();
+       }
+});
 ```
 ----
 
 ```java
-//注解诠释
+ //注解诠释
  RxGalleryFinal.with(context)
-                    .image()//图片
-                    .radio()//单选
-                    .crop()//裁剪
-                    .video()//视频
-                    .imageLoader(ImageLoaderType.GLIDE)//里面可以选择主流图片工具  PICASSO  GLIDE  FRESCO UNIVERSAL(ImageLoader)
-                    .subscribe(rxBusResultSubscriber)
-                    .openGallery();
+      .image()//图片
+      .radio()//单选
+      .crop()//裁剪
+      .video()//视频
+      .imageLoader(ImageLoaderType.GLIDE)
+      //里面可以选择主流图片工具  PICASSO  GLIDE  FRESCO UNIVERSAL(ImageLoader)
+      .subscribe(rxBusResultSubscriber)
+      .openGallery();
 ```
 
 ----
 ```java
-
     //调用裁剪.RxGalleryFinalApi.getModelPath()为默认的输出路径
     RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), inputImg);
 ```
 ----
+
+```java
+    //获取和设置 保存路径
+    RxGalleryFinalApi.getImgSaveRxCropDirByFile();//得到裁剪路径
+    RxGalleryFinalApi.getImgSaveRxCropDirByStr();//得到裁剪路径
+    RxGalleryFinalApi.getImgSaveRxDirByFile();//得到图片路径
+    RxGalleryFinalApi.getImgSaveRxCropDirByStr();//得到图片路径
+
+    //获取和设置 保存路径
+    //…… setImgSaveXXXXX().
+    //图片自动会存储到下面，裁剪会自动生成路径；也可以手动设置裁剪的路径；
+    RxGalleryFinalApi.setImgSaveRxSDCard("dujinyang");
+```
 
 
 * 添加权限
@@ -178,8 +199,8 @@ RxGalleryFinal
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 ```
-* 注册activity
 
+* 注册activity
 ```xml
 <application
     ...
