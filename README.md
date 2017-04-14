@@ -12,7 +12,7 @@
     1.视频选择器的回调
     2.RxJAVA 升级
 
-      ### 新版本 V 1.0.2
+    ### 新版本 V 1.0.2
 
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.2'
         1.解决 裁剪图片"只有一张的问题",无需设置可多次裁剪
@@ -28,7 +28,7 @@
         2.增加直接开启裁剪的Api
         3.工程上保留ucrop,未引用。如有需要可结合自身需求改成本地lib
 
-     ### 新版本 V 1.0.0
+    ### 新版本 V 1.0.0
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.0'
         -- 测试版本
 
