@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 RxGalleryFinal
                         .with(MainActivity.this)
                         .image()
-                        .openCameraOnStart()
+
                         .multiple()
                         .maxSize(8)
                         .imageLoader(ImageLoaderType.GLIDE)

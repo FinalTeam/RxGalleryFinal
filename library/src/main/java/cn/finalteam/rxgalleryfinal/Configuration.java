@@ -90,6 +90,7 @@ public class Configuration implements Parcelable{
         imageLoaderType = in.readInt();
         imageConfig = in.readInt();
         hideCamera = in.readByte() != 0;
+        openCameraOnStart = in.readByte() != 0;
     }
 
     public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
@@ -346,5 +347,6 @@ public class Configuration implements Parcelable{
         parcel.writeInt(imageLoaderType);
         parcel.writeInt(imageConfig);
         parcel.writeByte((byte) (hideCamera ? 1 : 0));
+        parcel.writeByte((byte) (openCameraOnStart ? 1 : 0));
     }
 }
