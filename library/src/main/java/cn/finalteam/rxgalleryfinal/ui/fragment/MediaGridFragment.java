@@ -110,12 +110,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private Subscription mSubscrMediaCheckChangeEvent;
     private Subscription mSubscrCloseMediaViewPageFragmentEvent;
     private Subscription mSubscrRequestStorageReadAccessPermissionEvent;
-
+    private static boolean openCameraOnStart = false;
     public static MediaGridFragment newInstance(Configuration configuration) {
         MediaGridFragment fragment = new MediaGridFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_CONFIGURATION, configuration);
         fragment.setArguments(bundle);
+        openCameraOnStart = configuration.isOpenCameraOnStart();
         return fragment;
     }
 
@@ -258,7 +259,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     protected void onFirstTimeLaunched() {
-
+        if(openCameraOnStart){
+            this.openCameraOnStart();
+        }
     }
 
     @Override
@@ -395,6 +398,15 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         } else {
             Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void openCameraOnStart(){
+        if (!CameraUtils.hasCamera(getContext())) {
+            Toast.makeText(getContext(), R.string.gallery_device_no_camera_tips, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        openCamera();
     }
 
     @Override

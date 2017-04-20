@@ -40,7 +40,7 @@ public class Configuration implements Parcelable{
     private int imageLoaderType;
     private int imageConfig;
     private boolean hideCamera;
-
+    private boolean openCameraOnStart = false;
     //==========UCrop START==========
     //是否隐藏裁剪页面底部控制栏,默认显示
     private boolean hideBottomControls;
@@ -150,6 +150,14 @@ public class Configuration implements Parcelable{
 
     public void setHideCamera(boolean hideCamera) {
         this.hideCamera = hideCamera;
+    }
+
+    public boolean isOpenCameraOnStart() {
+        return openCameraOnStart;
+    }
+
+    public void setOpenCameraOnStart(boolean openCameraOnStart) {
+        this.openCameraOnStart = openCameraOnStart;
     }
 
     public AbsImageLoader getImageLoader() {

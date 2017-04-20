@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
                         .image()
                         .radio()
                         .crop()
+                        .openCameraOnStart()
                         .imageLoader(ImageLoaderType.GLIDE)
                         .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
                             @Override
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 RxGalleryFinal
                         .with(MainActivity.this)
                         .image()
+                        .openCameraOnStart()
                         .multiple()
                         .maxSize(8)
                         .imageLoader(ImageLoaderType.GLIDE)

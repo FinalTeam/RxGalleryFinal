@@ -132,6 +132,14 @@ public class RxGalleryFinal {
     }
 
     /**
+     * 直接打开相机
+     * @return
+     */
+    public RxGalleryFinal openCameraOnStart() {
+        configuration.setOpenCameraOnStart(true);
+        return this;
+    }
+    /**
      * set to true to hide the bottom controls (shown by default)
      * @param hide
      * @return
