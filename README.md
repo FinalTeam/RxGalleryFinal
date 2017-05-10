@@ -330,5 +330,8 @@ RxGalleryFinal.with(MainActivity.this)
 
 ## Wiki
 
+   * <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/GalleryFinal-%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97" targer="_blank"> GalleryFinal 问题系列 </a>
+   * <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97" targer="_blank"> RxGalleryFinal 问题系列 </a>
+   * <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version" targer="_blank"> RxGalleryFinal Version </a>
 
 
