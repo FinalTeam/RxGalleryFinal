@@ -8,6 +8,8 @@
 
 ## Version described
 
+    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md">Chinese Version description</a>
+    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md">The English description</a>
 
 ### To be perfect
 
