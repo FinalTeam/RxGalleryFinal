@@ -28,7 +28,6 @@
 
 
     ### 新版本 V 1.0.2
-
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.2'
         1.解决 裁剪图片"只有一张的问题",无需设置可多次裁剪
         2.增加 裁剪图片的回调
@@ -37,7 +36,6 @@
         5.配置主题 - gallery_attrs.xml / gallery_default_theme.xml
 
     ### 新版本 V 1.0.1
-
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.1'
         1.升级UCrop裁剪库 - 2.2.0
         2.增加直接开启裁剪的Api
@@ -48,13 +46,11 @@
         -- 测试版本
 
     ### 新版本 V 0.0.9
-
         -- compile 'cn.finalteam.rxgalleryfinal:library:0.0.9'
         1.增加直接打开相机的功能
         2.去掉 char[] java.lang.String.toCharArray()
 
     ### 新版本 V 0.0.8
-
         -- compile 'cn.finalteam.rxgalleryfinal:library:0.0.8'
         1.增加日志输出的debug功能，防止多层DebugConfig的问题
         2.去掉Toast，图片多选给到自定义的事件
