@@ -39,7 +39,7 @@ public class RxGalleryFinalApi {
     static RxGalleryFinalApi mRxApi;
     private static RxGalleryFinal rxGalleryFinal;
     private static Activity mActivity;
-
+    private static String imgType = "image/jpeg" ;
 
     /**
      * 默认使用 ImageLoaderType.GLIDE
@@ -180,7 +180,7 @@ public class RxGalleryFinalApi {
      * @param flag 标识是否开启裁剪
      */
     public static RxGalleryFinal openRadioSelectImage(Activity context,RxBusResultSubscriber rxBusResultSubscriber,boolean flag){
-
+        getInstance(context);
         if(flag) {
             rxGalleryFinal
                     .image()
@@ -326,7 +326,7 @@ public class RxGalleryFinalApi {
                 }else {
                     ContentValues contentValues = new ContentValues(1);
                     contentValues.put(MediaStore.Images.Media.DATA, mImagePath );
-                    contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                    contentValues.put(MediaStore.Images.Media.MIME_TYPE, imgType);
                     Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
                     captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                     context.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
@@ -357,13 +357,13 @@ public class RxGalleryFinalApi {
     public static void openZKCameraForResult(Activity context,MediaScanner.ScanCallback mediaScanner){
         if(currentapiVersion<24){
             MediaScanner scanner = new MediaScanner(context);
-            scanner.scanFile(RxGalleryFinalApi.fileImagePath.getPath().toString(), "image/jpeg", mediaScanner);
+            scanner.scanFile(RxGalleryFinalApi.fileImagePath.getPath().toString(), imgType, mediaScanner);
         }else{
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.ImageColumns.TITLE, "title");
             values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, "filename.jpg");
             values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, System.currentTimeMillis());
-            values.put(MediaStore.Images.ImageColumns.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.Images.ImageColumns.MIME_TYPE, imgType);
             values.put(MediaStore.Images.ImageColumns.ORIENTATION, 0);
             values.put(MediaStore.Images.ImageColumns.DATA, RxGalleryFinalApi.fileImagePath.getPath().toString());
            /* values.put(MediaStore.Images.ImageColumns.WIDTH, bmp.getWidth());
@@ -445,7 +445,7 @@ public class RxGalleryFinalApi {
     public static void cropActivityForResult(Activity context,MediaScanner.ScanCallback imgScanner){
         if(cropImagePath!=null) {
                 MediaScanner scanner = new MediaScanner(context);
-                scanner.scanFile(RxGalleryFinalApi.cropImagePath.getPath().toString(), "image/jpeg", imgScanner);
+                scanner.scanFile(RxGalleryFinalApi.cropImagePath.getPath().toString(),imgType , imgScanner);
         }
     }
 
@@ -458,7 +458,7 @@ public class RxGalleryFinalApi {
     public static void cropActivityForResult(Activity context,String path,MediaScanner.ScanCallback imgScanner){
         if(cropImagePath!=null) {
             MediaScanner scanner = new MediaScanner(context);
-            scanner.scanFile(path.trim(), "image/jpeg", imgScanner);
+            scanner.scanFile(path.trim(), imgType , imgScanner);
         }
     }
 

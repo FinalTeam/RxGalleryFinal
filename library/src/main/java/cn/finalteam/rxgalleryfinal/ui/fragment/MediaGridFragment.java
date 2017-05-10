@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
+import com.yalantis.ucrop.model.AspectRatio;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,6 +85,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         FooterAdapter.OnItemClickListener,View.OnClickListener, MediaScanner.ScanCallback, BucketAdapter.OnRecyclerViewItemClickListener {
 
     private final String IMAGE_STORE_FILE_NAME = "IMG_%s.jpg";
+    private static String imgType = "image/jpeg" ;
     private final int TAKE_IMAGE_REQUEST_CODE = 1001;
     private final String TAKE_URL_STORAGE_KEY = "take_url_storage_key";
     private final String BUCKET_ID_KEY = "bucket_id_key";
@@ -401,15 +404,24 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
     }
 
+    /**
+     * 处理回调
+     * @param mediaBean
+     */
+    private void setPostMediaBean(MediaBean mediaBean){
+        ImageCropBean bean = new ImageCropBean();
+        bean.copyMediaBean(mediaBean);
+        RxBus.getDefault().post(new ImageRadioResultEvent(bean));
+    }
 
     private void radioNext(MediaBean mediaBean) {
         Logger.i("isCrop :" + mConfiguration.isCrop());
         if(!mConfiguration.isCrop()){
-                ImageCropBean bean = new ImageCropBean();
-                bean.copyMediaBean(mediaBean);
-                RxBus.getDefault().post(new ImageRadioResultEvent(bean));
+                setPostMediaBean(mediaBean);
                 getActivity().finish();
-            } else {
+        } else {
+                //裁剪根据大家需求加上选择完图片后的回调
+                setPostMediaBean(mediaBean);
                 String originalPath = mediaBean.getOriginalPath();
                 File file = new File(originalPath);
                 Random random = new Random();
@@ -428,17 +440,23 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 Intent intent = new Intent(getContext(), UCropActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(UCrop.EXTRA_OUTPUT_URI, outUri);
-                //bundle.putParcelable(UCropActivity.EXTRA_INPUT_BEAN, mediaBean);//EXTRA_INPUT_BEAN
+                bundle.putParcelable(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS, mediaBean);//EXTRA_INPUT_BEAN
                 bundle.putParcelable(UCrop.EXTRA_INPUT_URI, inputUri);
                 int bk = FileUtils.existImageDir(inputUri.getPath());
-                intent.putExtras(bundle);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
                 Logger.i("--->" + inputUri.getPath());
-                Logger.i("--->" + outUri.getPath() );
-                //AspectRatio []aspectRatios =  mConfiguration.getAspectRatio();
-                //bundle.putParcelableArrayList(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS,arrayList);//EXTRA_CONFIGURATION
+                Logger.i("--->" + outUri.getPath());
+                ArrayList<AspectRatio> aspectRatioList = new ArrayList<>();
+                AspectRatio[]aspectRatios =  mConfiguration.getAspectRatio();
+                for (int i=0;i<aspectRatios.length;i++){
+                    aspectRatioList.add(i,aspectRatios[i]);
+                    Logger.i("自定义比例=>"+aspectRatioList.get(i).getAspectRatioX()+" " +aspectRatioList.get(i).getAspectRatioY());
+                }
+              //  AspectRatio[]aspectRatios =  mConfiguration.getAspectRatio();
+                bundle.putParcelableArrayList(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS, aspectRatioList);//EXTRA_CONFIGURATION
+                intent.putExtras(bundle);
                 if(bk != -1){
+
                     startActivityForResult(intent, -1);//无效
                 }else{
                     Logger.w("点击图片无效");
@@ -489,7 +507,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (requestCode == TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Logger.i(String.format("拍照成功,图片存储路径:%s", mImagePath));
             //刷新相册数据库
-            mMediaScanner.scanFile(mImagePath, "image/jpeg", this);
+            mMediaScanner.scanFile(mImagePath, imgType , this);
         }
     }
 
@@ -580,10 +598,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             }*/
             //刷新相册数据库
             if(!TextUtils.isEmpty(mImagePath))
-                mMediaScanner.scanFile(mImagePath, "image/jpeg", this);
+                mMediaScanner.scanFile(mImagePath, imgType , this);
             if(mCropPath !=null) {
                 Logger.i("->mCropPath:" + mCropPath.getPath());
-                mMediaScanner.scanFile(mCropPath.getPath(), "image/jpeg", this);
+                mMediaScanner.scanFile(mCropPath.getPath(), imgType , this);
             }
         }catch (Exception e ){
             Logger.e(e.getMessage());

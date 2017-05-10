@@ -13,6 +13,18 @@
     1.视频选择器的回调
     2.RxJAVA 升级
 
+    ### 新版本 V 1.0.3
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.3'
+       1.修复 自定义剪裁比例函数失效 #114
+       2.修复 无法裁剪PNG格式图片？ #77
+       3.修复 多选图片超过最大值空指针 #107
+       4.修复 单选照片存在空指针 #105
+       5.增加 自定义裁剪比例方法与Api #115
+       6.Picasso 原图缩放问题
+       7.demo中注释掉多个调用示例，根据自身需求选择对应api
+       8.根据大家需求 - - 裁剪时也会回调 onEvent 选择事件
+
+
     ### 新版本 V 1.0.2
 
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.2'
@@ -20,7 +32,7 @@
         2.增加 裁剪图片的回调
         3.增加 可设置保存和裁剪路径, 不设置则自动存储到默认路径
         4.解决 出现黑图问题
-        4.配置主题 - gallery_attrs.xml
+        5.配置主题 - gallery_attrs.xml / gallery_default_theme.xml
 
     ### 新版本 V 1.0.1
 
@@ -195,6 +207,15 @@ RxGalleryFinal.with(MainActivity.this)
 ```
 ----
 
+
+```java
+    //自定义裁剪
+   rx.cropAspectRatioOptions(0, new AspectRatio("3:3",30, 10))
+   .crop()
+   .openGallery();
+```
+----
+
 * 添加权限
 
 ```xml
@@ -308,6 +329,8 @@ RxGalleryFinal.with(MainActivity.this)
     如果有紧急事件可联系作者或加Q群：
     - Q群号： 218801658
     - Q群号： 246231638
+
+## Wiki
 
 
 

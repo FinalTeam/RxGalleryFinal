@@ -167,7 +167,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 AppCompatCheckBox checkBox = (AppCompatCheckBox) buttonView;
                 checkBox.setChecked(false);
                 Logger.i("选中：" + mMediaActivity.getResources().getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()));
-                iMultiImageCheckedListener.selectedImgMax(buttonView, isChecked, mConfiguration.getMaxSize());
+                if (iMultiImageCheckedListener != null){
+                    iMultiImageCheckedListener.selectedImgMax(buttonView, isChecked, mConfiguration.getMaxSize());
+                }
             } else {
                 if(iMultiImageCheckedListener!=null)
                     iMultiImageCheckedListener.selectedImg(buttonView, isChecked);

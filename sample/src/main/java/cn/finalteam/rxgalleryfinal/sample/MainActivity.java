@@ -9,24 +9,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Toast;
-
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-
-import java.io.File;
-
+import com.yalantis.ucrop.model.AspectRatio;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
 import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
-import cn.finalteam.rxgalleryfinal.ui.adapter.MediaGridAdapter;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
@@ -179,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
             if (mRbRadioIMG.isChecked()) {
                 //以下方式 -- 可选：
                 //1.打开单选图片，默认参数
-                RxGalleryFinalApi.getInstance(this).setImageRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+     /*             RxGalleryFinalApi.getInstance(this).setImageRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
                     @Override
                     protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
                         Logger.i("单选图片的回调");
@@ -194,14 +189,14 @@ public class MainActivity extends AppCompatActivity {
                                 Logger.i("单选图片的回调");
                             }
                         }).open();
-
-                //3.打开单选图片
+*/
+                //3. 快速打开单选图片,flag使用true不裁剪
                 RxGalleryFinalApi.openRadioSelectImage(this, new RxBusResultSubscriber() {
                     @Override
                     protected void onEvent(Object o) throws Exception {
 
                     }
-                });
+                },true);
 
             } else if (mRbMutiIMG.isChecked()) {
                 //多选图片的方式
@@ -212,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                         Logger.i("多选图片的回调");
                     }
                 }).open();
-
+/*
                 //2.使用自定义的参数
                 RxGalleryFinalApi.getInstance(this)
                         .setType(RxGalleryFinalApi.SelectRXType.TYPE_IMAGE, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_MULTI)
@@ -230,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                     protected void onEvent(Object o) throws Exception {
                         Logger.i("多选图片的回调");
                     }
-                });
+                });*/
             } else {
                 mFlagOpenCrop = false;
                 //直接打开相机
@@ -249,8 +244,9 @@ public class MainActivity extends AppCompatActivity {
         mBtnOpenSetDir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RxGalleryFinalApi.setImgSaveRxSDCard("dujinyang");//图片自动会存储到下面，裁剪会自动生成路径；也可以手动设置裁剪的路径；
-                RxGalleryFinalApi.setImgSaveRxCropSDCard("dujinyang/crop");
+                //图片会自动会存储到下面路径
+                RxGalleryFinalApi.setImgSaveRxSDCard("dujinyang");
+                RxGalleryFinalApi.setImgSaveRxCropSDCard("dujinyang/crop");//裁剪会自动生成路径；也可以手动设置裁剪的路径；
             }
         });
 
@@ -258,19 +254,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //单选图片
-                RxGalleryFinal
+                RxGalleryFinal rx = RxGalleryFinal
                         .with(MainActivity.this)
                         .image()
                         .radio()
-                        .crop()
-                        .imageLoader(ImageLoaderType.FRESCO)
+                        .imageLoader(ImageLoaderType.PICASSO)
                         .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
                             @Override
                             protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
                                 Toast.makeText(getBaseContext(), imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
                             }
-                        })
+                        });
+                //自定义裁剪
+                rx.cropAspectRatioOptions(0, new AspectRatio("3:3",30, 10)).crop()
                         .openGallery();
+
             }
         });
 

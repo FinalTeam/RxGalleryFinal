@@ -25,6 +25,7 @@ public class PicassoImageLoader implements AbsImageLoader {
         Context ctx = (Context) context;
         RequestCreator creator = Picasso.with(ctx)
                 .load(new File(path))
+                .centerCrop()
                 .placeholder(defaultDrawable)
                 .error(defaultDrawable)
                 .rotate(rotate)
