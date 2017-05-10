@@ -5,11 +5,11 @@
 
    RxGalleryFinal is an android image/video file selector.Its support for multiple, radio, film and cutting, the theme can be custom, no mandatory binding third-party image loader.
 
+    * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md" targer="_blank"> Chinese Version description </a>
+    * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md" targer="_blank"> The English description </a>
+
 
 ## Version described
-
-    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md" targer="_blank"> Chinese Version description </a>
-    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md" targer="_blank"> The English description </a>
 
 ### To be perfect
 
