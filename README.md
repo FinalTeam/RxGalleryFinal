@@ -7,8 +7,8 @@
 
 ## 版本描述
 
-    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md">中文版描述</a>
-    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md">英文版描述</a>
+    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md" targer="_blank"> 中文版描述 </a>
+    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md" targer="_blank"> 英文版描述 </a>
 
 ### 待完善
 
