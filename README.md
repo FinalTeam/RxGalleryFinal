@@ -5,10 +5,10 @@
 
    RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、单选、拍摄和裁剪，主题可自定义，无强制绑定第三方图片加载器。
 
-## 版本描述
+   * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md" targer="_blank"> 中文版描述 </a>
+   * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md" targer="_blank"> 英文版描述 </a>
 
-    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md" targer="_blank"> 中文版描述 </a>
-    <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md" targer="_blank"> 英文版描述 </a>
+## 版本描述
 
 ### 待完善
 
