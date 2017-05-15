@@ -16,6 +16,10 @@
     1.Video of the callback
     2.RxJAVA upgrade
 
+   ### New version 1.0.4
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.4'
+        1.Repair 1.0.3 Bug，picasso preview big images of the crash. #119
+
    ### New version 1.0.3
         -- the compile 'cn. Finalteam. Rxgalleryfinal: library: 1.0.3'
         1. Repair the custom tailoring proportion function failure # 114

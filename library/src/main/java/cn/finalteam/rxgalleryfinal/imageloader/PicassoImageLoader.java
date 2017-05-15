@@ -33,7 +33,8 @@ public class PicassoImageLoader implements AbsImageLoader {
                 .config(config)
                 .tag(context);
         if(resize){
-            creator = creator.resize(width, height);
+            creator = creator.resize(width, height)
+                    .centerCrop();
         }
        creator.into(imageView);
     }
