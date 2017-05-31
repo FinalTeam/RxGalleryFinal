@@ -152,6 +152,11 @@ public class Configuration implements Parcelable{
         this.hideCamera = hideCamera;
     }
 
+    //#ADD
+    public int getImageLoaderType() {
+        return imageLoaderType;
+    }
+
     public AbsImageLoader getImageLoader() {
         AbsImageLoader imageLoader = null;
         switch (imageLoaderType){

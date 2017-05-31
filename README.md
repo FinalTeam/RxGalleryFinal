@@ -5,15 +5,32 @@
 
    RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、单选、拍摄和裁剪，主题可自定义，无强制绑定第三方图片加载器。
 
-   * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md" targer="_blank"> 中文版描述 </a>
-   * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md" targer="_blank"> 英文版描述 </a>
+   * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md" target="_blank"> 中文版描述 </a>
+   * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md" target="_blank"> 英文版描述 </a>
 
 ## 版本描述
+    <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Issues" target="_blank">History Issues</a>
 
 ### 待完善
 
     1.视频选择器的回调
     2.RxJAVA 升级
+    3.卡顿测试，可在 Issues 里搜索：【精】觉得卡顿的点我 #130
+
+   ### 新版本 V 1.0.6
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.6'
+        1.修复 点击Home再返回界面，图片会增加问题。
+        2.修复 UI预览的size为0 的问题。
+        3.修复 onresume()生命周期调用 onScanCompleted 问题。
+        4.修复 剪裁回调及图片MediaActivity关闭问题。
+        5.修复 部分机型卡顿的问题。
+
+    ### 新版本 V 1.0.5
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.5'
+        1.修复 1.0.3大BUG，picasso预览大图崩溃 #119
+        2.提供裁剪之后的回调 onCropImageResult() ， 用于关闭选择界面
+        3.Api 相关方法优化
+        4.优化相关的空指针
 
     ### 新版本 V 1.0.4
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.4'
@@ -217,6 +234,30 @@ RxGalleryFinal.with(MainActivity.this)
    .openGallery();
 ```
 ----
+
+```java
+  //4.演示 单选裁剪 并且增加回掉 （裁剪必须在open之前）
+  RxGalleryFinalApi.getInstance(this)
+     .onCrop(true)//是否裁剪
+     .openGalleryRadioImgDefault(new RxBusResultSubscriber() {
+             @Override
+             protected void onEvent(Object o) throws Exception {
+                  Logger.i("只要选择图片就会触发");
+             }
+      })
+     .onCropImageResult(new IRadioImageCheckedListener() {
+             @Override
+             public void cropAfter(Object t) {
+                  Logger.i("裁剪完成");
+             }
+
+             @Override
+             public boolean isActivityFinish() {
+                  Logger.i("返回false不关闭，返回true则为关闭");
+                  return true;
+             }
+     });
+```
 
 * 添加权限
 

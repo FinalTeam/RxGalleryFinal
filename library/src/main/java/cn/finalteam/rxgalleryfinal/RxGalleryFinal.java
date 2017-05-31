@@ -29,9 +29,9 @@ import cn.finalteam.rxgalleryfinal.utils.StorageUtils;
 import rx.Subscription;
 
 /**
- * Desction:
- * Author:pengjianbo
- * Date:16/5/7 下午4:20
+ * Desction: RxGalleryFinal
+ * author: pengjianbo
+ * author: karl-dujinyang
  */
 public class RxGalleryFinal {
 
@@ -74,6 +74,11 @@ public class RxGalleryFinal {
 
     public RxGalleryFinal crop(){
         configuration.setCrop(true);
+        return this;
+    }
+
+    public RxGalleryFinal crop(boolean flag){
+        configuration.setCrop(flag);
         return this;
     }
 
@@ -265,6 +270,9 @@ public class RxGalleryFinal {
         execute();
     }
 
+    /**
+     * 执行
+     */
     private void execute() {
         Context context = configuration.getContext();
         if(context == null) {

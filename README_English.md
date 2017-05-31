@@ -5,16 +5,33 @@
 
    RxGalleryFinal is an android image/video file selector.Its support for multiple, radio, film and cutting, the theme can be custom, no mandatory binding third-party image loader.
 
-   * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md" targer="_blank"> Chinese Version description </a>
-   * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md" targer="_blank"> The English description </a>
+   * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README.md" target="_blank"> Chinese Version description </a>
+   * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md" target="_blank"> The English description </a>
 
 
 ## Version described
+    <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Issues" target="_blank">History Issues</a>
 
 ### To be perfect
 
     1.Video of the callback
     2.RxJAVA upgrade
+    3.Caton test, search in Issues: [fine] feel the point of Caton, I #130
+
+    ### New version 1.0.6
+         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.6'
+         1. Repair click Home, and then return to the interface, the picture will increase the problem.
+         2. Repair UI preview size for zero nums problems.
+         3. Repair the onresume () life cycle and invoke the onScanCompleted problem.
+         4. Repair cuts(crop), callbacks, and picture MediaActivity closure issues.
+         5. Repair Some models Caton problems.
+
+    ### New version 1.0.5
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.5'
+        1.Repair 1.0.3 Bug，picasso preview big images of the crash. #119
+        2.Provide the callback after cutting onCropImageResult() ， For close selection interface
+        3.Api Relevant methods to optimize
+        4.Optimization related to Null pointer
 
    ### New version 1.0.4
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.4'
@@ -226,6 +243,31 @@ RxGalleryFinal.with(MainActivity.this)
    .openGallery();
 ```
 ----
+
+```java
+  //4.演示 单选裁剪 并且增加回掉 （裁剪必须在open之前）
+  RxGalleryFinalApi.getInstance(this)
+     .onCrop(true)//是否裁剪
+     .openGalleryRadioImgDefault(new RxBusResultSubscriber() {
+             @Override
+             protected void onEvent(Object o) throws Exception {
+                  Logger.i("只要选择图片就会触发");
+             }
+      })
+     .onCropImageResult(new IRadioImageCheckedListener() {
+             @Override
+             public void cropAfter(Object t) {
+                  Logger.i("裁剪完成");
+             }
+
+             @Override
+             public boolean isActivityFinish() {
+                  Logger.i("返回false不关闭，返回true则为关闭");
+                  return true;
+             }
+     });
+```
+
 
 * Add permissions
 

@@ -96,6 +96,9 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         super.onStart();
         mViewPager.setCurrentItem(mPagerPosition, false);
         mViewPager.addOnPageChangeListener(this);
+        //#ADD UI预览数量的BUG
+        RxBus.getDefault().post(new MediaViewPagerChangedEvent(mPagerPosition, mMediaBeanList.size(), true));
+
     }
 
     @Override

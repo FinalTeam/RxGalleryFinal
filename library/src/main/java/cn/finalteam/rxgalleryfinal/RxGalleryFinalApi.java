@@ -1,11 +1,8 @@
 package cn.finalteam.rxgalleryfinal;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +23,9 @@ import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
+import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
+import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
+import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
@@ -40,6 +40,12 @@ public class RxGalleryFinalApi {
     private static RxGalleryFinal rxGalleryFinal;
     private static Activity mActivity;
     private static String imgType = "image/jpeg" ;
+
+    static {
+        if(mRxApi == null) {
+            mRxApi = new RxGalleryFinalApi();
+        }
+    }
 
     /**
      * 默认使用 ImageLoaderType.GLIDE
@@ -179,7 +185,7 @@ public class RxGalleryFinalApi {
      * @param rxBusResultSubscriber
      * @param flag 标识是否开启裁剪
      */
-    public static RxGalleryFinal openRadioSelectImage(Activity context,RxBusResultSubscriber rxBusResultSubscriber,boolean flag){
+    public static RxGalleryFinalApi openRadioSelectImage(Activity context,RxBusResultSubscriber rxBusResultSubscriber,boolean flag){
         getInstance(context);
         if(flag) {
             rxGalleryFinal
@@ -197,8 +203,74 @@ public class RxGalleryFinalApi {
                     .subscribe(rxBusResultSubscriber)
                     .openGallery();
         }
-        return rxGalleryFinal;
+        return mRxApi;
     }
+
+    /**
+     * 得到裁剪之后的事件
+     * @param context
+     * @param  IRadioImageCheckedListener
+     * @return RxGalleryFinalApi
+     */
+    public static RxGalleryFinalApi onCropImageResult(IRadioImageCheckedListener listener){
+        RxGalleryListener.getInstance().setRadioImageCheckedListener(listener);
+        return mRxApi;
+    }
+
+    /**
+     * 得到裁剪之后的事件
+     * @param context
+     * @param  IMultiImageCheckedListener
+     * @return RxGalleryFinalApi
+     */
+    public static RxGalleryFinalApi onMultiImageResult(IMultiImageCheckedListener listener){
+        RxGalleryListener.getInstance().setMultiImageCheckedListener(listener);
+        return mRxApi;
+    }
+
+    /**
+     * 得到多选限制事件
+     * @param flag
+     * @return
+     */
+    public static RxGalleryFinalApi onCrop(boolean flag){
+        if(rxGalleryFinal==null)
+            return null;
+            rxGalleryFinal.crop(flag);
+        return mRxApi;
+    }
+
+    /**
+     * 单选默认设置
+     * @return
+     */
+    public static RxGalleryFinalApi openGalleryRadioImgDefault(RxBusResultSubscriber rxBusResultSubscriber){
+        Logger.i("----rxGalleryFinal---"+rxGalleryFinal);
+        if(rxGalleryFinal==null)
+            return null;
+        rxGalleryFinal
+                .image()
+                .radio()
+                .crop()
+                .imageLoader(ImageLoaderType.GLIDE)
+                .subscribe(rxBusResultSubscriber)
+                .openGallery();
+        return mRxApi;
+    }
+
+    /**
+     * 得到多选限制事件
+     * @param flag
+     * @return
+     */
+    public static RxGalleryFinalApi openGallery(){
+        if(rxGalleryFinal==null)
+            return null;
+        rxGalleryFinal.openGallery();
+        return mRxApi;
+    }
+
+
 
     /**
      * 单选图片:默认开启全部
@@ -244,6 +316,33 @@ public class RxGalleryFinalApi {
                 .subscribe(rxBusResultSubscriber)
                 .openGallery();
     }
+
+    /**
+     * 多选图片：
+     *  @see    new RxBusResultSubscriber<ImageRadioResultEvent>() {
+     *         @Override
+     *        protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+     *
+     *       }
+     *    }
+     * @param context
+     * @param maxSize 最多选择
+     * @param rxBusResultSubscriber
+     */
+    public static void openMultiSelectImage(Activity context,int maxSize,RxBusResultSubscriber rxBusResultSubscriber){
+        RxGalleryFinal
+                .with(context)
+                .image()
+                .maxSize(maxSize)
+                .multiple()
+                .crop()
+                .imageLoader(ImageLoaderType.GLIDE)
+                .subscribe(rxBusResultSubscriber)
+                .openGallery();
+    }
+
+
+
 
     /**
      * 单选视频:默认开启全部

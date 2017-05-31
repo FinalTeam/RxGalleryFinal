@@ -17,4 +17,5 @@ public class ImageRadioResultEvent implements BaseResultEvent {
     public ImageCropBean getResult() {
         return resultBean;
     }
+
 }

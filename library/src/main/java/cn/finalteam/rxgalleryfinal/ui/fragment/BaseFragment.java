@@ -88,6 +88,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
+        Logger.i("startActivityForResult");
         Fragment parentFragment = getParentFragment();
         if (null != parentFragment) {
             fragmentStack.push(this);
@@ -99,6 +100,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Logger.i("onActivityResult");
         BaseFragment fragment = fragmentStack.isEmpty() ? null : fragmentStack.pop();
         if (null != fragment) {
             fragment.onActivityResult(requestCode, resultCode, data);
@@ -106,8 +108,6 @@ public abstract class BaseFragment extends Fragment {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
 
 
 

@@ -3,6 +3,7 @@ package cn.finalteam.rxgalleryfinal.ui.adapter;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,13 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.io.File;
 import java.util.List;
@@ -49,6 +57,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private Drawable mImageViewBg;
     private Drawable mCameraImage;
     private int mCameraTextColor;
+    //#ADD
+    private int imageLoaderType = 0;
 
     private static IMultiImageCheckedListener iMultiImageCheckedListener;
 
@@ -60,6 +70,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         int defaultResId = ThemeUtils.resolveDrawableRes(mediaActivity, R.attr.gallery_default_image, R.drawable.gallery_default_image);
         this.mDefaultImage = mediaActivity.getResources().getDrawable(defaultResId);
         this.mConfiguration = configuration;
+        //#ADD
+        this.imageLoaderType = configuration.getImageLoaderType();
 
         this.mImageViewBg = ThemeUtils.resolveDrawable(mMediaActivity,
                 R.attr.gallery_imageview_bg, R.drawable.gallery_default_image);
@@ -71,8 +83,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.gallery_adapter_media_grid_item, parent, false);
-        return new GridViewHolder(mMediaActivity, view);
+      //  View view = mInflater.inflate(R.layout.gallery_adapter_media_grid_item, parent, false);
+        //#ADD
+        View view = null;
+        if (imageLoaderType == 0) {
+            view = mInflater.inflate(R.layout.gallery_adapter_media_grid_item, parent, false);
+        } else {
+            view = mInflater.inflate(R.layout.gallery_adapter_media_grid_item_1, parent, false);
+        }
+        return new GridViewHolder(mMediaActivity, view,viewType);
     }
 
     @Override
@@ -80,7 +99,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         MediaBean mediaBean = mMediaBeanList.get(position);
         if(mediaBean.getId() == Integer.MIN_VALUE) {
             holder.mCbCheck.setVisibility(View.GONE);
-            holder.mIvMediaImage.setVisibility(View.GONE);
+            //#ADD
+            if (imageLoaderType == 0) {
+                holder.mIvMediaImage.setVisibility(View.GONE);
+            } else {
+                holder.mIvMediaImage_1.setVisibility(View.GONE);
+            }
+         //   holder.mIvMediaImage.setVisibility(View.GONE);
             holder.mLlCamera.setVisibility(View.VISIBLE);
             holder.mIvCameraImage.setImageDrawable(mCameraImage);
             holder.mTvCameraTxt.setTextColor(mCameraTextColor);
@@ -92,7 +117,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
                 holder.mCbCheck.setOnCheckedChangeListener(new OnCheckBoxCheckListener(mediaBean));
             }
-            holder.mIvMediaImage.setVisibility(View.VISIBLE);
+            //#ADD
+            if (imageLoaderType == 0) {
+                holder.mIvMediaImage.setVisibility(View.VISIBLE);
+            } else {
+                holder.mIvMediaImage_1.setVisibility(View.VISIBLE);
+            }
+           // holder.mIvMediaImage.setVisibility(View.VISIBLE);
             holder.mLlCamera.setVisibility(View.GONE);
             if(mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean)){
                 holder.mCbCheck.setChecked(true);
@@ -113,12 +144,20 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if(TextUtils.isEmpty(path)) {
                 path = mediaBean.getOriginalPath();
             }
-            Logger.w("提示path："+path);
-            OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
+            Logger.w("提示path：" + path);
+            if (imageLoaderType == 0) {
+                OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
+                mConfiguration.getImageLoader()
+                        .displayImage(mMediaActivity, path, holder.mIvMediaImage, mDefaultImage, mConfiguration.getImageConfig(),
+                                true, mImageSize, mImageSize, mediaBean.getOrientation());
+            } else {
+                OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage_1, mImageViewBg);
+                setImageSmall("file://"+path, holder.mIvMediaImage_1, mImageSize, mImageSize);
+            }
 
-            mConfiguration.getImageLoader()
+         /*   mConfiguration.getImageLoader()
                     .displayImage(mMediaActivity, path, holder.mIvMediaImage, mDefaultImage, mConfiguration.getImageConfig(),
-                            true, mImageSize, mImageSize, mediaBean.getOrientation());
+                            true, mImageSize, mImageSize, mediaBean.getOrientation());*/
         }
     }
 
@@ -187,14 +226,22 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         RecyclerImageView mIvMediaImage;
         AppCompatCheckBox mCbCheck;
+        //#ADD
+        SimpleDraweeView mIvMediaImage_1;
 
         LinearLayout mLlCamera;
         TextView mTvCameraTxt;
         ImageView mIvCameraImage;
 
-        public GridViewHolder(Context context, View itemView) {
+        public GridViewHolder(Context context, View itemView, int viewType) {
             super(itemView);
-            mIvMediaImage = (RecyclerImageView) itemView.findViewById(R.id.iv_media_image);
+            //#ADD
+            if (viewType == 0) {
+                mIvMediaImage = (RecyclerImageView) itemView.findViewById(R.id.iv_media_image);
+            } else {
+                mIvMediaImage_1 = (SimpleDraweeView) itemView.findViewById(R.id.iv_media_image);
+            }
+          //  mIvMediaImage = (RecyclerImageView) itemView.findViewById(R.id.iv_media_image);
             mCbCheck = (AppCompatCheckBox) itemView.findViewById(R.id.cb_check);
 
             mLlCamera = (LinearLayout) itemView.findViewById(R.id.ll_camera);
@@ -209,5 +256,26 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public static void setCheckedListener(IMultiImageCheckedListener checkedListener){
         iMultiImageCheckedListener = checkedListener;
+    }
+
+
+
+    public void setImageSmall(String url, SimpleDraweeView simpleDraweeView, int width, int height) {
+        Uri uri = Uri.parse(url);
+        ImageRequest request = ImageRequestBuilder
+                .newBuilderWithSource(uri)
+                .setAutoRotateEnabled(true)
+                .setResizeOptions(new ResizeOptions(simpleDraweeView.getLayoutParams().width,
+                        simpleDraweeView.getLayoutParams().height))
+                .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
+                .setCacheChoice(ImageRequest.CacheChoice.SMALL)
+                .build();
+        PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
+                .setTapToRetryEnabled(true)
+                .setImageRequest(request)
+                .setOldController(simpleDraweeView.getController())
+                .build();
+
+        simpleDraweeView.setController(controller);
     }
 }

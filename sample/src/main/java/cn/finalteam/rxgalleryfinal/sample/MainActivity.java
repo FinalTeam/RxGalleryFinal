@@ -2,7 +2,6 @@ package cn.finalteam.rxgalleryfinal.sample;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,6 +22,7 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
+import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
 import cn.finalteam.rxgalleryfinal.utils.ModelUtils;
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
     private void onClickSelImgListener() {
         mBtnOpenIMG.setOnClickListener(view -> {
             if (mRbRadioIMG.isChecked()) {
-                //以下方式 -- 可选：
+                //以下方式 -- 可选其一：
                 //1.打开单选图片，默认参数
      /*             RxGalleryFinalApi.getInstance(this).setImageRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
                     @Override
@@ -191,13 +191,36 @@ public class MainActivity extends AppCompatActivity {
                         }).open();
 */
                 //3. 快速打开单选图片,flag使用true不裁剪
-                RxGalleryFinalApi.openRadioSelectImage(this, new RxBusResultSubscriber() {
+
+               /* RxGalleryFinalApi.openRadioSelectImage(this, new RxBusResultSubscriber<ImageRadioResultEvent>() {
                     @Override
-                    protected void onEvent(Object o) throws Exception {
-
+                    protected void onEvent(ImageRadioResultEvent o) throws Exception {
+                        Logger.i("单选图片的回调");
                     }
-                },true);
+                }, true);*/
 
+
+                //4.演示 单选裁剪 并且增加回掉 （onCrop裁剪必须在open..之前）
+                RxGalleryFinalApi.getInstance(this)
+                        .onCrop(true)//是否裁剪
+                        .openGalleryRadioImgDefault(new RxBusResultSubscriber() {
+                            @Override
+                            protected void onEvent(Object o) throws Exception {
+                                Logger.i("只要选择图片就会触发");
+                            }
+                        })
+                        .onCropImageResult(new IRadioImageCheckedListener() {
+                            @Override
+                            public void cropAfter(Object t) {
+                                Logger.i("裁剪完成");
+                            }
+
+                            @Override
+                            public boolean isActivityFinish() {
+                                Logger.i("返回false不关闭，返回true则为关闭");
+                                return true;
+                            }
+                        });
             } else if (mRbMutiIMG.isChecked()) {
                 //多选图片的方式
                 //1.使用默认的参数
@@ -258,11 +281,11 @@ public class MainActivity extends AppCompatActivity {
                         .with(MainActivity.this)
                         .image()
                         .radio()
-                        .imageLoader(ImageLoaderType.PICASSO)
+                        .imageLoader(ImageLoaderType.FRESCO)
                         .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
                             @Override
                             protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                                Toast.makeText(getBaseContext(), imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getBaseContext(), "选中了图片路径："+imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
                             }
                         });
                 //自定义裁剪
@@ -279,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
                     .image()
                     .multiple()
                     .maxSize(8)
-                    .imageLoader(ImageLoaderType.UNIVERSAL)
+                    .imageLoader(ImageLoaderType.FRESCO)
                     .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
 
                         @Override
@@ -300,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * 多选事件都会在这里执行
+     * 自定义的多选事件都会在这里执行
      */
     public void getMultiListener(){
         //得到多选的事件
