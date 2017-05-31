@@ -9,6 +9,7 @@
    * <a href="https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md" target="_blank"> 英文版描述 </a>
 
 ## 版本描述
+
     <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Issues" target="_blank">History Issues</a>
 
 ### 待完善
