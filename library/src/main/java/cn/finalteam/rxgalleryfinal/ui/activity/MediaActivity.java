@@ -260,7 +260,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         ft.show(mMediaPreviewFragment);
         ft.commit();
 
-        String title = getString(R.string.gallery_page_title, mPreviewPosition, mCheckedList.size());
+        String title = getString(R.string.gallery_page_title, mPreviewPosition + 1, mCheckedList.size());
         mTvToolbarTitle.setText(title);
     }
 
