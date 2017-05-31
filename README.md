@@ -10,7 +10,7 @@
 
 ## 版本描述
 
-    <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Issues" target="_blank">History Issues</a>
+ <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Issues" target="_blank">History Issues</a>
 
 ### 待完善
 
