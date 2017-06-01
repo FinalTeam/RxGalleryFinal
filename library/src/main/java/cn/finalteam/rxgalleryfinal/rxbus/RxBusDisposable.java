@@ -1,14 +1,14 @@
 package cn.finalteam.rxgalleryfinal.rxbus;
 
 import cn.finalteam.rxgalleryfinal.utils.Logger;
-import rx.Subscriber;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * Desction:
  * Author:pengjianbo
  * Date:16/7/22 下午2:40
  */
-public abstract class RxBusSubscriber<T> extends Subscriber<T> {
+public abstract class RxBusDisposable<T> extends DisposableObserver<T> {
 
     @Override
     public void onNext(T t) {
@@ -22,7 +22,7 @@ public abstract class RxBusSubscriber<T> extends Subscriber<T> {
 
 
     @Override
-    public void onCompleted() {
+    public void onComplete() {
 
     }
 
