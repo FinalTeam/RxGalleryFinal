@@ -11,6 +11,7 @@
 ## 版本描述
 
  <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Issues" target="_blank">History Issues</a>
+ <br/>
  <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version" target="_blank">History Version</a>
 
 
