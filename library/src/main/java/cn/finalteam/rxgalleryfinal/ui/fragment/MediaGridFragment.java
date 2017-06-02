@@ -534,7 +534,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Logger.i(String.format("拍照成功,图片存储路径:%s", mImagePath));
             //刷新相册数据库
             mMediaScanner.scanFile(mImagePath, imgType, this);
-        } else if (requestCode == CROP_IMAGE_REQUEST_CODE) {
+        } else if (requestCode == CROP_IMAGE_REQUEST_CODE && data != null) {
             Logger.i("裁剪成功");
             refreshUI();
             onCropFinished(data);
@@ -550,25 +550,23 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
      * .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_HEIGHT, imageHeight)
      */
     private void onCropFinished(Intent data) {
-        if (data != null) {
-            if (iListenerRadio != null && mCropPath != null) {
-                if (mConfiguration.isCrop()) {
-                    Uri outputUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
-                    Logger.i("# crop image is #" + outputUri.getPath());
-                    iListenerRadio.cropAfter(mCropPath);
-                }
-            } else {
-                Logger.i("# CropPath is null！# ");
+        if (iListenerRadio != null && mCropPath != null) {
+            if (mConfiguration.isCrop()) {
+                Uri outputUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
+                Logger.i("# crop image is #" + outputUri.getPath());
+                iListenerRadio.cropAfter(mCropPath);
             }
-            //裁剪默认会关掉这个界面. 实现接口返回true则不关闭.
-            if (iListenerRadio == null) {
+        } else {
+            Logger.i("# CropPath is null！# ");
+        }
+        //裁剪默认会关掉这个界面. 实现接口返回true则不关闭.
+        if (iListenerRadio == null) {
+            getActivity().finish();
+        } else {
+            boolean flag = iListenerRadio.isActivityFinish();
+            Logger.i("# crop image is flag # :" + flag);
+            if (flag)
                 getActivity().finish();
-            } else {
-                boolean flag = iListenerRadio.isActivityFinish();
-                Logger.i("# crop image is flag # :" + flag);
-                if (flag)
-                    getActivity().finish();
-            }
         }
     }
 
