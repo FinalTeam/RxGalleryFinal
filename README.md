@@ -11,12 +11,18 @@
 ## 版本描述
 
  <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Issues" target="_blank">History Issues</a>
+ <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version" target="_blank">History Version</a>
+
 
 ### 待完善
 
     1.视频选择器的回调
     2.卡顿测试，可在 Issues 里搜索：【精】觉得卡顿的点我 #130
-    
+
+   ### 新版本 V 1.0.7
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.6'
+        1.RxJava升级到最新 - RxJava2.1
+        2.修复相关bug -  #136,#135,#134,#129,#99
 
    ### 新版本 V 1.0.6
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.6'

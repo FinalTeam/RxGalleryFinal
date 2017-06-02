@@ -12,12 +12,19 @@
 ## Version described
 
  <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Issues" target="_blank">History Issues</a>
+ <a href="https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version" target="_blank">History Version</a>
 
 ### To be perfect
 
     1.Video of the callback
     2.RxJAVA upgrade
     3.Caton test, search in Issues: [fine] feel the point of Caton, I #130
+
+
+   ### 新版本 V 1.0.7
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.6'
+        1.RxJava Update to - RxJava2.1
+        2.Repair bug ->  #136,#135,#134,#129,#99
 
     ### New version 1.0.6
          -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.6'
