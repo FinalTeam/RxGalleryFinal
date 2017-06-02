@@ -3,10 +3,12 @@ package cn.finalteam.rxgalleryfinal.rxjob;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Desction:
@@ -36,19 +38,19 @@ public class JobManager {
     }
 
     private void start() {
-        Observable.create((Observable.OnSubscribe<Job>) subscriber -> {
+        Observable.create((ObservableOnSubscribe<Job>) subscriber -> {
             queueFree = false;
             Job job;
             while ((job = jobQueue.poll()) != null) {
                 job.onRunJob();
             }
-            subscriber.onCompleted();
+            subscriber.onComplete();
         })
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Job>() {
+                .subscribe(new DisposableObserver<Job>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         queueFree = true;
                     }
 

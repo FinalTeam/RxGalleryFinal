@@ -15,8 +15,8 @@
 ### 待完善
 
     1.视频选择器的回调
-    2.RxJAVA 升级
-    3.卡顿测试，可在 Issues 里搜索：【精】觉得卡顿的点我 #130
+    2.卡顿测试，可在 Issues 里搜索：【精】觉得卡顿的点我 #130
+    
 
    ### 新版本 V 1.0.6
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.6'
@@ -34,7 +34,6 @@
 
   ```gradle
     compile 'cn.finalteam.rxgalleryfinal:library:1.0.1'
-    //rxgalleryfinal依赖appcompat-v7和recyclerview-v7扩展卡库
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
 
@@ -80,6 +79,11 @@
     <img src="https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png" style="zoom:40%"  width=720 height=1080/>
 
 <hr/>
+
+
+##  Theme
+
+配置Theme请查看sample下的 TestTheme..
 
 * Code
 

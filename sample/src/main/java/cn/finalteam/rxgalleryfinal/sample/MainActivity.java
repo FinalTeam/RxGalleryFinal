@@ -311,8 +311,8 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onCompleted() {
-                            super.onCompleted();
+                        public void onComplete() {
+                            super.onComplete();
                             Toast.makeText(getBaseContext(), "OVER", Toast.LENGTH_SHORT).show();
                         }
                     })

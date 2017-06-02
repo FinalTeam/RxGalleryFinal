@@ -26,7 +26,7 @@ import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.ModelUtils;
 import cn.finalteam.rxgalleryfinal.utils.StorageUtils;
-import rx.Subscription;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Desction: RxGalleryFinal
@@ -300,17 +300,17 @@ public class RxGalleryFinal {
             return;
         }
 
-        Subscription subscription;
+        Disposable disposable;
         if (configuration.isRadio()) {
-            subscription = RxBus.getDefault()
+            disposable = RxBus.getDefault()
                     .toObservable(ImageRadioResultEvent.class)
-                    .subscribe(rxBusResultSubscriber);
+                    .subscribeWith(rxBusResultSubscriber);
         } else {
-            subscription = RxBus.getDefault()
+            disposable = RxBus.getDefault()
                     .toObservable(ImageMultipleResultEvent.class)
-                    .subscribe(rxBusResultSubscriber);
+                    .subscribeWith(rxBusResultSubscriber);
         }
-        RxBus.getDefault().add(subscription);
+        RxBus.getDefault().add(disposable);
 
         Intent intent = new Intent(context, MediaActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

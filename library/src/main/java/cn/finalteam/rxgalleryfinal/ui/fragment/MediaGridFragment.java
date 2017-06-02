@@ -68,11 +68,12 @@ import cn.finalteam.rxgalleryfinal.utils.PermissionCheckUtils;
 import cn.finalteam.rxgalleryfinal.utils.SimpleDateUtils;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 import cn.finalteam.rxgalleryfinal.view.MediaGridView;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Desction:
@@ -127,9 +128,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private String mBucketId = String.valueOf(Integer.MIN_VALUE);
 
     private MediaActivity mMediaActivity;
-    private Subscription mSubscrMediaCheckChangeEvent;
-    private Subscription mSubscrCloseMediaViewPageFragmentEvent;
-    private Subscription mSubscrRequestStorageReadAccessPermissionEvent;
+    private Disposable mSubscrMediaCheckChangeEvent;
+    private Disposable mSubscrCloseMediaViewPageFragmentEvent;
+    private Disposable mSubscrRequestStorageReadAccessPermissionEvent;
 
 
     private int uCropStatusColor;
@@ -242,7 +243,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
      */
     private void subscribeEvent() {
         mSubscrMediaCheckChangeEvent = RxBus.getDefault().toObservable(MediaCheckChangeEvent.class)
-                .subscribe(new RxBusSubscriber<MediaCheckChangeEvent>() {
+                .subscribeWith(new RxBusSubscriber<MediaCheckChangeEvent>() {
                     @Override
                     protected void onEvent(MediaCheckChangeEvent mediaCheckChangeEvent) {
                         if (mMediaActivity.getCheckedList().size() == 0) {
@@ -256,7 +257,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         RxBus.getDefault().add(mSubscrMediaCheckChangeEvent);
 
         mSubscrCloseMediaViewPageFragmentEvent = RxBus.getDefault().toObservable(CloseMediaViewPageFragmentEvent.class)
-                .subscribe(new RxBusSubscriber<CloseMediaViewPageFragmentEvent>() {
+                .subscribeWith(new RxBusSubscriber<CloseMediaViewPageFragmentEvent>() {
                     @Override
                     protected void onEvent(CloseMediaViewPageFragmentEvent closeMediaViewPageFragmentEvent) throws Exception {
                         mMediaGridAdapter.notifyDataSetChanged();
@@ -265,7 +266,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         RxBus.getDefault().add(mSubscrCloseMediaViewPageFragmentEvent);
 
         mSubscrRequestStorageReadAccessPermissionEvent = RxBus.getDefault().toObservable(RequestStorageReadAccessPermissionEvent.class)
-                .subscribe(new RxBusSubscriber<RequestStorageReadAccessPermissionEvent>() {
+                .subscribeWith(new RxBusSubscriber<RequestStorageReadAccessPermissionEvent>() {
                     @Override
                     protected void onEvent(RequestStorageReadAccessPermissionEvent requestStorageReadAccessPermissionEvent) throws Exception {
                         if (requestStorageReadAccessPermissionEvent.isSuccess()) {
@@ -682,16 +683,16 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             return;
         }
 
-        Observable.create((Observable.OnSubscribe<MediaBean>) subscriber -> {
+        Observable.create((ObservableOnSubscribe<MediaBean>) subscriber -> {
             MediaBean mediaBean = MediaUtils.getMediaBeanWithImage(getContext(), images[0]);
             subscriber.onNext(mediaBean);
-            subscriber.onCompleted();
+            subscriber.onComplete();
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<MediaBean>() {
+                .subscribe(new DisposableObserver<MediaBean>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
