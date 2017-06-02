@@ -22,7 +22,7 @@
 
 
    ### 新版本 V 1.0.7
-        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.6'
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.7'
         1.RxJava Update to - RxJava2.1
         2.Repair bug ->  #136,#135,#134,#129,#99
 

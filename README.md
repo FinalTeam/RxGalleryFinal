@@ -20,7 +20,7 @@
     2.卡顿测试，可在 Issues 里搜索：【精】觉得卡顿的点我 #130
 
    ### 新版本 V 1.0.7
-        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.6'
+        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.7'
         1.RxJava升级到最新 - RxJava2.1
         2.修复相关bug -  #136,#135,#134,#129,#99
 
