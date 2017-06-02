@@ -28,7 +28,7 @@ public class FrescoImageLoader implements AbsImageLoader {
     private DraweeHolder<GenericDraweeHierarchy> draweeHolder;
 
     private void init(Context ctx, Drawable defaultDrawable) {
-        if(draweeHolder == null) {
+        if (draweeHolder == null) {
             Resources resources = ctx.getResources();
             GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(resources)
                     .setPlaceholderImage(defaultDrawable)
@@ -83,7 +83,7 @@ public class FrescoImageLoader implements AbsImageLoader {
                 .build();
         ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setAutoRotateEnabled(true);
-        if(resize){
+        if (resize) {
             builder.setResizeOptions(new ResizeOptions(width, height));
         }
         ImageRequest request = builder.build();

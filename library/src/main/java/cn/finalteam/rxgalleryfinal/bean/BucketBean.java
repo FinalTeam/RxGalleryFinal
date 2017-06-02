@@ -40,7 +40,7 @@ public class BucketBean {
     }
 
     public String getCover() {
-        if(cover == null){
+        if (cover == null) {
             return "";
         }
         return cover;
@@ -60,7 +60,7 @@ public class BucketBean {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null || !(o instanceof BucketBean)) {
+        if (o == null || !(o instanceof BucketBean)) {
             return false;
         }
         BucketBean bucketBean = (BucketBean) o;

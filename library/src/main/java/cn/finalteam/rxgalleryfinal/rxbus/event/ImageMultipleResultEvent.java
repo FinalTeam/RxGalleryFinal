@@ -16,7 +16,7 @@ public class ImageMultipleResultEvent implements BaseResultEvent {
         this.mediaResultList = list;
     }
 
-    public List<MediaBean> getResult(){
+    public List<MediaBean> getResult() {
         return mediaResultList;
     }
 }

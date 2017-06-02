@@ -5,7 +5,45 @@
         <!--<item name="gallery_ucrop_title_text">@string/gallery_ucrop_menu_crop</item>-->
     </style>
 
-    <style name="Theme_Light.Default"/>
+    <style name="Theme_Light.Test">
+        <!--<item name="gallery_toolbar_bg">#233</item>-->
+        <!--<item name="gallery_toolbar_close_image">@mipmap/ic_launcher</item>-->
+        <!--<item name="gallery_toolbar_close_color">#fff</item>-->
+        <!--<item name="gallery_toolbar_widget_color">#2A2A2F</item>-->
+        <!--<item name="gallery_toolbar_text_color">#fff</item>-->
+        <!--<item name="gallery_toolbar_text_size">@dimen/column_width</item>-->
+        <!--<item name="gallery_toolbar_divider_height">@dimen/activity_vertical_margin</item>-->
+        <!--<item name="gallery_toolbar_divider_bg">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_toolbar_bottom_margin">@dimen/column_width</item>-->
+        <!--<item name="gallery_toolbar_text_gravity">right</item>-->
+        <!--<item name="gallery_toolbar_height">@dimen/activity_horizontal_margin</item>-->
+        <!--<item name="gallery_toolbar_over_button_bg">@mipmap/ic_launcher</item>-->
+        <!--<item name="gallery_toolbar_over_button_text_size">@dimen/column_width</item>-->
+        <!--<item name="gallery_toolbar_over_button_text_color">#446</item>-->
+        <!--<item name="gallery_toolbar_over_button_pressed_color">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_toolbar_over_button_normal_color">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_color_statusbar">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_color_active_widget">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_checkbox_button_tint_color">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_checkbox_text_color">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_page_bg">#FFFFFF</item>-->
+        <!--<item name="gallery_default_image">@mipmap/ic_launcher</item>-->
+        <!--<item name="gallery_camera_image">@mipmap/ic_launcher</item>-->
+        <!--<item name="gallery_camera_bg">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_take_image_text_color">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_default_image">@mipmap/ic_launcher</item>-->
+        <!--<item name="gallery_default_image">@mipmap/ic_launcher</item>-->
+        <!--<item name="gallery_default_image">@mipmap/ic_launcher</item>-->
+        <!--<item name="gallery_default_image">@mipmap/ic_launcher</item>-->
+        <!--<item name="gallery_ucrop_status_bar_color">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_ucrop_toolbar_color">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_ucrop_toolbar_widget_color">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_ucrop_activity_widget_color">@color/theme_blue_dark</item>-->
+        <!--<item name="gallery_ucrop_toolbar_title">@string/app_name</item>-->
+    </style>
+
+    <style name="Theme_Light.Default" />
+
 
     <style name="Theme_Light.White">
         <item name="gallery_toolbar_bg">@color/theme_white_primary</item>

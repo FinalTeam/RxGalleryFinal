@@ -15,7 +15,7 @@ import java.util.Date;
 public class SimpleTest {
 
     @Test
-    public void testDateFormat(){
+    public void testDateFormat() {
         System.out.println("====" + DateFormat.format("yyyyMMddHHmmss", new Date()));
     }
 

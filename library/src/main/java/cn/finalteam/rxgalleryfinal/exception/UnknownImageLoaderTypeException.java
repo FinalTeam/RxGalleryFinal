@@ -7,11 +7,11 @@ package cn.finalteam.rxgalleryfinal.exception;
  */
 public class UnknownImageLoaderTypeException extends RuntimeException {
 
-    public UnknownImageLoaderTypeException(){
+    public UnknownImageLoaderTypeException() {
         super("未知的ImageLoader");
     }
 
-    public UnknownImageLoaderTypeException(String errormsg){
+    public UnknownImageLoaderTypeException(String errormsg) {
         super(errormsg);
     }
 }

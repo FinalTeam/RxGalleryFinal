@@ -15,21 +15,21 @@
             style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/tv_over_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="@string/gallery_over_button_text"
-            android:layout_margin="8dp"/>
+            android:layout_margin="8dp"
+            android:text="@string/gallery_over_button_text" />
     </android.support.v7.widget.Toolbar>
 
     <View
         android:id="@+id/toolbar_divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp" />
 
     <FrameLayout
         android:id="@+id/fragment_container"

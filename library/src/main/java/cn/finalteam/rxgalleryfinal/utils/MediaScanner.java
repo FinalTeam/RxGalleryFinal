@@ -29,6 +29,40 @@ public class MediaScanner {
         }
     }
 
+    /**
+     * 扫描文件标签信息
+     *
+     * @param filePath 文件路径
+     * @param fileType 文件类型
+     */
+
+    public void scanFile(String filePath, String fileType, ScanCallback callback) {
+        this.filePaths = new String[]{filePath};
+        this.fileType = fileType;
+        this.scanCallback = callback;
+        //连接之后调用MusicSannerClient的onMediaScannerConnected()方法
+        mediaScanConn.connect();
+    }
+
+    /**
+     * @param filePaths 文件路径
+     * @param fileType  文件类型
+     */
+    public void scanFile(String[] filePaths, String fileType, ScanCallback callback) {
+        this.filePaths = filePaths;
+        this.fileType = fileType;
+        this.scanCallback = callback;
+        mediaScanConn.connect();
+    }
+
+    public void unScanFile() {
+        mediaScanConn.disconnect();
+    }
+
+    public interface ScanCallback {
+        void onScanCompleted(String[] images);
+    }
+
     class MusicSannerClient implements MediaScannerConnection.MediaScannerConnectionClient {
         @Override
         public void onMediaScannerConnected() {
@@ -44,44 +78,11 @@ public class MediaScanner {
         public void onScanCompleted(String path, Uri uri) {
             Logger.i("onScanCompleted");
             mediaScanConn.disconnect();
-            if(scanCallback != null) {
+            if (scanCallback != null) {
                 scanCallback.onScanCompleted(filePaths);
             }
             fileType = null;
             filePaths = null;
         }
-    }
-
-    /**
-     * 扫描文件标签信息
-     * @param filePath 文件路径
-     * @param fileType 文件类型
-     */
-
-    public void scanFile(String filePath, String fileType, ScanCallback callback) {
-        this.filePaths = new String[]{filePath};
-        this.fileType = fileType;
-        this.scanCallback = callback;
-        //连接之后调用MusicSannerClient的onMediaScannerConnected()方法
-        mediaScanConn.connect();
-    }
-
-    /**
-     * @param filePaths 文件路径
-     * @param fileType 文件类型
-     */
-    public void scanFile(String[] filePaths, String fileType, ScanCallback callback) {
-        this.filePaths = filePaths;
-        this.fileType = fileType;
-        this.scanCallback = callback;
-        mediaScanConn.connect();
-    }
-
-    public void unScanFile(){
-        mediaScanConn.disconnect();
-    }
-
-    public interface ScanCallback{
-        void onScanCompleted(String[] images);
     }
 }

@@ -19,7 +19,7 @@ import cn.finalteam.rxgalleryfinal.view.MediaGridView;
  * Date:16/5/14 上午10:58
  */
 public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFactoryInteractor.OnGenerateMediaListener,
-        MediaBucketFactoryInteractor.OnGenerateBucketListener{
+        MediaBucketFactoryInteractor.OnGenerateBucketListener {
 
     MediaSrcFactoryInteractor mediaSrcFactoryInteractor;
     MediaBucketFactoryInteractor mediaBucketFactoryInteractor;
@@ -35,6 +35,7 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
 
     /**
      * 设置MVP view(操作UI接口)
+     *
      * @param mediaGridView
      */
     @Override
@@ -44,6 +45,7 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
 
     /**
      * 分页获取media
+     *
      * @param bucketId
      * @param pageSize
      * @param currentOffset
@@ -60,6 +62,7 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
 
     /**
      * Media获取事件回调
+     *
      * @param pageSize
      * @param currentOffset
      * @param list
@@ -71,6 +74,7 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
 
     /**
      * BUCKET获取事件回调
+     *
      * @param list
      */
     @Override

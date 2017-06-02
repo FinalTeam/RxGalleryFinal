@@ -25,11 +25,19 @@ import cn.finalteam.rxgalleryfinal.imageloader.UniversalImageLoader;
  * Author:pengjianbo
  * Date:16/5/7 下午3:58
  */
-public class Configuration implements Parcelable{
+public class Configuration implements Parcelable {
 
-    protected Configuration() {
-    }
+    public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
+        @Override
+        public Configuration createFromParcel(Parcel in) {
+            return new Configuration(in);
+        }
 
+        @Override
+        public Configuration[] newArray(int size) {
+            return new Configuration[size];
+        }
+    };
     private boolean image = true;
     private Context context;
     private List<MediaBean> selectedList;
@@ -47,7 +55,7 @@ public class Configuration implements Parcelable{
     //图片压缩质量,默认不压缩
     private int compressionQuality = 90;
     //手势方式,默认all
-    private int []gestures;
+    private int[] gestures;
     //设置图片最大值,默认根据屏幕得出
     private int maxBitmapSize = CropImageView.DEFAULT_MAX_BITMAP_SIZE;
     //设置最大缩放值,默认10.f
@@ -58,7 +66,7 @@ public class Configuration implements Parcelable{
     //等比缩放默认值索引,默认原图比例
     private int selectedByDefault;
     //等比缩放值表,默认1:1,3:4,原图比例,3:2,16:9
-    private AspectRatio []aspectRatio;
+    private AspectRatio[] aspectRatio;
     //是否允许改变裁剪大小
     private boolean freestyleCropEnabled = OverlayView.DEFAULT_FREESTYLE_CROP_ENABLED;
     //是否显示裁剪框半透明椭圆浮层
@@ -67,6 +75,9 @@ public class Configuration implements Parcelable{
     private int maxResultHeight;
 
     //==========UCrop END==========
+
+    protected Configuration() {
+    }
 
     protected Configuration(Parcel in) {
         image = in.readByte() != 0;
@@ -91,18 +102,6 @@ public class Configuration implements Parcelable{
         imageConfig = in.readInt();
         hideCamera = in.readByte() != 0;
     }
-
-    public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
-        @Override
-        public Configuration createFromParcel(Parcel in) {
-            return new Configuration(in);
-        }
-
-        @Override
-        public Configuration[] newArray(int size) {
-            return new Configuration[size];
-        }
-    };
 
     public boolean isImage() {
         return image;
@@ -157,9 +156,13 @@ public class Configuration implements Parcelable{
         return imageLoaderType;
     }
 
+    protected void setImageLoaderType(int imageLoaderType) {
+        this.imageLoaderType = imageLoaderType;
+    }
+
     public AbsImageLoader getImageLoader() {
         AbsImageLoader imageLoader = null;
-        switch (imageLoaderType){
+        switch (imageLoaderType) {
             case 1:
                 imageLoader = new PicassoImageLoader();
                 break;
@@ -179,12 +182,8 @@ public class Configuration implements Parcelable{
         return imageLoader;
     }
 
-    protected void setImageLoaderType(int imageLoaderType) {
-        this.imageLoaderType = imageLoaderType;
-    }
-
     public Bitmap.Config getImageConfig() {
-        switch (imageConfig){
+        switch (imageConfig) {
             case 1:
                 return Bitmap.Config.ALPHA_8;
             case 2:
@@ -217,12 +216,12 @@ public class Configuration implements Parcelable{
         this.compressionQuality = compressionQuality;
     }
 
-    public void setAllowedGestures(@UCropActivity.GestureTypes int []gestures) {
-        this.gestures = gestures;
-    }
-
     public int[] getAllowedGestures() {
         return gestures;
+    }
+
+    public void setAllowedGestures(@UCropActivity.GestureTypes int[] gestures) {
+        this.gestures = gestures;
     }
 
     public int getMaxBitmapSize() {

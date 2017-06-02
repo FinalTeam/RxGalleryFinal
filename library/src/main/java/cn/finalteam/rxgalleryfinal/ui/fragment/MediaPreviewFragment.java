@@ -33,7 +33,7 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
  * Date:16/6/9 上午1:35
  */
 public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPageChangeListener,
-        View.OnClickListener{
+        View.OnClickListener {
 
     private static final String EXTRA_PAGE_INDEX = EXTRA_PREFIX + ".PageIndex";
 
@@ -48,21 +48,21 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
     private MediaActivity mMediaActivity;
     private int mPagerPosition;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if(context instanceof  MediaActivity) {
-            mMediaActivity = (MediaActivity) context;
-        }
-    }
-
-    public static MediaPreviewFragment newInstance(Configuration configuration, int position){
+    public static MediaPreviewFragment newInstance(Configuration configuration, int position) {
         MediaPreviewFragment fragment = new MediaPreviewFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_CONFIGURATION, configuration);
         bundle.putInt(EXTRA_PAGE_INDEX, position);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MediaActivity) {
+            mMediaActivity = (MediaActivity) context;
+        }
     }
 
     @Override
@@ -78,7 +78,7 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         mRlRootView = (RelativeLayout) view.findViewById(R.id.rl_root_view);
         mScreenSize = DeviceUtils.getScreenSize(getContext());
         mMediaBeanList = new ArrayList<>();
-        if(mMediaActivity.getCheckedList() != null){
+        if (mMediaActivity.getCheckedList() != null) {
             mMediaBeanList.addAll(mMediaActivity.getCheckedList());
         }
         mMediaPreviewAdapter = new MediaPreviewAdapter(getContext(), mMediaBeanList,
@@ -86,7 +86,7 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         mViewPager.setAdapter(mMediaPreviewAdapter);
         mCbCheck.setOnClickListener(this);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mPagerPosition = savedInstanceState.getInt(EXTRA_PAGE_INDEX);
         }
     }
@@ -120,14 +120,14 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
 
     @Override
     protected void onRestoreState(Bundle savedInstanceState) {
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mPagerPosition = savedInstanceState.getInt(EXTRA_PAGE_INDEX);
         }
     }
 
     @Override
     protected void onSaveState(Bundle outState) {
-        if(outState != null){
+        if (outState != null) {
             outState.putInt(EXTRA_PAGE_INDEX, mPagerPosition);
         }
     }
@@ -142,7 +142,7 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         MediaBean mediaBean = mMediaBeanList.get(position);
         mCbCheck.setChecked(false);
         //判断是否选择
-        if(mMediaActivity != null && mMediaActivity.getCheckedList() != null){
+        if (mMediaActivity != null && mMediaActivity.getCheckedList() != null) {
             mCbCheck.setChecked(mMediaActivity.getCheckedList().contains(mediaBean));
         }
 
@@ -155,13 +155,14 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
 
     /**
      * 改变选择
+     *
      * @param view
      */
     @Override
     public void onClick(View view) {
         int position = mViewPager.getCurrentItem();
         MediaBean mediaBean = mMediaBeanList.get(position);
-        if(mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size()
+        if (mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size()
                 && !mMediaActivity.getCheckedList().contains(mediaBean)) {
             Toast.makeText(getContext(), getResources()
                     .getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()), Toast.LENGTH_SHORT).show();

@@ -8,21 +8,23 @@ import android.support.annotation.NonNull;
  * Date:16/7/31 上午9:15
  */
 public interface Job {
+    Result onRunJob();
+
     public enum Result {
 
         SUCCESS(), FAILURE();
 
         private Object data;
 
-        Result(){
-        }
-
-        public void setResultData(Object data){
-            this.data = data;
+        Result() {
         }
 
         public Object getResultData() {
             return data;
+        }
+
+        public void setResultData(Object data) {
+            this.data = data;
         }
     }
 
@@ -43,6 +45,4 @@ public interface Job {
             return data;
         }
     }
-
-    Result onRunJob();
 }

@@ -13,7 +13,7 @@ public class OpenMediaPageFragmentEvent {
     private ArrayList<MediaBean> mediaBeanList;
     private int position;
 
-    public OpenMediaPageFragmentEvent(ArrayList<MediaBean> mediaBeanList, int position){
+    public OpenMediaPageFragmentEvent(ArrayList<MediaBean> mediaBeanList, int position) {
         this.mediaBeanList = mediaBeanList;
         this.position = position;
     }

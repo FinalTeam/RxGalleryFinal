@@ -1,4 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.finalteam.rxgalleryfinal">
+<manifest package="cn.finalteam.rxgalleryfinal">
 
 </manifest>

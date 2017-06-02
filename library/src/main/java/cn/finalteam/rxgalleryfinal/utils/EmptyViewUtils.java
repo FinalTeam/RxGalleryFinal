@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class EmptyViewUtils {
 
     public static void showLoading(ViewGroup emptyView) {
-        if(emptyView == null) {
+        if (emptyView == null) {
             return;
         }
         ProgressBar pbLoading = (ProgressBar) emptyView.getChildAt(0);
@@ -23,7 +23,7 @@ public class EmptyViewUtils {
     }
 
     public static void showMessage(ViewGroup emptyView, String msg) {
-        if(emptyView == null) {
+        if (emptyView == null) {
             return;
         }
         ProgressBar pbLoading = (ProgressBar) emptyView.getChildAt(0);

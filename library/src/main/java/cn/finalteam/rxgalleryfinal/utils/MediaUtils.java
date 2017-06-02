@@ -28,8 +28,10 @@ public class MediaUtils {
     public static List<MediaBean> getMediaWithImageList(Context context, int page, int limit) {
         return getMediaWithImageList(context, String.valueOf(Integer.MIN_VALUE), page, limit);
     }
+
     /**
      * 从数据库中读取图片
+     *
      * @param context
      * @param bucketId
      * @param page
@@ -37,7 +39,7 @@ public class MediaUtils {
      * @return
      */
     public static List<MediaBean> getMediaWithImageList(Context context, String bucketId, int page, int limit) {
-        int offset = (page -1) * limit;
+        int offset = (page - 1) * limit;
         List<MediaBean> mediaBeanList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         List<String> projection = new ArrayList<>();
@@ -53,22 +55,22 @@ public class MediaUtils {
         projection.add(MediaStore.Images.Media.LONGITUDE);
         projection.add(MediaStore.Images.Media.ORIENTATION);
         projection.add(MediaStore.Images.Media.SIZE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             projection.add(MediaStore.Images.Media.WIDTH);
             projection.add(MediaStore.Images.Media.HEIGHT);
         }
         String selection = null;
-        String []selectionArgs = null;
-        if(!TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
+        String[] selectionArgs = null;
+        if (!TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
             selection = MediaStore.Images.Media.BUCKET_ID + "=?";
             selectionArgs = new String[]{bucketId};
         }
         Cursor cursor = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection.toArray(new String[projection.size()]), selection,
-                selectionArgs, MediaStore.Images.Media.DATE_ADDED +" DESC LIMIT " + limit +" OFFSET " + offset);
-        if(cursor != null) {
+                selectionArgs, MediaStore.Images.Media.DATE_ADDED + " DESC LIMIT " + limit + " OFFSET " + offset);
+        if (cursor != null) {
             int count = cursor.getCount();
-            if(count > 0) {
+            if (count > 0) {
                 cursor.moveToFirst();
                 do {
                     MediaBean mediaBean = parseImageCursorAndCreateThumImage(context, cursor);
@@ -77,7 +79,7 @@ public class MediaUtils {
             }
         }
 
-        if(cursor != null && !cursor.isClosed()){
+        if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
         cursor = null;
@@ -90,6 +92,7 @@ public class MediaUtils {
 
     /**
      * 从数据库中读取视频
+     *
      * @param context
      * @param bucketId
      * @param page
@@ -97,7 +100,7 @@ public class MediaUtils {
      * @return
      */
     public static List<MediaBean> getMediaWithVideoList(Context context, String bucketId, int page, int limit) {
-        int offset = (page -1) * limit;
+        int offset = (page - 1) * limit;
         List<MediaBean> mediaBeanList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         List<String> projection = new ArrayList<>();
@@ -112,23 +115,23 @@ public class MediaUtils {
         projection.add(MediaStore.Video.Media.LATITUDE);
         projection.add(MediaStore.Video.Media.LONGITUDE);
         projection.add(MediaStore.Video.Media.SIZE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             projection.add(MediaStore.Video.Media.WIDTH);
             projection.add(MediaStore.Video.Media.HEIGHT);
         }
         String selection = null;
-        String []selectionArgs = null;
-        if(!TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
+        String[] selectionArgs = null;
+        if (!TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
             selection = MediaStore.Video.Media.BUCKET_ID + "=?";
             selectionArgs = new String[]{bucketId};
         }
 
         Cursor cursor = contentResolver.query(
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection.toArray(new String[projection.size()]), selection,
-                selectionArgs, MediaStore.Video.Media.DATE_ADDED +" DESC LIMIT " + limit +" OFFSET " + offset);
-        if(cursor != null) {
+                selectionArgs, MediaStore.Video.Media.DATE_ADDED + " DESC LIMIT " + limit + " OFFSET " + offset);
+        if (cursor != null) {
             int count = cursor.getCount();
-            if(count > 0) {
+            if (count > 0) {
                 cursor.moveToFirst();
                 do {
                     MediaBean mediaBean = parseVideoCursorAndCreateThumImage(context, cursor);
@@ -137,7 +140,7 @@ public class MediaUtils {
             }
         }
 
-        if(cursor != null && !cursor.isClosed()){
+        if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
         cursor = null;
@@ -146,6 +149,7 @@ public class MediaUtils {
 
     /**
      * 根据原图获取图片相关信息
+     *
      * @param context
      * @param originalPath
      * @return
@@ -165,19 +169,19 @@ public class MediaUtils {
         projection.add(MediaStore.Images.Media.LONGITUDE);
         projection.add(MediaStore.Images.Media.ORIENTATION);
         projection.add(MediaStore.Images.Media.SIZE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             projection.add(MediaStore.Images.Media.WIDTH);
             projection.add(MediaStore.Images.Media.HEIGHT);
         }
         Cursor cursor = contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection.toArray(new String[projection.size()]), MediaStore.Images.Media.DATA +"=?",
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection.toArray(new String[projection.size()]), MediaStore.Images.Media.DATA + "=?",
                 new String[]{originalPath}, null);
         MediaBean mediaBean = null;
-        if(cursor != null && cursor.getCount() > 0) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            mediaBean =  parseImageCursorAndCreateThumImage(context, cursor);
+            mediaBean = parseImageCursorAndCreateThumImage(context, cursor);
         }
-        if(cursor != null && !cursor.isClosed()){
+        if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
         cursor = null;
@@ -187,6 +191,7 @@ public class MediaUtils {
 
     /**
      * 解析图片cursor并且创建缩略图
+     *
      * @param context
      * @param cursor
      * @return
@@ -212,7 +217,7 @@ public class MediaUtils {
         mediaBean.setThumbnailBigPath(createThumbnailBigFileName(context, originalPath).getAbsolutePath());
         mediaBean.setThumbnailSmallPath(createThumbnailSmallFileName(context, originalPath).getAbsolutePath());
         int width = 0, height = 0;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             width = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.WIDTH));
             height = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT));
         } else {
@@ -240,6 +245,7 @@ public class MediaUtils {
 
     /**
      * 解析视频cursor并且创建缩略图
+     *
      * @param context
      * @param cursor
      * @return
@@ -270,7 +276,7 @@ public class MediaUtils {
         mediaBean.setThumbnailSmallPath(createThumbnailSmallFileName(context, originalPath).getAbsolutePath());
 
         int width = 0, height = 0;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             width = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.WIDTH));
             height = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.HEIGHT));
         } else {
@@ -306,6 +312,7 @@ public class MediaUtils {
 
     /**
      * 获取所有的图片文件夹
+     *
      * @param context
      * @return
      */
@@ -315,6 +322,7 @@ public class MediaUtils {
 
     /**
      * 获取所以视频文件夹
+     *
      * @param context
      * @return
      */
@@ -324,6 +332,7 @@ public class MediaUtils {
 
     /**
      * 获取所有的问media文件夹
+     *
      * @param context
      * @param isImage
      * @return
@@ -332,15 +341,15 @@ public class MediaUtils {
         List<BucketBean> bucketBeenList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         String[] projection;
-        if(isImage){
-            projection = new String[] {
+        if (isImage) {
+            projection = new String[]{
                     MediaStore.Images.Media.BUCKET_ID,
                     MediaStore.Images.Media.DATA,
                     MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
                     MediaStore.Images.Media.ORIENTATION,
             };
         } else {
-            projection = new String[] {
+            projection = new String[]{
                     MediaStore.Video.Media.BUCKET_ID,
                     MediaStore.Video.Media.DATA,
                     MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
@@ -349,7 +358,7 @@ public class MediaUtils {
         BucketBean allMediaBucket = new BucketBean();
         allMediaBucket.setBucketId(String.valueOf(Integer.MIN_VALUE));
         Uri uri;
-        if(isImage) {
+        if (isImage) {
             allMediaBucket.setBucketName(context.getString(R.string.gallery_all_image));
             uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         } else {
@@ -359,19 +368,19 @@ public class MediaUtils {
         bucketBeenList.add(allMediaBucket);
         Cursor cursor = null;
         try {
-             cursor = contentResolver.query(uri, projection, null, null, MediaStore.Video.Media.DATE_ADDED + " DESC");
-        } catch (Exception e){
+            cursor = contentResolver.query(uri, projection, null, null, MediaStore.Video.Media.DATE_ADDED + " DESC");
+        } catch (Exception e) {
             Logger.e(e);
         }
 
-        if(cursor != null && cursor.getCount() > 0) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
                 BucketBean bucketBean = new BucketBean();
                 String bucketId;
                 String bucketKey;
                 String cover;
-                if(isImage) {
+                if (isImage) {
                     bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
                     bucketBean.setBucketId(bucketId);
                     String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
@@ -388,22 +397,22 @@ public class MediaUtils {
                     bucketKey = MediaStore.Video.Media.BUCKET_ID;
                     cover = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
                 }
-                if(TextUtils.isEmpty(allMediaBucket.getCover())) {
+                if (TextUtils.isEmpty(allMediaBucket.getCover())) {
                     allMediaBucket.setCover(cover);
                 }
-                if(bucketBeenList.contains(bucketBean)) {
+                if (bucketBeenList.contains(bucketBean)) {
                     bucketBean = null;
                     bucketId = null;
                     bucketKey = null;
-                   continue;
+                    continue;
                 }
                 //获取数量
-                Cursor c = contentResolver.query(uri, projection, bucketKey +"=?", new String[]{bucketId}, null);
-                if(c != null && c.getCount() > 0) {
+                Cursor c = contentResolver.query(uri, projection, bucketKey + "=?", new String[]{bucketId}, null);
+                if (c != null && c.getCount() > 0) {
                     bucketBean.setImageCount(c.getCount());
                 }
                 bucketBean.setCover(cover);
-                if(c != null && !c.isClosed()) {
+                if (c != null && !c.isClosed()) {
                     c.close();
                 }
                 c = null;
@@ -411,7 +420,7 @@ public class MediaUtils {
             } while (cursor.moveToNext());
         }
 
-        if(cursor != null && !cursor.isClosed()){
+        if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
         cursor = null;

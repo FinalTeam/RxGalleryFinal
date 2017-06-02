@@ -1,17 +1,14 @@
 package cn.finalteam.rxgalleryfinal.ui.fragment;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
 import java.util.Stack;
 
 import cn.finalteam.rxgalleryfinal.BuildConfig;
@@ -25,13 +22,12 @@ import cn.finalteam.rxgalleryfinal.utils.Logger;
  */
 public abstract class BaseFragment extends Fragment {
 
-    private final String CLASS_NAME = getClass().getSimpleName();
     public static final String EXTRA_PREFIX = BuildConfig.APPLICATION_ID;
-    public static final String EXTRA_CONFIGURATION = EXTRA_PREFIX +".Configuration";
-
+    public static final String EXTRA_CONFIGURATION = EXTRA_PREFIX + ".Configuration";
+    private static Stack<BaseFragment> fragmentStack = new Stack<>();
+    private final String CLASS_NAME = getClass().getSimpleName();
     protected Bundle mSaveDataBundle;
     protected String BUNDLE_KEY = "KEY_" + CLASS_NAME;
-
     protected Configuration mConfiguration;
 
     @Override
@@ -53,21 +49,21 @@ public abstract class BaseFragment extends Fragment {
 
         Bundle argsBundle = getArguments();
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mConfiguration = savedInstanceState.getParcelable(EXTRA_CONFIGURATION);
         }
-        if(mConfiguration == null && argsBundle != null) {
+        if (mConfiguration == null && argsBundle != null) {
             mConfiguration = argsBundle.getParcelable(EXTRA_CONFIGURATION);
         }
 
-        if(mConfiguration != null){
-            if(argsBundle == null){
+        if (mConfiguration != null) {
+            if (argsBundle == null) {
                 argsBundle = savedInstanceState;
             }
             onViewCreatedOk(view, argsBundle);
             setTheme();
         } else {
-            if(getActivity() != null && !getActivity().isFinishing()) {
+            if (getActivity() != null && !getActivity().isFinishing()) {
                 getActivity().finish();
             }
         }
@@ -75,16 +71,12 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract void onViewCreatedOk(View view, @Nullable Bundle savedInstanceState);
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         printFragmentLife("onCreateView");
         return inflater.inflate(getContentView(), container, false);
     }
-
-
-    private static Stack<BaseFragment> fragmentStack = new Stack<>();
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
@@ -108,8 +100,6 @@ public abstract class BaseFragment extends Fragment {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
 
 
     @Override
@@ -151,9 +141,10 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract int getContentView();
 
-    public void setTheme(){}
+    public void setTheme() {
+    }
 
-    private void printFragmentLife(String method){
+    private void printFragmentLife(String method) {
         Logger.i(String.format("Fragment:%s Method:%s", CLASS_NAME, method));
     }
 
@@ -182,7 +173,7 @@ public abstract class BaseFragment extends Fragment {
 
         if (mSaveDataBundle != null) {
             Bundle b = getArguments();
-            if(b != null) {
+            if (b != null) {
                 b.putBundle(BUNDLE_KEY, mSaveDataBundle);
             }
         }
@@ -190,7 +181,7 @@ public abstract class BaseFragment extends Fragment {
 
     private boolean restoreStateFromArguments() {
         Bundle b = getArguments();
-        if(b != null) {
+        if (b != null) {
             mSaveDataBundle = b.getBundle(BUNDLE_KEY);
             if (mSaveDataBundle != null) {
                 restoreState();
@@ -212,6 +203,7 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * 恢复数据
+     *
      * @param savedInstanceState
      */
     protected abstract void onRestoreState(Bundle savedInstanceState);

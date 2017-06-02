@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                tools:showIn="@layout/gallery_ucrop_activity_photobox"
-                tools:visibility="visible">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    tools:showIn="@layout/gallery_ucrop_activity_photobox"
+    tools:visibility="visible">
 
     <TextView
         android:id="@+id/text_view_rotate"
         style="@style/gallery_ucrop_TextViewWidgetText"
-        android:text="100°"/>
+        android:text="100°" />
 
     <com.yalantis.ucrop.view.widget.HorizontalProgressWheelView
         android:id="@+id/rotate_scroll_wheel"
@@ -20,7 +20,7 @@
         android:layout_toEndOf="@+id/wrapper_reset_rotate"
         android:layout_toLeftOf="@+id/wrapper_rotate_by_angle"
         android:layout_toRightOf="@+id/wrapper_reset_rotate"
-        android:layout_toStartOf="@+id/wrapper_rotate_by_angle"/>
+        android:layout_toStartOf="@+id/wrapper_rotate_by_angle" />
 
     <FrameLayout
         android:id="@+id/wrapper_reset_rotate"
@@ -29,7 +29,7 @@
 
         <ImageView
             style="@style/gallery_ucrop_ImageViewWidgetIcon"
-            android:src="@drawable/gallery_ucrop_ic_reset"/>
+            android:src="@drawable/gallery_ucrop_ic_reset" />
 
     </FrameLayout>
 
@@ -42,7 +42,7 @@
 
         <ImageView
             style="@style/gallery_ucrop_ImageViewWidgetIcon"
-            android:src="@drawable/gallery_ucrop_ic_angle"/>
+            android:src="@drawable/gallery_ucrop_ic_angle" />
 
     </FrameLayout>
 

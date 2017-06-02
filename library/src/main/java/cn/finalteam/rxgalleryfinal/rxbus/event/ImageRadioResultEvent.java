@@ -10,7 +10,7 @@ import cn.finalteam.rxgalleryfinal.bean.ImageCropBean;
 public class ImageRadioResultEvent implements BaseResultEvent {
     private ImageCropBean resultBean;
 
-    public ImageRadioResultEvent(ImageCropBean bean){
+    public ImageRadioResultEvent(ImageCropBean bean) {
         this.resultBean = bean;
     }
 

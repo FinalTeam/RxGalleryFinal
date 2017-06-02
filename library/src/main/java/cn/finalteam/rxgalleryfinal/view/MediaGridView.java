@@ -12,5 +12,6 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
  */
 public interface MediaGridView {
     void onRequestMediaCallback(List<MediaBean> list);
+
     void onRequestBucketCallback(List<BucketBean> list);
 }

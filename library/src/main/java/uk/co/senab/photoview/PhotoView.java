@@ -110,51 +110,14 @@ public class PhotoView extends FixImageView implements IPhotoView {
     }
 
     @Override
-    public float getMinimumScale() {
-        return mAttacher.getMinimumScale();
-    }
-
-    @Override
-    @Deprecated
-    public float getMidScale() {
-        return getMediumScale();
-    }
-
-    @Override
-    public float getMediumScale() {
-        return mAttacher.getMediumScale();
-    }
-
-    @Override
-    @Deprecated
-    public float getMaxScale() {
-        return getMaximumScale();
-    }
-
-    @Override
-    public float getMaximumScale() {
-        return mAttacher.getMaximumScale();
-    }
-
-    @Override
-    public float getScale() {
-        return mAttacher.getScale();
-    }
-
-    @Override
-    public ScaleType getScaleType() {
-        return mAttacher.getScaleType();
-    }
-
-    @Override
-    public void setAllowParentInterceptOnEdge(boolean allow) {
-        mAttacher.setAllowParentInterceptOnEdge(allow);
-    }
-
-    @Override
     @Deprecated
     public void setMinScale(float minScale) {
         setMinimumScale(minScale);
+    }
+
+    @Override
+    public float getMinimumScale() {
+        return mAttacher.getMinimumScale();
     }
 
     @Override
@@ -164,8 +127,19 @@ public class PhotoView extends FixImageView implements IPhotoView {
 
     @Override
     @Deprecated
+    public float getMidScale() {
+        return getMediumScale();
+    }
+
+    @Override
+    @Deprecated
     public void setMidScale(float midScale) {
         setMediumScale(midScale);
+    }
+
+    @Override
+    public float getMediumScale() {
+        return mAttacher.getMediumScale();
     }
 
     @Override
@@ -175,13 +149,53 @@ public class PhotoView extends FixImageView implements IPhotoView {
 
     @Override
     @Deprecated
+    public float getMaxScale() {
+        return getMaximumScale();
+    }
+
+    @Override
+    @Deprecated
     public void setMaxScale(float maxScale) {
         setMaximumScale(maxScale);
     }
 
     @Override
+    public float getMaximumScale() {
+        return mAttacher.getMaximumScale();
+    }
+
+    @Override
     public void setMaximumScale(float maximumScale) {
         mAttacher.setMaximumScale(maximumScale);
+    }
+
+    @Override
+    public float getScale() {
+        return mAttacher.getScale();
+    }
+
+    @Override
+    public void setScale(float scale) {
+        mAttacher.setScale(scale);
+    }
+
+    @Override
+    public ScaleType getScaleType() {
+        return mAttacher.getScaleType();
+    }
+
+    @Override
+    public void setScaleType(ScaleType scaleType) {
+        if (null != mAttacher) {
+            mAttacher.setScaleType(scaleType);
+        } else {
+            mPendingScaleType = scaleType;
+        }
+    }
+
+    @Override
+    public void setAllowParentInterceptOnEdge(boolean allow) {
+        mAttacher.setAllowParentInterceptOnEdge(allow);
     }
 
     @Override
@@ -225,19 +239,14 @@ public class PhotoView extends FixImageView implements IPhotoView {
     }
 
     @Override
-    public void setOnPhotoTapListener(OnPhotoTapListener listener) {
-        mAttacher.setOnPhotoTapListener(listener);
-    }
-
-    @Override
     @Deprecated
     public OnPhotoTapListener getOnPhotoTapListener() {
         return mAttacher.getOnPhotoTapListener();
     }
 
     @Override
-    public void setOnViewTapListener(OnViewTapListener listener) {
-        mAttacher.setOnViewTapListener(listener);
+    public void setOnPhotoTapListener(OnPhotoTapListener listener) {
+        mAttacher.setOnPhotoTapListener(listener);
     }
 
     @Override
@@ -247,8 +256,8 @@ public class PhotoView extends FixImageView implements IPhotoView {
     }
 
     @Override
-    public void setScale(float scale) {
-        mAttacher.setScale(scale);
+    public void setOnViewTapListener(OnViewTapListener listener) {
+        mAttacher.setOnViewTapListener(listener);
     }
 
     @Override
@@ -259,15 +268,6 @@ public class PhotoView extends FixImageView implements IPhotoView {
     @Override
     public void setScale(float scale, float focalX, float focalY, boolean animate) {
         mAttacher.setScale(scale, focalX, focalY, animate);
-    }
-
-    @Override
-    public void setScaleType(ScaleType scaleType) {
-        if (null != mAttacher) {
-            mAttacher.setScaleType(scaleType);
-        } else {
-            mPendingScaleType = scaleType;
-        }
     }
 
     @Override

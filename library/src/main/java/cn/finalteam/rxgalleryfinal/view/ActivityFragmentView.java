@@ -12,6 +12,8 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 public interface ActivityFragmentView {
 
     void showMediaGridFragment();
+
     void showMediaPageFragment(ArrayList<MediaBean> list, int position);
+
     void showMediaPreviewFragment();
 }

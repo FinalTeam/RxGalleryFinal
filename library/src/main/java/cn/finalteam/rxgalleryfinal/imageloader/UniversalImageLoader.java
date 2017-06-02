@@ -25,7 +25,7 @@ public class UniversalImageLoader implements AbsImageLoader {
                 .showImageForEmptyUri(defaultDrawable)
                 .build();
         ImageSize imageSize = null;
-        if(resize) {
+        if (resize) {
             imageSize = new ImageSize(width, height);
         }
         ImageLoader.getInstance().displayImage("file://" + path, new ImageViewAware(imageView), options, imageSize, null, null);

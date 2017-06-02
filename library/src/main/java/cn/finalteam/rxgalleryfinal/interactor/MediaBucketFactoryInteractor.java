@@ -11,9 +11,9 @@ import cn.finalteam.rxgalleryfinal.bean.BucketBean;
  */
 public interface MediaBucketFactoryInteractor {
 
+    void generateBuckets();
+
     interface OnGenerateBucketListener {
         void onFinished(List<BucketBean> list);
     }
-
-    void generateBuckets();
 }

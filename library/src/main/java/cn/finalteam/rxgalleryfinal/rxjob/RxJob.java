@@ -7,15 +7,15 @@ package cn.finalteam.rxgalleryfinal.rxjob;
  */
 public class RxJob {
 
-    private final JobManager jobManager;
     private static RxJob rxJob;
+    private final JobManager jobManager;
 
     public RxJob() {
         jobManager = new JobManager();
     }
 
     public static RxJob getDefault() {
-        if(rxJob == null){
+        if (rxJob == null) {
             rxJob = new RxJob();
         }
         return rxJob;
