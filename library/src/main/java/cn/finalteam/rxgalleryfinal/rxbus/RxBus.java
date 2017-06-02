@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
@@ -69,6 +68,7 @@ public class RxBus {
 
     /**
      * 是否被取消订阅
+     *
      * @return
      */
     public boolean isUnsubscribed() {
@@ -77,6 +77,7 @@ public class RxBus {
 
     /**
      * 添加订阅
+     *
      * @param s
      */
     public void add(Subscription s) {
@@ -87,6 +88,7 @@ public class RxBus {
 
     /**
      * 移除订阅
+     *
      * @param s
      */
     public void remove(Subscription s) {
@@ -111,6 +113,7 @@ public class RxBus {
 
     /**
      * 判断是否有订阅者
+     *
      * @return
      */
     public boolean hasSubscriptions() {
@@ -137,12 +140,7 @@ public class RxBus {
             final Object event = mStickyEventMap.get(eventType);
 
             if (event != null) {
-                return Observable.merge(observable, Observable.create(new Observable.OnSubscribe<T>() {
-                    @Override
-                    public void call(Subscriber<? super T> subscriber) {
-                        subscriber.onNext(eventType.cast(event));
-                    }
-                }));
+                return Observable.merge(observable, Observable.create(subscriber -> subscriber.onNext(eventType.cast(event))));
             } else {
                 return observable;
             }

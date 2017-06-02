@@ -14,7 +14,7 @@ import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 
 /**
  * Desction:
- .centerCrop() 预览大图
+ * .centerCrop() 预览大图
  * Author:dujinyang
  * Date:16/6/17 下午1:23
  */
@@ -32,10 +32,10 @@ public class PicassoImageLoader implements AbsImageLoader {
                 .networkPolicy(NetworkPolicy.NO_STORE)
                 .config(config)
                 .tag(context);
-        if(resize){
+        if (resize) {
             creator = creator.resize(width, height)
                     .centerCrop();
         }
-       creator.into(imageView);
+        creator.into(imageView);
     }
 }

@@ -11,7 +11,7 @@ public class MediaCheckChangeEvent {
 
     private MediaBean mediaBean;
 
-    public MediaCheckChangeEvent(MediaBean mediaBean){
+    public MediaCheckChangeEvent(MediaBean mediaBean) {
         this.mediaBean = mediaBean;
     }
 

@@ -10,7 +10,7 @@ import java.util.Locale;
  */
 public class SimpleDateUtils {
 
-    public static String getNowTime(){
+    public static String getNowTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
         return dateFormat.format(new Date());
     }

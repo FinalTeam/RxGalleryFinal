@@ -12,9 +12,19 @@ import java.io.File;
  */
 public class MediaBean implements Parcelable {
 
+    public static final Creator<MediaBean> CREATOR = new Creator<MediaBean>() {
+        @Override
+        public MediaBean createFromParcel(Parcel in) {
+            return new MediaBean(in);
+        }
+
+        @Override
+        public MediaBean[] newArray(int size) {
+            return new MediaBean[size];
+        }
+    };
     //图片ID
     private long id;
-
     private String title;
     //图片、视频源地址
     private String originalPath;
@@ -36,17 +46,16 @@ public class MediaBean implements Parcelable {
     private int orientation;
     //文件大小
     private long length;
-
     //文件夹相关
     private String bucketId;
     private String bucketDisplayName;
-
     //大缩略图
     private String thumbnailBigPath;
     //小缩略图
     private String thumbnailSmallPath;
 
-    public MediaBean(){}
+    public MediaBean() {
+    }
 
     protected MediaBean(Parcel in) {
         id = in.readLong();
@@ -91,18 +100,6 @@ public class MediaBean implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<MediaBean> CREATOR = new Creator<MediaBean>() {
-        @Override
-        public MediaBean createFromParcel(Parcel in) {
-            return new MediaBean(in);
-        }
-
-        @Override
-        public MediaBean[] newArray(int size) {
-            return new MediaBean[size];
-        }
-    };
 
     public long getId() {
         return id;
@@ -169,7 +166,7 @@ public class MediaBean implements Parcelable {
     }
 
     public String getThumbnailBigPath() {
-        if(new File(thumbnailBigPath).exists()) {
+        if (new File(thumbnailBigPath).exists()) {
             return thumbnailBigPath;
         }
         return "";
@@ -180,7 +177,7 @@ public class MediaBean implements Parcelable {
     }
 
     public String getThumbnailSmallPath() {
-        if(new File(thumbnailSmallPath).exists()) {
+        if (new File(thumbnailSmallPath).exists()) {
             return thumbnailSmallPath;
         }
         return "";
@@ -240,12 +237,12 @@ public class MediaBean implements Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null || !(obj instanceof MediaBean)){
+        if (obj == null || !(obj instanceof MediaBean)) {
             return false;
         }
 
         MediaBean bean = (MediaBean) obj;
-        if(bean == null){
+        if (bean == null) {
             return false;
         }
 

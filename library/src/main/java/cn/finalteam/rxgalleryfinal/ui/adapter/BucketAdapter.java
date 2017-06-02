@@ -32,7 +32,7 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
  * Author:pengjianbo
  * Date:16/7/4 下午5:40
  */
-public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketViewHolder>{
+public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketViewHolder> {
 
     private List<BucketBean> mBucketList;
     private Context mContext;
@@ -60,7 +60,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
     public void onBindViewHolder(BucketViewHolder holder, int position) {
         BucketBean bucketBean = mBucketList.get(position);
         String bucketName = bucketBean.getBucketName();
-        if(position != 0) {
+        if (position != 0) {
             SpannableString nameSpannable = new SpannableString(bucketName + "\n" + bucketBean.getImageCount() + "张");
             nameSpannable.setSpan(new ForegroundColorSpan(Color.GRAY), bucketName.length(), nameSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             nameSpannable.setSpan(new RelativeSizeSpan(0.8f), bucketName.length(), nameSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -68,7 +68,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
         } else {
             holder.mTvBucketName.setText(bucketName);
         }
-        if(mSelectedBucket != null && TextUtils.equals(mSelectedBucket.getBucketId(), bucketBean.getBucketId())) {
+        if (mSelectedBucket != null && TextUtils.equals(mSelectedBucket.getBucketId(), bucketBean.getBucketId())) {
             holder.mRbSelected.setVisibility(View.VISIBLE);
             holder.mRbSelected.setChecked(true);
         } else {
@@ -83,6 +83,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
 
     public void setSelectedBucket(BucketBean bucketBean) {
         this.mSelectedBucket = bucketBean;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -94,7 +95,11 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
         this.mOnRecyclerViewItemClickListener = listener;
     }
 
-    class BucketViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static interface OnRecyclerViewItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    class BucketViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView mTvBucketName;
         SquareImageView mIvBucketCover;
@@ -117,7 +122,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
 
         @Override
         public void onClick(View v) {
-            if(mOnRecyclerViewItemClickListener != null) {
+            if (mOnRecyclerViewItemClickListener != null) {
                 mOnRecyclerViewItemClickListener.onItemClick(v, getLayoutPosition());
             }
 
@@ -128,6 +133,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
 
         /**
          * 设置未所有Item为未选中
+         *
          * @param parentView
          */
         private void setRadioDisChecked(ViewGroup parentView) {
@@ -138,15 +144,11 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
             for (int i = 0; i < parentView.getChildCount(); i++) {
                 View itemView = parentView.getChildAt(i);
                 RadioButton rbSelect = (RadioButton) itemView.findViewById(R.id.rb_selected);
-                if(rbSelect!=null){
+                if (rbSelect != null) {
                     rbSelect.setVisibility(View.GONE);
                     rbSelect.setChecked(false);
                 }
             }
         }
-    }
-
-     public static interface OnRecyclerViewItemClickListener{
-        void onItemClick(View view , int position);
     }
 }

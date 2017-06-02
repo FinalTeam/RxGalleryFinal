@@ -7,7 +7,7 @@
         android:repeatCount="-1"
         android:valueFrom="0"
         android:valueTo="1"
-        android:valueType="floatType"/>
+        android:valueType="floatType" />
 
     <objectAnimator
         android:duration="@integer/gallery_ucrop_progress_loading_anim_time"
@@ -15,6 +15,6 @@
         android:repeatCount="-1"
         android:valueFrom="1"
         android:valueTo="0"
-        android:valueType="floatType"/>
+        android:valueType="floatType" />
 
 </set>

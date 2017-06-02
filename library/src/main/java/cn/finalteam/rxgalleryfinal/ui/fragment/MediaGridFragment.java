@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 import com.yalantis.ucrop.model.AspectRatio;
@@ -30,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.anim.Animation;
@@ -44,9 +46,9 @@ import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.RequestStorageReadAccessPermissionEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.adapter.BucketAdapter;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaGridAdapter;
@@ -76,17 +78,16 @@ import rx.schedulers.Schedulers;
  * Desction:
  * Author:pengjianbo
  * Date:16/5/7 上午10:02
- *
+ * <p>
  * Desction: 直接暴漏
  * Author:KARL-Dujinyang
  * Date:2017.
- *
  */
 public class MediaGridFragment extends BaseFragment implements MediaGridView, RecyclerViewFinal.OnLoadMoreListener,
-        FooterAdapter.OnItemClickListener,View.OnClickListener, MediaScanner.ScanCallback, BucketAdapter.OnRecyclerViewItemClickListener {
+        FooterAdapter.OnItemClickListener, View.OnClickListener, MediaScanner.ScanCallback, BucketAdapter.OnRecyclerViewItemClickListener {
 
     private final String IMAGE_STORE_FILE_NAME = "IMG_%s.jpg";
-    private static String imgType = "image/jpeg" ;
+    private static String imgType = "image/jpeg";
     private final int TAKE_IMAGE_REQUEST_CODE = 1001;
     private final int CROP_IMAGE_REQUEST_CODE = 1011;
     private final String TAKE_URL_STORAGE_KEY = "take_url_storage_key";
@@ -119,7 +120,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private static File mImageStoreDir;
     private static File mImageStoreCropDir; //裁剪目录
     //裁剪后+name
-    private static File mCropPath  = null;
+    private static File mCropPath = null;
 
     private String mImagePath;
 
@@ -129,6 +130,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private Subscription mSubscrMediaCheckChangeEvent;
     private Subscription mSubscrCloseMediaViewPageFragmentEvent;
     private Subscription mSubscrRequestStorageReadAccessPermissionEvent;
+
+
+    private int uCropStatusColor;
+    private int uCropToolbarColor;
+    private int uCropActivityWidgetColor;
+    private int uCropToolbarWidgetColor;
+    private String uCropTitle;
 
     public static MediaGridFragment newInstance(Configuration configuration) {
         MediaGridFragment fragment = new MediaGridFragment();
@@ -141,15 +149,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof MediaActivity) {
+        if (context instanceof MediaActivity) {
             mMediaActivity = (MediaActivity) context;
         }
         //onLoadFile()
         mMediaScanner = new MediaScanner(context);
 
     }
-
-
 
 
     @Override
@@ -159,6 +165,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onViewCreatedOk(View view, @Nullable Bundle savedInstanceState) {
+
         mRvMedia = (RecyclerViewFinal) view.findViewById(R.id.rv_media);
         mLlEmptyView = (LinearLayout) view.findViewById(R.id.ll_empty_view);
         mRvBucket = (RecyclerView) view.findViewById(R.id.rv_bucket);
@@ -178,7 +185,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mTvPreview = (TextView) view.findViewById(R.id.tv_preview);
         mTvPreview.setOnClickListener(this);
         mTvPreview.setEnabled(false);
-        if(mConfiguration.isRadio()){
+        if (mConfiguration.isRadio()) {
             view.findViewById(R.id.tv_preview_vr).setVisibility(View.GONE);
             mTvPreview.setVisibility(View.GONE);
         }
@@ -215,7 +222,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         subscribeEvent();
 
         Activity activity = mMediaActivity;
-        if(activity == null){
+        if (activity == null) {
             activity = getActivity();
         }
 
@@ -224,7 +231,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 R.string.gallery_default_request_storage_access_permission_tips);
         boolean success = PermissionCheckUtils.checkReadExternalPermission(activity, requestStorageAccessPermissionTips,
                 MediaActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION);
-        if(success) {
+        if (success) {
             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
         }
 
@@ -238,7 +245,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .subscribe(new RxBusSubscriber<MediaCheckChangeEvent>() {
                     @Override
                     protected void onEvent(MediaCheckChangeEvent mediaCheckChangeEvent) {
-                        if(mMediaActivity.getCheckedList().size() == 0){
+                        if (mMediaActivity.getCheckedList().size() == 0) {
                             mTvPreview.setEnabled(false);
                         } else {
                             mTvPreview.setEnabled(true);
@@ -261,7 +268,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .subscribe(new RxBusSubscriber<RequestStorageReadAccessPermissionEvent>() {
                     @Override
                     protected void onEvent(RequestStorageReadAccessPermissionEvent requestStorageReadAccessPermissionEvent) throws Exception {
-                        if(requestStorageReadAccessPermissionEvent.isSuccess()){
+                        if (requestStorageReadAccessPermissionEvent.isSuccess()) {
                             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
                         } else {
                             getActivity().finish();
@@ -278,6 +285,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     @Override
     public void setTheme() {
         super.setTheme();
+        uCropStatusColor = ThemeUtils.resolveColor(getActivity(), R.attr.gallery_ucrop_status_bar_color, R.color.gallery_default_ucrop_color_widget_active);
+        uCropToolbarColor = ThemeUtils.resolveColor(getActivity(), R.attr.gallery_ucrop_toolbar_color, R.color.gallery_default_ucrop_color_widget_active);
+        uCropActivityWidgetColor = ThemeUtils.resolveColor(getActivity(), R.attr.gallery_ucrop_activity_widget_color, R.color.gallery_default_ucrop_color_widget);
+        uCropToolbarWidgetColor = ThemeUtils.resolveColor(getActivity(), R.attr.gallery_ucrop_toolbar_widget_color, R.color.gallery_default_toolbar_widget_color);
+        uCropTitle = ThemeUtils.resolveString(getActivity(), R.attr.gallery_ucrop_toolbar_title, R.string.gallery_edit_phote);
         int pageColor = ThemeUtils.resolveColor(getContext(), R.attr.gallery_page_bg, R.color.gallery_default_page_bg);
         mRlRootView.setBackgroundColor(pageColor);
     }
@@ -308,7 +320,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onRequestMediaCallback(List<MediaBean> list) {
-        if(!mConfiguration.isHideCamera()) {
+        if (!mConfiguration.isHideCamera()) {
             if (mPage == 1 && TextUtils.equals(mBucketId, String.valueOf(Integer.MIN_VALUE))) {
                 MediaBean takePhotoBean = new MediaBean();
                 takePhotoBean.setId(Integer.MIN_VALUE);
@@ -344,7 +356,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onRequestBucketCallback(List<BucketBean> list) {
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return;
         }
 
@@ -358,7 +370,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         BucketBean bucketBean = mBucketBeanList.get(position);
         String bucketId = bucketBean.getBucketId();
         mRlBucektOverview.setVisibility(View.GONE);
-        if(TextUtils.equals(mBucketId, bucketId)){
+        if (TextUtils.equals(mBucketId, bucketId)) {
             return;
         }
         mBucketId = bucketId;
@@ -366,8 +378,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia.setHasLoadMore(false);
         mMediaBeanList.clear();
         mMediaGridAdapter.notifyDataSetChanged();
+        mTvFolderName.setText(bucketBean.getBucketName());
         mBucketAdapter.setSelectedBucket(bucketBean);
-
         mRvMedia.setFooterViewHide(true);
         mPage = 1;
         mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
@@ -378,7 +390,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         onObItemClick(position);
     }
 
-    public void onObItemClick( int position) {
+    public void onObItemClick(int position) {
         MediaBean mediaBean = mMediaBeanList.get(position);
         if (mediaBean.getId() == Integer.MIN_VALUE) {
 
@@ -397,7 +409,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 ArrayList<MediaBean> gridMediaList = new ArrayList<>();
                 gridMediaList.addAll(mMediaBeanList);
                 int pos = position;
-                if(firstBean.getId() == Integer.MIN_VALUE) {
+                if (firstBean.getId() == Integer.MIN_VALUE) {
                     pos = position - 1;
                     gridMediaList.clear();
                     List<MediaBean> list = mMediaBeanList.subList(1, mMediaBeanList.size());
@@ -410,9 +422,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     /**
      * 处理回调
+     *
      * @param mediaBean
      */
-    private void setPostMediaBean(MediaBean mediaBean){
+    private void setPostMediaBean(MediaBean mediaBean) {
         ImageCropBean bean = new ImageCropBean();
         bean.copyMediaBean(mediaBean);
         RxBus.getDefault().post(new ImageRadioResultEvent(bean));
@@ -420,11 +433,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     /**
      * 区分功能
+     *
      * @param mediaBean
      */
     private void radioNext(MediaBean mediaBean) {
         Logger.i("isCrop :" + mConfiguration.isCrop());
-        if(!mConfiguration.isCrop()){
+        if (!mConfiguration.isCrop()) {
             setPostMediaBean(mediaBean);
             getActivity().finish();
         } else {
@@ -433,30 +447,36 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             String originalPath = mediaBean.getOriginalPath();
             File file = new File(originalPath);
             Random random = new Random();
-            String outName =String.format(IMAGE_STORE_FILE_NAME,SimpleDateUtils.getNowTime()+"_"+random.nextInt(1024));
-            Logger.i("--->isCrop:"+mImageStoreCropDir);
-            Logger.i("--->mediaBean.getOriginalPath():"+mediaBean.getOriginalPath());
-            mCropPath =  new File(mImageStoreCropDir,outName );
+            String outName = String.format(IMAGE_STORE_FILE_NAME, SimpleDateUtils.getNowTime() + "_" + random.nextInt(1024));
+            Logger.i("--->isCrop:" + mImageStoreCropDir);
+            Logger.i("--->mediaBean.getOriginalPath():" + mediaBean.getOriginalPath());
+            mCropPath = new File(mImageStoreCropDir, outName);
             Uri outUri = Uri.fromFile(mCropPath);
-            if(!mImageStoreCropDir.exists()){
+            if (!mImageStoreCropDir.exists()) {
                 mImageStoreCropDir.mkdirs();
             }
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.mkdirs();
             }
+
             Uri inputUri = Uri.fromFile(new File(mediaBean.getOriginalPath()));
             Intent intent = new Intent(getContext(), UCropActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelable(UCrop.EXTRA_OUTPUT_URI, outUri);
             bundle.putParcelable(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS, mediaBean);//EXTRA_INPUT_BEAN
+            bundle.putInt(UCrop.Options.EXTRA_STATUS_BAR_COLOR, uCropStatusColor);
+            bundle.putInt(UCrop.Options.EXTRA_TOOL_BAR_COLOR, uCropToolbarColor);
+            bundle.putString(UCrop.Options.EXTRA_UCROP_TITLE_TEXT_TOOLBAR, uCropTitle);
+            bundle.putInt(UCrop.Options.EXTRA_UCROP_COLOR_WIDGET_ACTIVE, uCropActivityWidgetColor);
+            bundle.putInt(UCrop.Options.EXTRA_UCROP_WIDGET_COLOR_TOOLBAR, uCropToolbarWidgetColor);
             bundle.putParcelable(UCrop.EXTRA_INPUT_URI, inputUri);
             int bk = FileUtils.existImageDir(inputUri.getPath());
-            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Logger.i("--->" + inputUri.getPath());
             Logger.i("--->" + outUri.getPath());
             ArrayList<AspectRatio> aspectRatioList = new ArrayList<>();
-            AspectRatio[]aspectRatios =  mConfiguration.getAspectRatio();
-            if(aspectRatios != null) {
+            AspectRatio[] aspectRatios = mConfiguration.getAspectRatio();
+            if (aspectRatios != null) {
                 for (int i = 0; i < aspectRatios.length; i++) {
                     aspectRatioList.add(i, aspectRatios[i]);
                     Logger.i("自定义比例=>" + aspectRatioList.get(i).getAspectRatioX() + " " + aspectRatioList.get(i).getAspectRatioY());
@@ -465,22 +485,18 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             //  AspectRatio[]aspectRatios =  mConfiguration.getAspectRatio();
             bundle.putParcelableArrayList(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS, aspectRatioList);//EXTRA_CONFIGURATION
             intent.putExtras(bundle);
-            if(bk != -1){
+            if (bk != -1) {
                 //裁剪
-                startActivityForResult(intent,CROP_IMAGE_REQUEST_CODE);
-            }else{
+                startActivityForResult(intent, CROP_IMAGE_REQUEST_CODE);
+            } else {
                 Logger.w("点击图片无效");
             }
         }
     }
 
 
-
-
-
     /**
-     * @Author:Karl-dujinyang
-     * 兼容7.0打开路径问题
+     * @Author:Karl-dujinyang 兼容7.0打开路径问题
      */
     public void openCamera(Context context) {
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -490,16 +506,16 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Logger.i("openCamera：" + mImageStoreDir.getAbsolutePath());
             File fileImagePath = new File(mImageStoreDir, filename);
             mImagePath = fileImagePath.getAbsolutePath();
-            if(mImagePath!=null){
+            if (mImagePath != null) {
                     /*获取当前系统的android版本号*/
                 int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-                if (currentapiVersion < 24){
+                if (currentapiVersion < 24) {
                     captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
                     startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
-                }else {
+                } else {
                     ContentValues contentValues = new ContentValues(1);
-                    contentValues.put(MediaStore.Images.Media.DATA, mImagePath );
-                    Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+                    contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
+                    Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                     captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                     startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
                 }
@@ -510,8 +526,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
 
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -520,7 +534,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Logger.i(String.format("拍照成功,图片存储路径:%s", mImagePath));
             //刷新相册数据库
             mMediaScanner.scanFile(mImagePath, imgType, this);
-        }else if(requestCode == CROP_IMAGE_REQUEST_CODE){
+        } else if (requestCode == CROP_IMAGE_REQUEST_CODE) {
             Logger.i("裁剪成功");
             refreshUI();
             onCropFinished(data);
@@ -529,30 +543,32 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     /**
      * 裁剪之后
-     *  setResult(RESULT_OK, new Intent()
-     .putExtra(UCrop.EXTRA_OUTPUT_URI, uri)
-     .putExtra(UCrop.EXTRA_OUTPUT_CROP_ASPECT_RATIO, resultAspectRatio)
-     .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_WIDTH, imageWidth)
-     .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_HEIGHT, imageHeight)
+     * setResult(RESULT_OK, new Intent()
+     * .putExtra(UCrop.EXTRA_OUTPUT_URI, uri)
+     * .putExtra(UCrop.EXTRA_OUTPUT_CROP_ASPECT_RATIO, resultAspectRatio)
+     * .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_WIDTH, imageWidth)
+     * .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_HEIGHT, imageHeight)
      */
     private void onCropFinished(Intent data) {
-        if(iListenerRadio != null) {
-            if(mConfiguration.isCrop()) {
-                Uri outputUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
-                Logger.i("# crop image is #" + outputUri.getPath());
-                iListenerRadio.cropAfter(mCropPath);
+        if (data != null) {
+            if (iListenerRadio != null && mCropPath != null) {
+                if (mConfiguration.isCrop()) {
+                    Uri outputUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
+                    Logger.i("# crop image is #" + outputUri.getPath());
+                    iListenerRadio.cropAfter(mCropPath);
+                }
+            } else {
+                Logger.i("# CropPath is null！# ");
             }
-        }else{
-            Logger.i("# CropPath is null！# ");
-        }
-        //裁剪默认会关掉这个界面. 实现接口返回true则不关闭.
-        if(iListenerRadio==null) {
-            getActivity().finish();
-        } else {
-            boolean flag = iListenerRadio.isActivityFinish();
-            Logger.i("# crop image is flag # :"+flag);
-            if(flag==true)
+            //裁剪默认会关掉这个界面. 实现接口返回true则不关闭.
+            if (iListenerRadio == null) {
                 getActivity().finish();
+            } else {
+                boolean flag = iListenerRadio.isActivityFinish();
+                Logger.i("# crop image is flag # :" + flag);
+                if (flag)
+                    getActivity().finish();
+            }
         }
     }
 
@@ -562,7 +578,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (!TextUtils.isEmpty(mImagePath)) {
             outState.putString(TAKE_URL_STORAGE_KEY, mImagePath);
         }
-        if(!TextUtils.isEmpty(mBucketId)) {
+        if (!TextUtils.isEmpty(mBucketId)) {
             outState.putString(BUCKET_ID_KEY, mBucketId);
         }
     }
@@ -603,58 +619,67 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.tv_preview) {
+        if (id == R.id.tv_preview) {
             RxBus.getDefault().post(new OpenMediaPreviewFragmentEvent());
-        } else if(id == R.id.tv_folder_name) {
+        } else if (id == R.id.tv_folder_name) {
             v.setEnabled(false);
-            int visibility = mRlBucektOverview.getVisibility();
-            if(visibility == View.VISIBLE) {
-                new SlideOutUnderneathAnimation(mRvBucket)
-                        .setDirection(Animation.DIRECTION_DOWN)
-                        .setDuration(Animation.DURATION_DEFAULT)
-                        .setListener(animation -> {
-                            v.setEnabled(true);
-                            mRlBucektOverview.setVisibility(View.GONE);
-                        })
-                        .animate();
-            } else  {
-                mRlBucektOverview.setVisibility(View.VISIBLE);
-                new SlideInUnderneathAnimation(mRvBucket)
-                        .setDirection(Animation.DIRECTION_DOWN)
-                        .setDuration(Animation.DURATION_DEFAULT)
-                        .setListener(animation -> {
-                            v.setEnabled(true);
-                        })
-                        .animate();
+            if (isShowRvBucketView()) {
+                hideRvBucketView();
+            } else {
+                showRvBucketView();
             }
         }
+    }
+
+    public boolean isShowRvBucketView() {
+        return mRlBucektOverview != null && mRlBucektOverview.getVisibility() == View.VISIBLE;
+    }
+
+    public void showRvBucketView() {
+        mRlBucektOverview.setVisibility(View.VISIBLE);
+        new SlideInUnderneathAnimation(mRvBucket)
+                .setDirection(Animation.DIRECTION_DOWN)
+                .setDuration(Animation.DURATION_DEFAULT)
+                .setListener(animation -> mTvFolderName.setEnabled(true))
+                .animate();
+    }
+
+    public void hideRvBucketView() {
+        new SlideOutUnderneathAnimation(mRvBucket)
+                .setDirection(Animation.DIRECTION_DOWN)
+                .setDuration(Animation.DURATION_DEFAULT)
+                .setListener(animation -> {
+                    mTvFolderName.setEnabled(true);
+                    mRlBucektOverview.setVisibility(View.GONE);
+                })
+                .animate();
     }
 
     /**
      * Observable刷新图库
      */
-    public void refreshUI(){
+    public void refreshUI() {
         try {
-            Logger.i("->getImageStoreDirByFile().getPath().toString()："+getImageStoreDirByFile().getPath().toString());
+            Logger.i("->getImageStoreDirByFile().getPath().toString()：" + getImageStoreDirByFile().getPath().toString());
             Logger.i("->getImageStoreCropDirByStr ().toString()：" + getImageStoreCropDirByStr().toString());
     /*        if(getImageStoreDirByFile() !=null ){
                 mMediaScanner.scanFile(getImageStoreDirByFile().getPath().toString(), "image/jpeg", this);
             }*/
             //刷新相册数据库
-            if(!TextUtils.isEmpty(mImagePath))
-                mMediaScanner.scanFile(mImagePath, imgType , this);
-            if(mCropPath !=null) {
-                Logger.i("->mCropPath:" + mCropPath.getPath() +" "+imgType);
+            if (!TextUtils.isEmpty(mImagePath))
+                mMediaScanner.scanFile(mImagePath, imgType, this);
+            if (mCropPath != null) {
+                Logger.i("->mCropPath:" + mCropPath.getPath() + " " + imgType);
                 mMediaScanner.scanFile(mCropPath.getPath(), imgType, this);
             }
-        }catch (Exception e ){
+        } catch (Exception e) {
             Logger.e(e.getMessage());
         }
     }
 
     @Override
     public void onScanCompleted(String[] images) {
-        if(images == null || images.length == 0){
+        if (images == null || images.length == 0) {
             Logger.i("images empty");
             return;
         }
@@ -705,18 +730,20 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     /**
      * getImageStoreDir
+     *
      * @return 存储路径
      */
-    public static File getImageStoreDirByFile(){
+    public static File getImageStoreDirByFile() {
         return mImageStoreDir;
     }
 
     /**
      * getImageStoreDir
+     *
      * @return 存储路径
      */
-    public static String getImageStoreDirByStr(){
-        if(mImageStoreDir!=null)
+    public static String getImageStoreDirByStr() {
+        if (mImageStoreDir != null)
             return mImageStoreDir.getPath().toString();
         else
             return null;
@@ -724,38 +751,42 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     /**
      * 设置路径
+     *
      * @param imgFile
      */
-    public static void setImageStoreDir(File imgFile){
-        Logger.i("设置图片保存路径为："+imgFile.getAbsolutePath());
+    public static void setImageStoreDir(File imgFile) {
+        Logger.i("设置图片保存路径为：" + imgFile.getAbsolutePath());
         mImageStoreDir = imgFile;
     }
 
     /**
      * 设置路径
+     *
      * @param imgFile
      */
-    public static void setImageStoreDir(String imgFile){
-        mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM"+File.separator+imgFile+File.separator);;
-        Logger.i("设置图片保存路径为："+mImageStoreDir.getAbsolutePath());
+    public static void setImageStoreDir(String imgFile) {
+        mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM" + File.separator + imgFile + File.separator);
+        ;
+        Logger.i("设置图片保存路径为：" + mImageStoreDir.getAbsolutePath());
     }
-
 
 
     /**
      * getImageStoreDir裁剪
+     *
      * @return 裁剪存储路径
      */
-    public static File getImageStoreCropDirByFile(){
+    public static File getImageStoreCropDirByFile() {
         return mImageStoreCropDir;
     }
 
     /**
      * getImageStoreDir
+     *
      * @return 存储路径
      */
-    public static String getImageStoreCropDirByStr(){
-        if(mImageStoreCropDir!=null)
+    public static String getImageStoreCropDirByStr() {
+        if (mImageStoreCropDir != null)
             return mImageStoreCropDir.getPath().toString();
         else
             return null;
@@ -764,38 +795,40 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     /**
      * 设置裁剪路径
+     *
      * @param imgFile
      */
-    public static void setImageStoreCropDir(File imgFile){
+    public static void setImageStoreCropDir(File imgFile) {
         mImageStoreCropDir = imgFile;
-        Logger.i("设置图片裁剪保存路径为："+mImageStoreCropDir.getAbsolutePath());
+        Logger.i("设置图片裁剪保存路径为：" + mImageStoreCropDir.getAbsolutePath());
     }
 
     /**
      * 设置裁剪路径
+     *
      * @param imgFile 裁剪
      */
-    public static void setImageStoreCropDir(String imgFile){
-        mImageStoreCropDir = new File(Environment.getExternalStorageDirectory(), "/DCIM"+File.separator+imgFile+File.separator);
-        if(!mImageStoreCropDir.exists()){
+    public static void setImageStoreCropDir(String imgFile) {
+        mImageStoreCropDir = new File(Environment.getExternalStorageDirectory(), "/DCIM" + File.separator + imgFile + File.separator);
+        if (!mImageStoreCropDir.exists()) {
             mImageStoreCropDir.mkdirs();
         }
-        Logger.i("设置图片裁剪保存路径为："+mImageStoreCropDir.getAbsolutePath());
+        Logger.i("设置图片裁剪保存路径为：" + mImageStoreCropDir.getAbsolutePath());
     }
 
     /**
      * onAttach 转 onStart
      */
-    public void onLoadFile(){
+    public void onLoadFile() {
         //没有的话就默认路径
-        if(getImageStoreDirByFile()==null && getImageStoreDirByStr() == null){
+        if (getImageStoreDirByFile() == null && getImageStoreDirByStr() == null) {
             mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/IMMQY/");
             setImageStoreCropDir(mImageStoreDir);
         }
-        if(!mImageStoreDir.exists()){
+        if (!mImageStoreDir.exists()) {
             mImageStoreDir.mkdirs();
         }
-        if(getImageStoreCropDirByFile()== null && getImageStoreCropDirByStr() == null){
+        if (getImageStoreCropDirByFile() == null && getImageStoreCropDirByStr() == null) {
             mImageStoreCropDir = new File(mImageStoreDir, "crop");
             if (!mImageStoreCropDir.exists()) {
                 mImageStoreCropDir.mkdirs();
@@ -807,12 +840,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     /**
      * 预留黑色图片处理
      */
-    public static void decode(){
+    public static void decode() {
 
     }
 
 
-    public static void setRadioListener(IRadioImageCheckedListener radioListener){
+    public static void setRadioListener(IRadioImageCheckedListener radioListener) {
         MediaGridFragment.iListenerRadio = radioListener;
     }
 }

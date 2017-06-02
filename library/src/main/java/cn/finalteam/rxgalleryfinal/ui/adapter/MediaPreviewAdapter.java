@@ -48,14 +48,14 @@ public class MediaPreviewAdapter extends RecyclingPagerAdapter {
         View view = mInflater.inflate(R.layout.gallery_media_image_preview_item, null);
         PhotoView ivImage = (PhotoView) view.findViewById(R.id.iv_media_image);
         String path = null;
-        if(mediaBean.getWidth() > 1200 || mediaBean.getHeight() > 1200){
+        if (mediaBean.getWidth() > 1200 || mediaBean.getHeight() > 1200) {
             path = mediaBean.getThumbnailBigPath();
         }
-        if(TextUtils.isEmpty(path)) {
+        if (TextUtils.isEmpty(path)) {
             path = mediaBean.getOriginalPath();
         }
         ivImage.setBackgroundColor(mPageColor);
-        mConfiguration.getImageLoader().displayImage(mContext, path, ivImage,mDefaultImage, mConfiguration.getImageConfig(),
+        mConfiguration.getImageLoader().displayImage(mContext, path, ivImage, mDefaultImage, mConfiguration.getImageConfig(),
                 false, mScreenWidth, mScreenHeight, mediaBean.getOrientation());
         return view;
     }

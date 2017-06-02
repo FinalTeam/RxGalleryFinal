@@ -26,58 +26,7 @@
         4.修复 剪裁回调及图片MediaActivity关闭问题。
         5.修复 部分机型卡顿的问题。
 
-    ### 新版本 V 1.0.5
-        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.5'
-        1.修复 1.0.3大BUG，picasso预览大图崩溃 #119
-        2.提供裁剪之后的回调 onCropImageResult() ， 用于关闭选择界面
-        3.Api 相关方法优化
-        4.优化相关的空指针
 
-    ### 新版本 V 1.0.4
-        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.4'
-        1.修复 1.0.3大BUG，picasso预览大图崩溃 #119
-
-    ### 新版本 V 1.0.3
-        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.3'
-        1.修复 自定义剪裁比例函数失效 #114
-        2.修复 无法裁剪PNG格式图片？ #77
-        3.修复 多选图片超过最大值空指针 #107
-        4.修复 单选照片存在空指针 #105
-        5.增加 自定义裁剪比例方法与Api #115
-        6.Picasso 原图缩放问题
-        7.demo中注释掉多个调用示例，根据自身需求选择对应api
-        8.根据大家需求 - - 裁剪时也会回调 onEvent 选择事件
-
-
-    ### 新版本 V 1.0.2
-        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.2'
-        1.解决 裁剪图片"只有一张的问题",无需设置可多次裁剪
-        2.增加 裁剪图片的回调
-        3.增加 可设置保存和裁剪路径, 不设置则自动存储到默认路径
-        4.解决 出现黑图问题
-        5.配置主题 - gallery_attrs.xml / gallery_default_theme.xml
-
-    ### 新版本 V 1.0.1
-        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.1'
-        1.升级UCrop裁剪库 - 2.2.0
-        2.增加直接开启裁剪的Api
-        3.工程上保留ucrop,未引用。如有需要可结合自身需求改成本地lib
-
-    ### 新版本 V 1.0.0
-        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.0'
-        -- 测试版本
-
-    ### 新版本 V 0.0.9
-        -- compile 'cn.finalteam.rxgalleryfinal:library:0.0.9'
-        1.增加直接打开相机的功能
-        2.去掉 char[] java.lang.String.toCharArray()
-
-    ### 新版本 V 0.0.8
-        -- compile 'cn.finalteam.rxgalleryfinal:library:0.0.8'
-        1.增加日志输出的debug功能，防止多层DebugConfig的问题
-        2.去掉Toast，图片多选给到自定义的事件
-        3.解决7.0奔溃的问题
-        4.去掉 相关NULL引起的问题
 
 ## 使用
 ### 下载或添加依赖

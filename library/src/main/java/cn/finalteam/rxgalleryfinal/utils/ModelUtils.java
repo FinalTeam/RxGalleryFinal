@@ -11,9 +11,10 @@ import cn.finalteam.rxgalleryfinal.BuildConfig;
  */
 public class ModelUtils {
     private static final String TAG = "Test";
-    public static void logDebug(){
-        Log.w(TAG, "BuildConfig.DEBUG:--"+BuildConfig.DEBUG+"--");
-        if(BuildConfig.DEBUG)
+
+    public static void logDebug() {
+        Log.w(TAG, "BuildConfig.DEBUG:--" + BuildConfig.DEBUG + "--");
+        if (BuildConfig.DEBUG)
             Logger.w("is debug mode");
         else
             Logger.w("not debug mode");
@@ -21,9 +22,10 @@ public class ModelUtils {
 
     /**
      * 多层依赖时DEBUGCONFIG会出错，所以提供了内部接口更改
+     *
      * @param f 是否打开
      */
-    public static void setDebugModel(boolean f){
+    public static void setDebugModel(boolean f) {
         Logger.DEBUG = f;
     }
 

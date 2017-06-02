@@ -33,7 +33,7 @@ public class MediaSrcFactoryInteractorImpl implements MediaSrcFactoryInteractor 
     public void generateMeidas(final String bucketId, final int page, final int limit) {
         Observable.create((Observable.OnSubscribe<List<MediaBean>>) subscriber -> {
             List<MediaBean> mediaBeanList = null;
-            if(isImage) {
+            if (isImage) {
                 mediaBeanList = MediaUtils.getMediaWithImageList(context, bucketId, page, limit);
             } else {
                 mediaBeanList = MediaUtils.getMediaWithVideoList(context, bucketId, page, limit);
@@ -41,22 +41,22 @@ public class MediaSrcFactoryInteractorImpl implements MediaSrcFactoryInteractor 
             subscriber.onNext(mediaBeanList);
             subscriber.onCompleted();
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<List<MediaBean>>() {
-            @Override
-            public void onCompleted() {
-            }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<MediaBean>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                onGenerateMediaListener.onFinished(bucketId, page, limit, null);
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        onGenerateMediaListener.onFinished(bucketId, page, limit, null);
+                    }
 
-            @Override
-            public void onNext(List<MediaBean> mediaBeenList) {
-                onGenerateMediaListener.onFinished(bucketId, page, limit, mediaBeenList);
-            }
-        });
+                    @Override
+                    public void onNext(List<MediaBean> mediaBeenList) {
+                        onGenerateMediaListener.onFinished(bucketId, page, limit, mediaBeenList);
+                    }
+                });
     }
 }

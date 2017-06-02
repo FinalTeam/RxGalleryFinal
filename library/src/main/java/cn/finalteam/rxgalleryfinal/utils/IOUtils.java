@@ -12,7 +12,7 @@ import java.io.OutputStream;
 public class IOUtils {
 
     public static void close(OutputStream stream) {
-        if(stream != null) {
+        if (stream != null) {
             try {
                 stream.close();
             } catch (IOException e) {
@@ -22,7 +22,7 @@ public class IOUtils {
     }
 
     public static void close(InputStream stream) {
-        if(stream != null) {
+        if (stream != null) {
             try {
                 stream.close();
             } catch (IOException e) {
@@ -32,7 +32,7 @@ public class IOUtils {
     }
 
     public static void flush(OutputStream stream) {
-        if(stream != null) {
+        if (stream != null) {
             try {
                 stream.flush();
             } catch (IOException e) {

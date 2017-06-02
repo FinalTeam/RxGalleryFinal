@@ -11,12 +11,13 @@ import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
  */
 public class RxGalleryListener {
 
-    private RxGalleryListener(){}
-
     private static RxGalleryListener rxGalleryListener;
 
-    public static RxGalleryListener getInstance(){
-        if(rxGalleryListener == null){
+    private RxGalleryListener() {
+    }
+
+    public static RxGalleryListener getInstance() {
+        if (rxGalleryListener == null) {
             rxGalleryListener = new RxGalleryListener();
         }
         return rxGalleryListener;
@@ -25,7 +26,7 @@ public class RxGalleryListener {
     /**
      * 图片多选的事件
      */
-    public void setMultiImageCheckedListener(IMultiImageCheckedListener checkedImageListener){
+    public void setMultiImageCheckedListener(IMultiImageCheckedListener checkedImageListener) {
         MediaGridAdapter.setCheckedListener(checkedImageListener);
     }
 
@@ -33,7 +34,7 @@ public class RxGalleryListener {
     /**
      * 图片单选的事件
      */
-    public void setRadioImageCheckedListener(IRadioImageCheckedListener checkedImageListener){
+    public void setRadioImageCheckedListener(IRadioImageCheckedListener checkedImageListener) {
         MediaGridFragment.setRadioListener(checkedImageListener);
     }
 }

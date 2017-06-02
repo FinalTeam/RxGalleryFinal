@@ -20,11 +20,18 @@ import cn.finalteam.rxgalleryfinal.utils.Logger;
 public abstract class BaseActivity extends AppCompatActivity {
 
     public static final String EXTRA_PREFIX = BuildConfig.APPLICATION_ID;
-    public static final String EXTRA_CONFIGURATION = EXTRA_PREFIX +".Configuration";
+    public static final String EXTRA_CONFIGURATION = EXTRA_PREFIX + ".Configuration";
 
     private final String CLASS_NAME = getClass().getSimpleName();
 
     public Configuration mConfiguration;
+    protected Handler mFinishHanlder = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            finish();
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,22 +39,22 @@ public abstract class BaseActivity extends AppCompatActivity {
         printActivityLife("onCreate");
         Intent intent = getIntent();
         Bundle bundle = null;
-        if(intent != null){
+        if (intent != null) {
             bundle = intent.getExtras();
         }
 
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mConfiguration = savedInstanceState.getParcelable(EXTRA_CONFIGURATION);
         }
-        if(mConfiguration == null && bundle != null) {
+        if (mConfiguration == null && bundle != null) {
             mConfiguration = bundle.getParcelable(EXTRA_CONFIGURATION);
         }
 
-        if(mConfiguration == null){
+        if (mConfiguration == null) {
             mFinishHanlder.sendEmptyMessage(0);
         } else {
-            if(bundle == null){
+            if (bundle == null) {
                 bundle = savedInstanceState;
             }
             setContentView(getContentView());
@@ -108,17 +115,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract void findViews();
 
-    protected Handler mFinishHanlder = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            finish();
-        }
-    };
-
     protected abstract void setTheme();
 
-    private void printActivityLife(String method){
+    private void printActivityLife(String method) {
         Logger.i(String.format("Activity:%s Method:%s", CLASS_NAME, method));
     }
 }

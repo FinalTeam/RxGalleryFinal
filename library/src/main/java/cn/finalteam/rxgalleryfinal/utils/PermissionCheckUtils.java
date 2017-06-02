@@ -19,6 +19,7 @@ public class PermissionCheckUtils {
 
     /**
      * 数组
+     *
      * @param activity
      * @param permission
      * @param permissionDesc
@@ -29,9 +30,9 @@ public class PermissionCheckUtils {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
-                Logger.i("ContextCompat.checkSelfPermission(activity, permission):"+ContextCompat.checkSelfPermission(activity, permission));
-                Logger.i("PackageManager.PERMISSION_GRANTED:"+PackageManager.PERMISSION_GRANTED);
-                Logger.i("permission:"+permission);
+                Logger.i("ContextCompat.checkSelfPermission(activity, permission):" + ContextCompat.checkSelfPermission(activity, permission));
+                Logger.i("PackageManager.PERMISSION_GRANTED:" + PackageManager.PERMISSION_GRANTED);
+                Logger.i("permission:" + permission);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
                     alertBuilder.setCancelable(false);
@@ -57,6 +58,7 @@ public class PermissionCheckUtils {
 
     /**
      * 检查是否对sd卡读取授权
+     *
      * @param activity
      * @param permissionDesc
      * @param requestCode
@@ -68,11 +70,9 @@ public class PermissionCheckUtils {
     }
 
 
-
-
-
     /**
      * 检查是否对sd卡读取授权
+     *
      * @param activity
      * @param permissionDesc
      * @param requestCode

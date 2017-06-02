@@ -39,10 +39,7 @@ public class Compat {
     }
 
     public static int getPointerIndex(int action) {
-        if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB)
-            return getPointerIndexHoneyComb(action);
-        else
-            return getPointerIndexEclair(action);
+        return getPointerIndexHoneyComb(action);
     }
 
     @SuppressWarnings("deprecation")

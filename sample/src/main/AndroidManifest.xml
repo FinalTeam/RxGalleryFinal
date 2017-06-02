@@ -28,12 +28,11 @@
         <activity android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
             android:screenOrientation="portrait"
             android:exported="true"
-            android:theme="@style/Theme_Light.Default"/>
+            android:theme="@style/Theme_Light.Test"/>
 
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme_Light.Default"/>
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

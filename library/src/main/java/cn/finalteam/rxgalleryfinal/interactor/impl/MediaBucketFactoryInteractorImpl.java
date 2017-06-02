@@ -33,7 +33,7 @@ public class MediaBucketFactoryInteractorImpl implements MediaBucketFactoryInter
     public void generateBuckets() {
         Observable.create((Observable.OnSubscribe<List<BucketBean>>) subscriber -> {
             List<BucketBean> bucketBeanList = null;
-            if(isImage) {
+            if (isImage) {
                 bucketBeanList = MediaUtils.getAllBucketByImage(context);
             } else {
                 bucketBeanList = MediaUtils.getAllBucketByVideo(context);
@@ -41,22 +41,22 @@ public class MediaBucketFactoryInteractorImpl implements MediaBucketFactoryInter
             subscriber.onNext(bucketBeanList);
             subscriber.onCompleted();
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<List<BucketBean>>() {
-            @Override
-            public void onCompleted() {
-            }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<BucketBean>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                onGenerateBucketListener.onFinished(null);
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        onGenerateBucketListener.onFinished(null);
+                    }
 
-            @Override
-            public void onNext(List<BucketBean> bucketBeanList) {
-                onGenerateBucketListener.onFinished(bucketBeanList);
-            }
-        });
+                    @Override
+                    public void onNext(List<BucketBean> bucketBeanList) {
+                        onGenerateBucketListener.onFinished(bucketBeanList);
+                    }
+                });
     }
 }

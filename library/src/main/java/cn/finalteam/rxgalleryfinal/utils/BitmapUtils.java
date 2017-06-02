@@ -45,6 +45,7 @@ public class BitmapUtils {
 
     /**
      * 创建视频缩略图
+     *
      * @param thumbnailSaveDir
      * @param originalPath
      * @param scale
@@ -52,7 +53,7 @@ public class BitmapUtils {
      */
     public static void createVideoThumbnail(String thumbnailSaveDir, String originalPath, int scale) {
         Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(originalPath, MediaStore.Video.Thumbnails.MINI_KIND);
-        if(bitmap == null){
+        if (bitmap == null) {
             return;
         }
         int originalImageWidth = bitmap.getWidth();
@@ -68,9 +69,9 @@ public class BitmapUtils {
             } else if (maxValue > 2000 && maxValue <= 3000) {
                 options.inSampleSize = scale * 4;
             } else if (maxValue > 1500 && maxValue <= 2000) {
-                options.inSampleSize = (int)(scale * 2.5);
+                options.inSampleSize = (int) (scale * 2.5);
             } else if (maxValue > 1000 && maxValue <= 1500) {
-                options.inSampleSize = (int)(scale * 1.3);
+                options.inSampleSize = (int) (scale * 1.3);
 //            } else if (maxValue > 400 && maxValue <= 1000) {
 //                options.inSampleSize = scale * 2;
             } else {
@@ -96,10 +97,10 @@ public class BitmapUtils {
 
             fileOutputStream = new FileOutputStream(targetFile);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-        } catch (Exception e){
+        } catch (Exception e) {
             Logger.e(e);
         } finally {
-            if(bitmap != null && !bitmap.isRecycled()){
+            if (bitmap != null && !bitmap.isRecycled()) {
                 bitmap.recycle();
             }
 
@@ -111,27 +112,30 @@ public class BitmapUtils {
 
     /**
      * 创建大缩略图
-     * @param targetFile 保存目标文件
+     *
+     * @param targetFile   保存目标文件
      * @param originalPath 图片地址
-     * */
+     */
     public static void createThumbnailBig(File targetFile, String originalPath) {
         compressAndSaveImage(targetFile, originalPath, THUMBNAIL_BIG);
     }
 
     /**
      * 创建小缩略图
-     * @param targetFile 保存目标文件
+     *
+     * @param targetFile   保存目标文件
      * @param originalPath 图片地址
-     * */
+     */
     public static void createThumbnailSmall(File targetFile, String originalPath) {
         compressAndSaveImage(targetFile, originalPath, THUMBNAIL_SMALL);
     }
 
     /**
      * 图片压缩并且存储
-     * @param targetFile 保存目标文件
+     *
+     * @param targetFile   保存目标文件
      * @param originalPath 图片地址
-     * @param scale 图片缩放值
+     * @param scale        图片缩放值
      * @return
      */
     public static void compressAndSaveImage(File targetFile, String originalPath, int scale) {
@@ -176,9 +180,9 @@ public class BitmapUtils {
             } else if (maxValue > 2000 && maxValue <= 3000) {
                 options.inSampleSize = scale * 4;
             } else if (maxValue > 1500 && maxValue <= 2000) {
-                options.inSampleSize = (int)(scale * 2.5);
+                options.inSampleSize = (int) (scale * 2.5);
             } else if (maxValue > 1000 && maxValue <= 1500) {
-                options.inSampleSize = (int)(scale * 1.3);
+                options.inSampleSize = (int) (scale * 1.3);
 //            } else if (maxValue > 400 && maxValue <= 1000) {
 //                options.inSampleSize = scale * 2;
             } else {
@@ -191,7 +195,7 @@ public class BitmapUtils {
             bitmap = BitmapFactory.decodeStream(bufferedInputStream, null, options);
             bufferedInputStream.close();
 
-            if(bitmap == null){
+            if (bitmap == null) {
                 return;
             }
             String extension = FilenameUtils.getExtension(originalPath);
@@ -209,10 +213,10 @@ public class BitmapUtils {
             }
 
             //5、保存图片
-            if(TextUtils.equals(extension.toLowerCase(), "jpg")
+            if (TextUtils.equals(extension.toLowerCase(), "jpg")
                     || TextUtils.equals(extension.toLowerCase(), "jpeg")) {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-            } else if(TextUtils.equals(extension.toLowerCase(), "webp")
+            } else if (TextUtils.equals(extension.toLowerCase(), "webp")
                     && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 bitmap.compress(Bitmap.CompressFormat.WEBP, 100, fileOutputStream);
             } else {
@@ -224,7 +228,7 @@ public class BitmapUtils {
             IOUtils.close(bufferedInputStream);
             IOUtils.flush(fileOutputStream);
             IOUtils.close(fileOutputStream);
-            if(bitmap != null && bitmap.isRecycled()){
+            if (bitmap != null && bitmap.isRecycled()) {
                 bitmap.recycle();
             }
         }
@@ -232,12 +236,13 @@ public class BitmapUtils {
 
     /**
      * 获取一张图片在手机上的方向值
+     *
      * @param uri
      * @return
      * @throws IOException
      */
     public static int getImageOrientation(String uri) {
-        if(!new File(uri).exists()){
+        if (!new File(uri).exists()) {
             return 0;
         }
         try {
@@ -246,12 +251,14 @@ public class BitmapUtils {
                     ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_NORMAL);
             return orientation;
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         return 0;
     }
 
     /**
      * Drawable着色工具
+     *
      * @param drawable
      * @param colors
      * @return
@@ -269,6 +276,7 @@ public class BitmapUtils {
 
     /**
      * 获取图片Bitmap
+     *
      * @param context
      * @param uri
      * @param outputUri
@@ -283,6 +291,7 @@ public class BitmapUtils {
 
     /**
      * 图片压缩旋转
+     *
      * @param context
      * @param uri
      * @param outputUri

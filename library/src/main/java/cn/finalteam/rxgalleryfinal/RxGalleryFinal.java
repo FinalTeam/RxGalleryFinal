@@ -35,11 +35,11 @@ import rx.Subscription;
  */
 public class RxGalleryFinal {
 
-    private RxGalleryFinal(){}
-
-    Configuration configuration = new Configuration();
     static RxGalleryFinal instance;
+    Configuration configuration = new Configuration();
     RxBusResultSubscriber<BaseResultEvent> rxBusResultSubscriber;
+    private RxGalleryFinal() {
+    }
 
     public static RxGalleryFinal with(@NonNull Context context) {
         instance = new RxGalleryFinal();
@@ -47,7 +47,7 @@ public class RxGalleryFinal {
         return instance;
     }
 
-    public RxGalleryFinal image(){
+    public RxGalleryFinal image() {
         configuration.setImage(true);
         return this;
     }
@@ -62,7 +62,7 @@ public class RxGalleryFinal {
 //        return this;
 //    }
 
-    public RxGalleryFinal radio(){
+    public RxGalleryFinal radio() {
         configuration.setRadio(true);
         return this;
     }
@@ -72,17 +72,17 @@ public class RxGalleryFinal {
         return this;
     }
 
-    public RxGalleryFinal crop(){
+    public RxGalleryFinal crop() {
         configuration.setCrop(true);
         return this;
     }
 
-    public RxGalleryFinal crop(boolean flag){
+    public RxGalleryFinal crop(boolean flag) {
         configuration.setCrop(flag);
         return this;
     }
 
-    public RxGalleryFinal maxSize(@IntRange(from = 1) int maxSize){
+    public RxGalleryFinal maxSize(@IntRange(from = 1) int maxSize) {
         configuration.setMaxSize(maxSize);
         return this;
     }
@@ -94,7 +94,7 @@ public class RxGalleryFinal {
 
     public RxGalleryFinal imageConfig(@NonNull Bitmap.Config config) {
         int c = 3;
-        switch (config){
+        switch (config) {
             case ALPHA_8:
                 c = 1;
                 break;
@@ -116,13 +116,13 @@ public class RxGalleryFinal {
 
     public RxGalleryFinal imageLoader(@NonNull ImageLoaderType imageLoaderType) {
         int type = 0;
-        if(imageLoaderType == ImageLoaderType.PICASSO){
+        if (imageLoaderType == ImageLoaderType.PICASSO) {
             type = 1;
-        } else if(imageLoaderType == ImageLoaderType.GLIDE){
+        } else if (imageLoaderType == ImageLoaderType.GLIDE) {
             type = 2;
-        } else if(imageLoaderType == ImageLoaderType.FRESCO){
+        } else if (imageLoaderType == ImageLoaderType.FRESCO) {
             type = 3;
-        } else if(imageLoaderType == ImageLoaderType.UNIVERSAL){
+        } else if (imageLoaderType == ImageLoaderType.UNIVERSAL) {
             type = 4;
         }
         configuration.setImageLoaderType(type);
@@ -131,6 +131,7 @@ public class RxGalleryFinal {
 
     /**
      * 隐藏相机
+     *
      * @return
      */
     public RxGalleryFinal hideCamera() {
@@ -140,6 +141,7 @@ public class RxGalleryFinal {
 
     /**
      * set to true to hide the bottom controls (shown by default)
+     *
      * @param hide
      * @return
      */
@@ -150,6 +152,7 @@ public class RxGalleryFinal {
 
     /**
      * Set compression quality [0-100] that will be used to save resulting Bitmap.
+     *
      * @param compressQuality
      */
     public RxGalleryFinal cropropCompressionQuality(@IntRange(from = 0) int compressQuality) {
@@ -159,13 +162,14 @@ public class RxGalleryFinal {
 
     /**
      * Choose what set of gestures will be enabled on each tab - if any.
+     *
      * @param tabScale
      * @param tabRotate
      * @param tabAspectRatio
      */
     public RxGalleryFinal cropAllowedGestures(@UCropActivity.GestureTypes int tabScale,
-                                   @UCropActivity.GestureTypes int tabRotate,
-                                   @UCropActivity.GestureTypes int tabAspectRatio) {
+                                              @UCropActivity.GestureTypes int tabRotate,
+                                              @UCropActivity.GestureTypes int tabAspectRatio) {
         configuration.setAllowedGestures(new int[]{tabScale, tabRotate, tabAspectRatio});
         return this;
     }
@@ -227,6 +231,7 @@ public class RxGalleryFinal {
 
     /**
      * set to true to let user resize crop bounds (disabled by default)
+     *
      * @param enabled
      */
     public RxGalleryFinal cropFreeStyleCropEnabled(boolean enabled) {
@@ -236,6 +241,7 @@ public class RxGalleryFinal {
 
     /**
      * set it to true if you want dimmed layer to have an oval inside
+     *
      * @param isOval
      */
     public RxGalleryFinal cropOvalDimmedLayer(boolean isOval) {
@@ -245,6 +251,7 @@ public class RxGalleryFinal {
 
     /**
      * 设置裁剪结果最大宽度和高度
+     *
      * @param width
      * @param height
      */
@@ -255,6 +262,7 @@ public class RxGalleryFinal {
 
     /**
      * 设置回调
+     *
      * @param rxBusResultSubscriber
      * @return
      */
@@ -264,7 +272,7 @@ public class RxGalleryFinal {
     }
 
 
-    public void openGallery(){
+    public void openGallery() {
         //提示
         ModelUtils.logDebug();
         execute();
@@ -275,25 +283,25 @@ public class RxGalleryFinal {
      */
     private void execute() {
         Context context = configuration.getContext();
-        if(context == null) {
+        if (context == null) {
             return;
         }
-        if(!StorageUtils.existSDcard()){
-             Logger.i("没有找到SD卡");
-             Toast.makeText(context, "没有找到SD卡", Toast.LENGTH_SHORT).show();
+        if (!StorageUtils.existSDcard()) {
+            Logger.i("没有找到SD卡");
+            Toast.makeText(context, "没有找到SD卡", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(configuration.getImageLoader() == null) {
+        if (configuration.getImageLoader() == null) {
             throw new UnknownImageLoaderTypeException();
         }
 
-        if(rxBusResultSubscriber == null){
+        if (rxBusResultSubscriber == null) {
             return;
         }
 
         Subscription subscription;
-        if(configuration.isRadio()) {
+        if (configuration.isRadio()) {
             subscription = RxBus.getDefault()
                     .toObservable(ImageRadioResultEvent.class)
                     .subscribe(rxBusResultSubscriber);
@@ -311,7 +319,6 @@ public class RxGalleryFinal {
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
-
 
 
 }
