@@ -8,7 +8,7 @@
     <style name="Theme_Light.Test">
         <!--<item name="gallery_toolbar_bg">#233</item>-->
         <!--<item name="gallery_toolbar_close_image">@mipmap/ic_launcher</item>-->
-        <!--<item name="gallery_toolbar_close_color">#fff</item>-->
+        <!--<item name="gallery_toolbar_close_color">#223</item>-->
         <!--<item name="gallery_toolbar_widget_color">#2A2A2F</item>-->
         <!--<item name="gallery_toolbar_text_color">#fff</item>-->
         <!--<item name="gallery_toolbar_text_size">@dimen/column_width</item>-->

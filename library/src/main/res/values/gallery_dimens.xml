@@ -1,5 +1,4 @@
 <resources>
-
     <dimen name="gallery_grid_item_margin">1dp</dimen>
     <dimen name="gallery_divider_decoration_height">0.5dp</dimen>
     <dimen name="gallery_bucket_margin">10dp</dimen>
