@@ -3,14 +3,7 @@ package cn.finalteam.rxgalleryfinal.imageloader;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -27,22 +20,6 @@ import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
  */
 public class PicassoImageLoader implements AbsImageLoader {
 
-    public static void setImageSmall(String url, SimpleDraweeView simpleDraweeView) {
-        Uri uri = Uri.parse(url);
-        ImageRequest request = ImageRequestBuilder
-                .newBuilderWithSource(uri)
-                .setAutoRotateEnabled(true)
-                .setResizeOptions(new ResizeOptions(simpleDraweeView.getLayoutParams().width,
-                        simpleDraweeView.getLayoutParams().height))
-                .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
-                .build();
-        PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
-                .setTapToRetryEnabled(true)
-                .setImageRequest(request)
-                .setOldController(simpleDraweeView.getController())
-                .build();
-        simpleDraweeView.setController(controller);
-    }
 
     @Override
     public void displayImage(Object context, String path, FixImageView imageView,

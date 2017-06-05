@@ -23,7 +23,7 @@ import java.util.List;
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import cn.finalteam.rxgalleryfinal.imageloader.PicassoImageLoader;
+import cn.finalteam.rxgalleryfinal.imageloader.FrescoImageLoader;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxjob.Job;
@@ -140,7 +140,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                                 true, mImageSize, mImageSize, mediaBean.getOrientation());
             } else {
                 OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage_1, mImageViewBg);
-                PicassoImageLoader.setImageSmall("file://" + path, holder.mIvMediaImage_1);
+                FrescoImageLoader.setImageSmall("file://" + path, holder.mIvMediaImage_1);
             }
         }
     }
