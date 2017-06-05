@@ -47,7 +47,7 @@
 
  截图：
 
-![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/a1.png)
+![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/screenshots/a1.png)
 
 
 * 提供了相关的Api
@@ -69,7 +69,7 @@
 
 * 这里可以配置主题
 
-![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/device-2017-04-11-154816.png)
+![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/screenshots/device-2017-04-11-154816.png)
 
 ##  Theme
 
