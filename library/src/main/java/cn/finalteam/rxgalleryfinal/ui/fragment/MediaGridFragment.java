@@ -127,6 +127,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private Disposable mSubscrCloseMediaViewPageFragmentEvent;
     private Disposable mSubscrRequestStorageReadAccessPermissionEvent;
 
+    private SlideInUnderneathAnimation slideInUnderneathAnimation;
+    private SlideOutUnderneathAnimation slideOutUnderneathAnimation;
 
     private int uCropStatusColor;
     private int uCropToolbarColor;
@@ -222,13 +224,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         Logger.i("设置图片裁剪保存路径为：" + mImageStoreCropDir.getAbsolutePath());
     }
 
-    /**
-     * 预留黑色图片处理
-     */
-    public static void decode() {
-
-    }
-
     public static void setRadioListener(IRadioImageCheckedListener radioListener) {
         MediaGridFragment.iListenerRadio = radioListener;
     }
@@ -239,9 +234,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (context instanceof MediaActivity) {
             mMediaActivity = (MediaActivity) context;
         }
-        //onLoadFile()
         mMediaScanner = new MediaScanner(context);
-
     }
 
     @Override
@@ -278,8 +271,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
         mMediaBeanList = new ArrayList<>();
         mScreenSize = DeviceUtils.getScreenSize(getContext());
-        mMediaGridAdapter = new MediaGridAdapter(mMediaActivity, mMediaBeanList,
-                mScreenSize.widthPixels, mConfiguration);
+        mMediaGridAdapter = new MediaGridAdapter(mMediaActivity, mMediaBeanList, mScreenSize.widthPixels, mConfiguration);
         mRvMedia.setAdapter(mMediaGridAdapter);
         mMediaGridPresenter = new MediaGridPresenterImpl(getContext(), mConfiguration.isImage());
         mMediaGridPresenter.setMediaGridView(this);
@@ -301,7 +293,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mBucketAdapter.setOnRecyclerViewItemClickListener(this);
 
         mRlBucektOverview.setVisibility(View.INVISIBLE);
-        new SlideInUnderneathAnimation(mRvBucket)
+
+        if (slideInUnderneathAnimation == null) {
+            slideInUnderneathAnimation = new SlideInUnderneathAnimation(mRvBucket);
+        }
+
+        slideInUnderneathAnimation
                 .setDirection(Animation.DIRECTION_DOWN)
                 .animate();
 
@@ -399,10 +396,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         //   refreshUI();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
     @Override
     public void loadMore() {
@@ -713,9 +706,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         return mRlBucektOverview != null && mRlBucektOverview.getVisibility() == View.VISIBLE;
     }
 
+
     public void showRvBucketView() {
         mRlBucektOverview.setVisibility(View.VISIBLE);
-        new SlideInUnderneathAnimation(mRvBucket)
+        slideInUnderneathAnimation
                 .setDirection(Animation.DIRECTION_DOWN)
                 .setDuration(Animation.DURATION_DEFAULT)
                 .setListener(animation -> mTvFolderName.setEnabled(true))
@@ -723,7 +717,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     public void hideRvBucketView() {
-        new SlideOutUnderneathAnimation(mRvBucket)
+        if (slideOutUnderneathAnimation == null) {
+            slideOutUnderneathAnimation = new SlideOutUnderneathAnimation(mRvBucket);
+        }
+        slideOutUnderneathAnimation
                 .setDirection(Animation.DIRECTION_DOWN)
                 .setDuration(Animation.DURATION_DEFAULT)
                 .setListener(animation -> {
