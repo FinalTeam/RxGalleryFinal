@@ -21,9 +21,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MediaBucketFactoryInteractorImpl implements MediaBucketFactoryInteractor {
 
-    private Context context;
-    private boolean isImage;
-    private OnGenerateBucketListener onGenerateBucketListener;
+    private final Context context;
+    private final boolean isImage;
+    private final OnGenerateBucketListener onGenerateBucketListener;
 
     public MediaBucketFactoryInteractorImpl(Context context, boolean isImage, OnGenerateBucketListener onGenerateBucketListener) {
         this.context = context;

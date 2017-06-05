@@ -89,9 +89,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private float mBaseRotation;
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
+
     public PhotoViewAttacher(ImageView imageView) {
         this(imageView, true);
     }
+
     public PhotoViewAttacher(ImageView imageView, boolean zoomable) {
         mImageView = new WeakReference<>(imageView);
 

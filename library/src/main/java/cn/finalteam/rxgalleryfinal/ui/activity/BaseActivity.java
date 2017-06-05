@@ -2,8 +2,6 @@ package cn.finalteam.rxgalleryfinal.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -25,13 +23,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     private final String CLASS_NAME = getClass().getSimpleName();
 
     public Configuration mConfiguration;
-    protected Handler mFinishHanlder = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            finish();
-        }
-    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,7 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         if (mConfiguration == null) {
-            mFinishHanlder.sendEmptyMessage(0);
+            finish();
         } else {
             if (bundle == null) {
                 bundle = savedInstanceState;

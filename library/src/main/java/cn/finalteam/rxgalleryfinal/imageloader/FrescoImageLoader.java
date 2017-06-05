@@ -56,10 +56,7 @@ public class FrescoImageLoader implements AbsImageLoader {
 
             @Override
             public boolean verifyDrawable(Drawable dr) {
-                if (dr == draweeHolder.getHierarchy().getTopLevelDrawable()) {
-                    return true;
-                }
-                return false;
+                return dr == draweeHolder.getHierarchy().getTopLevelDrawable();
             }
 
             @Override

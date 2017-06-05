@@ -19,4 +19,5 @@
     <string name="gallery_all_image">所有图片</string>
     <string name="gallery_all_video">所有视频</string>
     <string name="gallery_take_image">拍摄照片</string>
+    <string name="gallery_video">录制视频</string>
 </resources>

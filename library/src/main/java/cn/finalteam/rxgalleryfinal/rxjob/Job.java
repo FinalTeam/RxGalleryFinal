@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 public interface Job {
     Result onRunJob();
 
-    public enum Result {
+    enum Result {
 
         SUCCESS(), FAILURE();
 
@@ -28,9 +28,9 @@ public interface Job {
         }
     }
 
-    public class Params {
-        private Object data;
-        private String tag;
+    class Params {
+        private final Object data;
+        private final String tag;
 
         public Params(@NonNull String tag, Object requestData) {
             this.tag = tag;

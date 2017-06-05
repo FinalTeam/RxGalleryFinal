@@ -8,12 +8,8 @@ public class FileUtils {
 
     /**
      * 验证是否是图片路径
-     *
-     * @int
      */
     public static int existImageDir(String dir) {
-        String image = dir.trim().toString();
-        int bk = image.lastIndexOf(".");
-        return bk;
+        return dir.trim().lastIndexOf(".");
     }
 }

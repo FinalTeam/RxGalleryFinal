@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.SystemClock;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,8 +27,7 @@ public class RecyclerViewFinal extends RecyclerView {
     /**
      * 是否可以加载跟多
      */
-    boolean mHasLoadMore;
-    Adapter adapter;
+    private boolean mHasLoadMore;
     /**
      * 加载更多lock
      */
@@ -40,14 +40,10 @@ public class RecyclerViewFinal extends RecyclerView {
      * emptyview
      */
     private View mEmptyView;
-    private FooterAdapter mFooterViewAdapter;
-    private TextView mTvMessage;
-    private ProgressBar mPbLoading;
-    private View mFooterView;
     /**
      * 刷新数据时停止滑动,避免出现数组下标越界问题
      */
-    private AdapterDataObserver mDataObserver = new AdapterDataObserver() {
+    private final AdapterDataObserver mDataObserver = new AdapterDataObserver() {
         @Override
         public void onChanged() {
             Adapter<?> adapter = getAdapter();
@@ -64,23 +60,28 @@ public class RecyclerViewFinal extends RecyclerView {
             dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
         }
     };
+    private FooterAdapter mFooterViewAdapter;
+    private TextView mTvMessage;
+    private ProgressBar mPbLoading;
+    private View mFooterView;
 
     public RecyclerViewFinal(Context context) {
         super(context);
-        init(context, null);
+        init(context);
     }
 
     public RecyclerViewFinal(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context);
     }
 
     public RecyclerViewFinal(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init(context);
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    @SuppressLint("InflateParams")
+    private void init(Context context) {
         mFooterView = LayoutInflater.from(context).inflate(R.layout.gallery_loading_view_final_footer_default, null);
         mPbLoading = (ProgressBar) mFooterView.findViewById(R.id.pb_loading);
         mTvMessage = (TextView) mFooterView.findViewById(R.id.tv_loading_msg);
@@ -91,10 +92,9 @@ public class RecyclerViewFinal extends RecyclerView {
 
     @Override
     public void setAdapter(Adapter adapter) {
-        this.adapter = adapter;
         try {
             adapter.unregisterAdapterDataObserver(mDataObserver);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         adapter.registerAdapterDataObserver(mDataObserver);
@@ -115,8 +115,6 @@ public class RecyclerViewFinal extends RecyclerView {
 
     /**
      * 设置recyclerview emptyview
-     *
-     * @param emptyView
      */
     public void setEmptyView(View emptyView) {
         this.mEmptyView = emptyView;
@@ -125,7 +123,7 @@ public class RecyclerViewFinal extends RecyclerView {
     /**
      * 没有很多了
      */
-    void showNoMoreUI() {
+    private void showNoMoreUI() {
         mLoadMoreLock = false;
         mPbLoading.setVisibility(View.GONE);
         mTvMessage.setText(R.string.gallery_loading_view_no_more);
@@ -134,7 +132,7 @@ public class RecyclerViewFinal extends RecyclerView {
     /**
      * 显示默认UI
      */
-    void showNormalUI() {
+    private void showNormalUI() {
         mLoadMoreLock = false;
         mPbLoading.setVisibility(View.GONE);
         mTvMessage.setText(R.string.gallery_loading_view_click_loading_more);
@@ -143,15 +141,13 @@ public class RecyclerViewFinal extends RecyclerView {
     /**
      * 显示加载中UI
      */
-    void showLoadingUI() {
+    private void showLoadingUI() {
         mPbLoading.setVisibility(View.VISIBLE);
         mTvMessage.setText(R.string.gallery_loading_view_loading);
     }
 
     /**
      * 是否有更多
-     *
-     * @param hasLoadMore
      */
     public void setHasLoadMore(boolean hasLoadMore) {
         mHasLoadMore = hasLoadMore;
@@ -164,8 +160,6 @@ public class RecyclerViewFinal extends RecyclerView {
 
     /**
      * 设置加载更多事件回调
-     *
-     * @param loadMoreListener
      */
     public void setOnLoadMoreListener(OnLoadMoreListener loadMoreListener) {
         this.mOnLoadMoreListener = loadMoreListener;
@@ -183,7 +177,7 @@ public class RecyclerViewFinal extends RecyclerView {
     /**
      * 加载更多
      */
-    void executeLoadMore() {
+    private void executeLoadMore() {
         if (!mLoadMoreLock && mHasLoadMore) {
             if (mOnLoadMoreListener != null) {
                 mOnLoadMoreListener.loadMore();
@@ -203,8 +197,6 @@ public class RecyclerViewFinal extends RecyclerView {
 
     /**
      * 设置OnItemClickListener
-     *
-     * @param listener
      */
     public void setOnItemClickListener(FooterAdapter.OnItemClickListener listener) {
         mFooterViewAdapter.setOnItemClickListener(listener);
@@ -240,10 +232,10 @@ public class RecyclerViewFinal extends RecyclerView {
 
             LayoutManager layoutManager = recyclerView.getLayoutManager();
 
-            if (layoutManager instanceof LinearLayoutManager) {
-                lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-            } else if (layoutManager instanceof GridLayoutManager) {
+            if (layoutManager instanceof GridLayoutManager) {
                 lastVisibleItemPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
+            } else if (layoutManager instanceof LinearLayoutManager) {
+                lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
             } else if (layoutManager instanceof StaggeredGridLayoutManager) {
                 StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
                 if (lastPositions == null) {
@@ -273,9 +265,6 @@ public class RecyclerViewFinal extends RecyclerView {
 
         /**
          * 取数组中最大值
-         *
-         * @param lastPositions
-         * @return
          */
         private int findMax(int[] lastPositions) {
             int max = lastPositions[0];

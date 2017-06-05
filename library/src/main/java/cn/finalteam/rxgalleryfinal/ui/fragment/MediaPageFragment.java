@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -90,8 +91,10 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
                 mMediaBeanList.addAll(mediaList);
             }
         }
-        mMediaPreviewAdapter = new MediaPreviewAdapter(getContext(), mMediaBeanList,
-                mScreenSize.widthPixels, mScreenSize.heightPixels, mConfiguration);
+        mMediaPreviewAdapter = new MediaPreviewAdapter(mMediaBeanList,
+                mScreenSize.widthPixels, mScreenSize.heightPixels, mConfiguration
+                , ThemeUtils.resolveColor(getActivity(), R.attr.gallery_page_bg, R.color.gallery_default_page_bg),
+                ContextCompat.getDrawable(getActivity(), ThemeUtils.resolveDrawableRes(getActivity(), R.attr.gallery_default_image, R.drawable.gallery_default_image)));
         mViewPager.setAdapter(mMediaPreviewAdapter);
         mCbCheck.setOnClickListener(this);
         mViewPager.setCurrentItem(mItemClickPosition);
@@ -136,16 +139,12 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
         if (savedInstanceState == null) {
             return;
         }
-
         List<MediaBean> mediaList = savedInstanceState.getParcelableArrayList(EXTRA_MEDIA_LIST);
         mItemClickPosition = savedInstanceState.getInt(EXTRA_ITEM_CLICK_POSITION);
-
         if (mediaList != null) {
             mMediaBeanList.clear();
             Logger.i("恢复数据:" + mediaList.size() + "  d=" + mediaList.get(0).getOriginalPath());
             mMediaBeanList.addAll(mediaList);
-        } else {
-            Logger.i("恢复数据: null");
         }
         mViewPager.setCurrentItem(mItemClickPosition);
         mMediaPreviewAdapter.notifyDataSetChanged();
@@ -185,8 +184,6 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
 
     /**
      * 改变选择
-     *
-     * @param view
      */
     @Override
     public void onClick(View view) {

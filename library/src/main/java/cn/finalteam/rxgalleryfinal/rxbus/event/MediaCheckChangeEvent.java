@@ -9,7 +9,7 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
  */
 public class MediaCheckChangeEvent {
 
-    private MediaBean mediaBean;
+    private final MediaBean mediaBean;
 
     public MediaCheckChangeEvent(MediaBean mediaBean) {
         this.mediaBean = mediaBean;

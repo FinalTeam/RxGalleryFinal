@@ -23,7 +23,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * Desction:Bitmap处理工具类,图片压缩、裁剪、选择、存储
@@ -45,11 +44,6 @@ public class BitmapUtils {
 
     /**
      * 创建视频缩略图
-     *
-     * @param thumbnailSaveDir
-     * @param originalPath
-     * @param scale
-     * @return
      */
     public static void createVideoThumbnail(String thumbnailSaveDir, String originalPath, int scale) {
         Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(originalPath, MediaStore.Video.Thumbnails.MINI_KIND);
@@ -61,7 +55,7 @@ public class BitmapUtils {
         int maxValue = Math.max(originalImageWidth, originalImageHeight);
         BufferedInputStream bufferedInputStream = null;
         FileOutputStream fileOutputStream = null;
-        File targetFile = null;
+        File targetFile;
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
             if (maxValue > 3000) {
@@ -100,7 +94,7 @@ public class BitmapUtils {
         } catch (Exception e) {
             Logger.e(e);
         } finally {
-            if (bitmap != null && !bitmap.isRecycled()) {
+            if (!bitmap.isRecycled()) {
                 bitmap.recycle();
             }
 
@@ -136,7 +130,6 @@ public class BitmapUtils {
      * @param targetFile   保存目标文件
      * @param originalPath 图片地址
      * @param scale        图片缩放值
-     * @return
      */
     public static void compressAndSaveImage(File targetFile, String originalPath, int scale) {
 
@@ -236,10 +229,6 @@ public class BitmapUtils {
 
     /**
      * 获取一张图片在手机上的方向值
-     *
-     * @param uri
-     * @return
-     * @throws IOException
      */
     public static int getImageOrientation(String uri) {
         if (!new File(uri).exists()) {
@@ -247,21 +236,16 @@ public class BitmapUtils {
         }
         try {
             ExifInterface exif = new ExifInterface(uri);
-            int orientation = exif.getAttributeInt(
+            return exif.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_NORMAL);
-            return orientation;
         } catch (Exception e) {
+            return 0;
         }
-        return 0;
     }
 
     /**
      * Drawable着色工具
-     *
-     * @param drawable
-     * @param colors
-     * @return
      */
     public static Drawable tintDrawable(Drawable drawable, ColorStateList colors) {
         final Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
@@ -276,13 +260,6 @@ public class BitmapUtils {
 
     /**
      * 获取图片Bitmap
-     *
-     * @param context
-     * @param uri
-     * @param outputUri
-     * @param requiredWidth
-     * @param requiredHeight
-     * @param loadCallback
      */
     public void decodeBitmapInBackground(@NonNull Context context, @NonNull Uri uri, @Nullable Uri outputUri,
                                          int requiredWidth, int requiredHeight, BitmapLoadCallback loadCallback) {
@@ -291,13 +268,6 @@ public class BitmapUtils {
 
     /**
      * 图片压缩旋转
-     *
-     * @param context
-     * @param uri
-     * @param outputUri
-     * @param requiredWidth
-     * @param requiredHeight
-     * @param loadCallback
      */
     public void rotateImage(@NonNull Context context, @NonNull Uri uri, @Nullable Uri outputUri,
                             int requiredWidth, int requiredHeight, BitmapLoadCallback loadCallback) {

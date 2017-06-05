@@ -31,12 +31,6 @@ public class MediaUtils {
 
     /**
      * 从数据库中读取图片
-     *
-     * @param context
-     * @param bucketId
-     * @param page
-     * @param limit
-     * @return
      */
     public static List<MediaBean> getMediaWithImageList(Context context, String bucketId, int page, int limit) {
         int offset = (page - 1) * limit;
@@ -82,7 +76,6 @@ public class MediaUtils {
         if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
-        cursor = null;
         return mediaBeanList;
     }
 
@@ -92,12 +85,6 @@ public class MediaUtils {
 
     /**
      * 从数据库中读取视频
-     *
-     * @param context
-     * @param bucketId
-     * @param page
-     * @param limit
-     * @return
      */
     public static List<MediaBean> getMediaWithVideoList(Context context, String bucketId, int page, int limit) {
         int offset = (page - 1) * limit;
@@ -143,16 +130,11 @@ public class MediaUtils {
         if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
-        cursor = null;
         return mediaBeanList;
     }
 
     /**
      * 根据原图获取图片相关信息
-     *
-     * @param context
-     * @param originalPath
-     * @return
      */
     public static MediaBean getMediaBeanWithImage(Context context, String originalPath) {
         ContentResolver contentResolver = context.getContentResolver();
@@ -184,17 +166,12 @@ public class MediaUtils {
         if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
-        cursor = null;
         return mediaBean;
     }
 
 
     /**
      * 解析图片cursor并且创建缩略图
-     *
-     * @param context
-     * @param cursor
-     * @return
      */
     private static MediaBean parseImageCursorAndCreateThumImage(Context context, Cursor cursor) {
         MediaBean mediaBean = new MediaBean();
@@ -245,10 +222,6 @@ public class MediaUtils {
 
     /**
      * 解析视频cursor并且创建缩略图
-     *
-     * @param context
-     * @param cursor
-     * @return
      */
     private static MediaBean parseVideoCursorAndCreateThumImage(Context context, Cursor cursor) {
         MediaBean mediaBean = new MediaBean();
@@ -300,21 +273,16 @@ public class MediaUtils {
 
     public static File createThumbnailBigFileName(Context context, String originalPath) {
         File storeFile = StorageUtils.getCacheDirectory(context);
-        File bigThumFile = new File(storeFile, "big_" + FilenameUtils.getName(originalPath));
-        return bigThumFile;
+        return new File(storeFile, "big_" + FilenameUtils.getName(originalPath));
     }
 
     public static File createThumbnailSmallFileName(Context context, String originalPath) {
         File storeFile = StorageUtils.getCacheDirectory(context);
-        File smallThumFile = new File(storeFile, "small_" + FilenameUtils.getName(originalPath));
-        return smallThumFile;
+        return new File(storeFile, "small_" + FilenameUtils.getName(originalPath));
     }
 
     /**
      * 获取所有的图片文件夹
-     *
-     * @param context
-     * @return
      */
     public static List<BucketBean> getAllBucketByImage(Context context) {
         return getAllBucket(context, true);
@@ -322,9 +290,6 @@ public class MediaUtils {
 
     /**
      * 获取所以视频文件夹
-     *
-     * @param context
-     * @return
      */
     public static List<BucketBean> getAllBucketByVideo(Context context) {
         return getAllBucket(context, false);
@@ -332,10 +297,6 @@ public class MediaUtils {
 
     /**
      * 获取所有的问media文件夹
-     *
-     * @param context
-     * @param isImage
-     * @return
      */
     public static List<BucketBean> getAllBucket(Context context, boolean isImage) {
         List<BucketBean> bucketBeenList = new ArrayList<>();
@@ -401,9 +362,6 @@ public class MediaUtils {
                     allMediaBucket.setCover(cover);
                 }
                 if (bucketBeenList.contains(bucketBean)) {
-                    bucketBean = null;
-                    bucketId = null;
-                    bucketKey = null;
                     continue;
                 }
                 //获取数量
@@ -415,7 +373,6 @@ public class MediaUtils {
                 if (c != null && !c.isClosed()) {
                     c.close();
                 }
-                c = null;
                 bucketBeenList.add(bucketBean);
             } while (cursor.moveToNext());
         }
@@ -423,7 +380,6 @@ public class MediaUtils {
         if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
-        cursor = null;
         return bucketBeenList;
     }
 }

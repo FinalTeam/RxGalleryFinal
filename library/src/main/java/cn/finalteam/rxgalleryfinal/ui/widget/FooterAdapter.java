@@ -14,20 +14,19 @@ public class FooterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int ITEM_VIEW_TYPE_FOOTER = 0;
     private static final int ITEM_VIEW_TYPE_ITEM = 1;
 
-    private RecyclerView.Adapter mAdapter;
-    private View mFooterView;
+    private final RecyclerView.Adapter mAdapter;
+    private final View mFooterView;
     private OnItemClickListener mOnItemClickListener;
-    private RecyclerView.AdapterDataObserver mDataObserver = new RecyclerView.AdapterDataObserver() {
-        @Override
-        public void onChanged() {
-            super.onChanged();
-            notifyDataSetChanged();
-        }
-    };
 
     public FooterAdapter(RecyclerView.Adapter adapter, View footerView) {
         this.mAdapter = adapter;
-        this.mAdapter.registerAdapterDataObserver(mDataObserver);
+        this.mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                notifyDataSetChanged();
+            }
+        });
         this.mFooterView = footerView;
     }
 
@@ -41,8 +40,7 @@ public class FooterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (isFooter(position)) {
-        } else {
+        if (!isFooter(position)) {
             if (mOnItemClickListener != null) {
                 holder.itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder, position));
             }
@@ -52,8 +50,6 @@ public class FooterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     /**
      * 设置Item点击事件
-     *
-     * @param listener
      */
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;

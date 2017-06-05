@@ -20,9 +20,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MediaSrcFactoryInteractorImpl implements MediaSrcFactoryInteractor {
 
-    Context context;
-    OnGenerateMediaListener onGenerateMediaListener;
-    boolean isImage;
+    private final Context context;
+    private final OnGenerateMediaListener onGenerateMediaListener;
+    private final boolean isImage;
 
     public MediaSrcFactoryInteractorImpl(Context context, boolean isImage, OnGenerateMediaListener onGenerateMediaListener) {
         this.context = context;

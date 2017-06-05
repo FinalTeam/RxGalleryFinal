@@ -59,9 +59,9 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     private static final String EXTRA_PAGE_POSITION = EXTRA_PREFIX + ".PagePosition";
     private static final String EXTRA_PREVIEW_POSITION = EXTRA_PREFIX + ".PreviewPosition";
 
-    MediaGridFragment mMediaGridFragment;
-    MediaPageFragment mMediaPageFragment;
-    MediaPreviewFragment mMediaPreviewFragment;
+    private MediaGridFragment mMediaGridFragment;
+    private MediaPageFragment mMediaPageFragment;
+    private MediaPreviewFragment mMediaPreviewFragment;
 
     private Toolbar mToolbar;
     private TextView mTvToolbarTitle;

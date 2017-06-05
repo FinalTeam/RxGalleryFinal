@@ -15,26 +15,22 @@ import io.reactivex.schedulers.Schedulers;
  * Author:pengjianbo
  * Date:16/7/31 上午9:12
  */
-public class JobManager {
+class JobManager {
 
     private final Queue<Job> jobQueue;
     private boolean queueFree = true;
 
-    public JobManager() {
+    JobManager() {
         jobQueue = new LinkedBlockingQueue<>();
     }
 
-    public void addJob(Job job) {
-        try {
-            if (jobQueue.isEmpty() && queueFree) {
-                jobQueue.offer(job);
-                start();
-            } else {
-                jobQueue.offer(job);
-            }
-        } catch (Exception e) {
+    void addJob(Job job) {
+        if (jobQueue.isEmpty() && queueFree) {
+            jobQueue.offer(job);
+            start();
+        } else {
+            jobQueue.offer(job);
         }
-
     }
 
     private void start() {
@@ -65,9 +61,6 @@ public class JobManager {
     }
 
     public void clear() {
-        try {
-            jobQueue.clear();
-        } catch (Exception e) {
-        }
+        jobQueue.clear();
     }
 }

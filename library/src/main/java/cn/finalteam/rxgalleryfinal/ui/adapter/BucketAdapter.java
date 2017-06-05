@@ -1,10 +1,10 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.RecyclerView;
@@ -34,26 +34,25 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
  */
 public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketViewHolder> {
 
-    private List<BucketBean> mBucketList;
-    private Context mContext;
-    private LayoutInflater mInflater;
-    private Drawable mDefaultImage;
-    private Configuration mConfiguration;
+    private final List<BucketBean> mBucketList;
+    private final Drawable mDefaultImage;
+    private final Configuration mConfiguration;
     private OnRecyclerViewItemClickListener mOnRecyclerViewItemClickListener;
     private BucketBean mSelectedBucket;
 
-    public BucketAdapter(Context context, List<BucketBean> bucketList, Configuration configuration) {
-        this.mContext = context;
+    public BucketAdapter(
+            List<BucketBean> bucketList,
+            Configuration configuration,
+            @ColorInt int color) {
         this.mBucketList = bucketList;
         this.mConfiguration = configuration;
-        this.mDefaultImage = new ColorDrawable(context.getResources().getColor(R.color.gallery_bucket_list_item_normal_color));
-        this.mInflater = LayoutInflater.from(context);
+        this.mDefaultImage = new ColorDrawable(color);
     }
 
     @Override
     public BucketViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.gallery_adapter_bucket_item, parent, false);
-        return new BucketViewHolder(mContext, parent, view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_adapter_bucket_item, parent, false);
+        return new BucketViewHolder(parent, view);
     }
 
     @Override
@@ -77,7 +76,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
 
         String path = bucketBean.getCover();
         mConfiguration.getImageLoader()
-                .displayImage(mContext, path, holder.mIvBucketCover, mDefaultImage, mConfiguration.getImageConfig(),
+                .displayImage(holder.itemView.getContext(), path, holder.mIvBucketCover, mDefaultImage, mConfiguration.getImageConfig(),
                         true, 100, 100, bucketBean.getOrientation());
     }
 
@@ -95,19 +94,19 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
         this.mOnRecyclerViewItemClickListener = listener;
     }
 
-    public static interface OnRecyclerViewItemClickListener {
+    public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view, int position);
     }
 
     class BucketViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView mTvBucketName;
-        SquareImageView mIvBucketCover;
-        AppCompatRadioButton mRbSelected;
+        final TextView mTvBucketName;
+        final SquareImageView mIvBucketCover;
+        final AppCompatRadioButton mRbSelected;
 
-        private ViewGroup mParentView;
+        private final ViewGroup mParentView;
 
-        public BucketViewHolder(Context context, ViewGroup parent, View itemView) {
+        BucketViewHolder(ViewGroup parent, View itemView) {
             super(itemView);
             this.mParentView = parent;
             mTvBucketName = (TextView) itemView.findViewById(R.id.tv_bucket_name);
@@ -116,7 +115,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
 
             itemView.setOnClickListener(this);
 
-            int checkTint = ThemeUtils.resolveColor(context, R.attr.gallery_checkbox_button_tint_color, R.color.gallery_default_checkbox_button_tint_color);
+            int checkTint = ThemeUtils.resolveColor(itemView.getContext(), R.attr.gallery_checkbox_button_tint_color, R.color.gallery_default_checkbox_button_tint_color);
             CompoundButtonCompat.setButtonTintList(mRbSelected, ColorStateList.valueOf(checkTint));
         }
 
@@ -133,8 +132,6 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
 
         /**
          * 设置未所有Item为未选中
-         *
-         * @param parentView
          */
         private void setRadioDisChecked(ViewGroup parentView) {
             if (parentView == null || parentView.getChildCount() < 1) {

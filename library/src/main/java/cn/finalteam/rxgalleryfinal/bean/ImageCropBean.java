@@ -26,7 +26,7 @@ public class ImageCropBean extends MediaBean implements Parcelable {
     public ImageCropBean() {
     }
 
-    protected ImageCropBean(Parcel in) {
+    private ImageCropBean(Parcel in) {
         super(in);
         cropPath = in.readString();
         aspectRatio = in.readFloat();

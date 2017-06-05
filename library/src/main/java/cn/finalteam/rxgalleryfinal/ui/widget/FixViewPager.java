@@ -24,9 +24,7 @@ public class FixViewPager extends ViewPager {
         try {
             return super.dispatchTouchEvent(ev);
         } catch (IllegalArgumentException ignored) {
-        } catch (ArrayIndexOutOfBoundsException e) {
         }
-
         return false;
     }
 }

@@ -17,76 +17,13 @@
 ### To be perfect
 
     1.Video of the callback
-    2.RxJAVA upgrade
-    3.Caton test, search in Issues: [fine] feel the point of Caton, I #130
+    2.Caton test, search in Issues: [fine] feel the point of Caton, I #130
 
 
    ### 新版本 V 1.0.7
         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.7'
         1.RxJava Update to - RxJava2.1
         2.Repair bug ->  #136,#135,#134,#129,#99
-
-    ### New version 1.0.6
-         -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.6'
-         1. Repair click Home, and then return to the interface, the picture will increase the problem.
-         2. Repair UI preview size for zero nums problems.
-         3. Repair the onresume () life cycle and invoke the onScanCompleted problem.
-         4. Repair cuts(crop), callbacks, and picture MediaActivity closure issues.
-         5. Repair Some models Caton problems.
-
-    ### New version 1.0.5
-        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.5'
-        1.Repair 1.0.3 Bug，picasso preview big images of the crash. #119
-        2.Provide the callback after cutting onCropImageResult() ， For close selection interface
-        3.Api Relevant methods to optimize
-        4.Optimization related to Null pointer
-
-   ### New version 1.0.4
-        -- compile 'cn.finalteam.rxgalleryfinal:library:1.0.4'
-        1.Repair 1.0.3 Bug，picasso preview big images of the crash. #119
-
-   ### New version 1.0.3
-        -- the compile 'cn. Finalteam. Rxgalleryfinal: library: 1.0.3'
-        1. Repair the custom tailoring proportion function failure # 114
-        2. Repair cannot cut PNG format images?# 77
-        3. Repair alternative picture more than the maximum null pointer # 107
-        4. Repair the radio photos exist null pointer # 105
-        5. Adding custom tailoring proportion method and Api # 115
-        6. Picasso was the original image scaling problems
-        7. Multiple calls in the demo commented examples, according to their own needs to choose the corresponding API
-        8. According to the requirements of all - cutting when the callback onEvent selection events
-
-
-    ### New version 1.0.2
-         -- the compile 'cn. Finalteam. Rxgalleryfinal: library: 1.0.2'
-         1. Solve the cutting picture "only have a problem", without setting can cut many times
-         2. Increase the callback cut out of the picture
-         3. Increase the preservation and the cutting path can be set up, is not set automatically stored in the default path
-         4. Solve the problem of a dark figure
-         5. Configure the topic - gallery_attrs. XML/gallery_default_theme XML
-
-    ### New version 1.0.1
-         -- the compile 'cn. Finalteam. Rxgalleryfinal: library: 1.0.1'
-         1. Upgrade UCrop tailoring library - 2.2.0
-         2. Increase the Api directly open cut
-         3. Keep ucrop on engineering, not references.If there is a need to local lib can combine their own needs
-
-    ###  New version 1.0.0
-        -- the compile 'cn. Finalteam. Rxgalleryfinal: library: 1.0.0'
-        1. Test version
-
-    ### New version V 0.0.9
-        -- the compile 'cn. Finalteam. Rxgalleryfinal: library: 0.0.9'
-        1. Increase directly open the camera function
-        2. Remove the char [] Java. Lang. String. ToCharArray ()
-
-    ### New version V 0.0.8
-        -- the compile 'cn. Finalteam. Rxgalleryfinal: library: 0.0.8'
-        1. Increase the debug log output function, prevent multilayer DebugConfig problem
-        2. Remove the Toast, image pops up to custom events
-        3. Solve the problem of 7.0 collapses
-        4. Remove the relevant problems caused by NULL
-
 
 ## Use
 ### Download or add a dependency

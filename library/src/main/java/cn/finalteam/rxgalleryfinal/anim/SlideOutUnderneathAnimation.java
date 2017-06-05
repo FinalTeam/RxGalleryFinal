@@ -22,11 +22,11 @@ import android.widget.FrameLayout;
 @TargetApi(14)
 public class SlideOutUnderneathAnimation extends Animation {
 
-    int direction;
-    TimeInterpolator interpolator;
-    long duration;
-    AnimationListener listener;
-    ValueAnimator slideAnim;
+    private int direction;
+    private TimeInterpolator interpolator;
+    private long duration;
+    private AnimationListener listener;
+    private ValueAnimator slideAnim;
 
     /**
      * This animation causes the view to slide out underneath to its own
@@ -160,7 +160,7 @@ public class SlideOutUnderneathAnimation extends Animation {
     /**
      * @return The listener for the end of the animation.
      */
-    public AnimationListener getListener() {
+    private AnimationListener getListener() {
         return listener;
     }
 

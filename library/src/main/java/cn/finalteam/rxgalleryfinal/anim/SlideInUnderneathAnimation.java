@@ -18,10 +18,10 @@ import android.widget.FrameLayout;
 @TargetApi(14)
 public class SlideInUnderneathAnimation extends Animation {
 
-    int direction;
-    TimeInterpolator interpolator;
-    long duration;
-    AnimationListener listener;
+    private int direction;
+    private TimeInterpolator interpolator;
+    private long duration;
+    private AnimationListener listener;
 
     /**
      * This animation causes the view to slide in underneath from its own
@@ -73,6 +73,9 @@ public class SlideInUnderneathAnimation extends Animation {
                 break;
             default:
                 break;
+        }
+        if (slideInAnim == null) {
+            return;
         }
         slideInAnim.setInterpolator(interpolator);
         slideInAnim.setDuration(duration);
@@ -160,7 +163,7 @@ public class SlideInUnderneathAnimation extends Animation {
     /**
      * @return The listener for the end of the animation.
      */
-    public AnimationListener getListener() {
+    private AnimationListener getListener() {
         return listener;
     }
 

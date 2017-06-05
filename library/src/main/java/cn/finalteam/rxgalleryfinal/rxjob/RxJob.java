@@ -10,7 +10,7 @@ public class RxJob {
     private static RxJob rxJob;
     private final JobManager jobManager;
 
-    public RxJob() {
+    private RxJob() {
         jobManager = new JobManager();
     }
 

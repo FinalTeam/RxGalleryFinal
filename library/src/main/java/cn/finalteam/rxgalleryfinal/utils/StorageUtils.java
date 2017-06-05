@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -58,7 +59,7 @@ public final class StorageUtils {
             appCacheDir = context.getCacheDir();
         }
         if (appCacheDir == null) {
-            String cacheDirPath = "/data/data/" + context.getPackageName() + "/cache/";
+            @SuppressLint("SdCardPath") String cacheDirPath = "/data/data/" + context.getPackageName() + "/cache/";
             Logger.w(String.format("Can't define system cache directory! '%s' will be used.", cacheDirPath));
             appCacheDir = new File(cacheDirPath);
         }
@@ -70,8 +71,6 @@ public final class StorageUtils {
         try {
             externalStorageState = Environment.getExternalStorageState();
         } catch (NullPointerException e) { // (sh)it happens (Issue #660)
-            externalStorageState = "";
-        } catch (IncompatibleClassChangeError e) { // (sh)it happens too (Issue #989)
             externalStorageState = "";
         }
         return MEDIA_MOUNTED.equals(externalStorageState);
