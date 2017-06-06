@@ -69,7 +69,9 @@
 * Here you can configure the theme
 ![image](https://github.com/FinalTeam/RxGalleryFinal/blob/master/screenshots/device-2017-04-11-154816.png)
 
+##  Theme
 
+   Configuration Theme : sample -Res xml-> TestTheme..
 
 * Code
 

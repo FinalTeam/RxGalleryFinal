@@ -73,7 +73,7 @@
 
 ##  Theme
 
-配置Theme请查看sample下的 TestTheme..
+	配置Theme请查看sample下的 xml-> TestTheme..
 
 * Code
 
