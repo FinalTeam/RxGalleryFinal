@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/14 下午7:26
  */
 public class EmptyViewUtils {

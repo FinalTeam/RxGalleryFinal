@@ -6,7 +6,7 @@ import android.view.View;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/20 下午4:23
  */
 public class OsCompat {

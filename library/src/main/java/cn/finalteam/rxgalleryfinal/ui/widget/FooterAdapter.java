@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 /**
  * Desction:footer适配器
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/21 下午3:59
  */
 public class FooterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

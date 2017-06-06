@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 
 /**
  * Desction:为了兼容fresco框架而自定义的ImageView
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:2015/12/24 0024 20:14
  */
 public class FixImageView extends AppCompatImageView {

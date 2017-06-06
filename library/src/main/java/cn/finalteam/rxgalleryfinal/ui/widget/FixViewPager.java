@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:2015/12/29 0029 19:29
  */
 public class FixViewPager extends ViewPager {

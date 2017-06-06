@@ -78,7 +78,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/7 上午10:02
  * <p>
  * Desction: 直接暴漏

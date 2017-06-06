@@ -15,7 +15,7 @@ import cn.finalteam.rxgalleryfinal.view.MediaGridView;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/14 上午10:58
  */
 public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFactoryInteractor.OnGenerateMediaListener,

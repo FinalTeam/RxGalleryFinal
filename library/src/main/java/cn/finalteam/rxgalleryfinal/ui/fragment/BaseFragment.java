@@ -18,7 +18,7 @@ import cn.finalteam.rxgalleryfinal.utils.Logger;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/14 上午10:46
  */
 public abstract class BaseFragment extends Fragment {

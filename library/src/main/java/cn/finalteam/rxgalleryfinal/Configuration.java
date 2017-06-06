@@ -22,7 +22,7 @@ import cn.finalteam.rxgalleryfinal.imageloader.UniversalImageLoader;
 
 /**
  * Desction:配置信息
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/7 下午3:58
  */
 public class Configuration implements Parcelable {

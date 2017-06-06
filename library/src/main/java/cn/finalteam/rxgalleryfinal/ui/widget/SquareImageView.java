@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/9 上午12:53
  */
 public class SquareImageView extends FixImageView {

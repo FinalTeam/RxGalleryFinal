@@ -2,7 +2,7 @@ package cn.finalteam.rxgalleryfinal.exception;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/8/9 上午7:50
  */
 public class UnknownImageLoaderTypeException extends RuntimeException {

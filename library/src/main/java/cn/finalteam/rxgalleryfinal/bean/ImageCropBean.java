@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/8/1 下午10:27
  */
 public class ImageCropBean extends MediaBean implements Parcelable {

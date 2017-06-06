@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/31 上午9:15
  */
 public interface Job {

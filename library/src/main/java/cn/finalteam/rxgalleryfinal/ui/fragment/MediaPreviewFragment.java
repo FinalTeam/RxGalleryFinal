@@ -30,7 +30,7 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
  * Desction:图片预览
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/9 上午1:35
  */
 public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPageChangeListener,

@@ -11,7 +11,7 @@ import android.widget.AdapterView;
  * Desction:
  * A {@link PagerAdapter} which behaves like an {@link android.widget.Adapter} with view types and
  * view recycling.
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:15/12/22 下午6:21
  */
 abstract class RecyclingPagerAdapter extends PagerAdapter {

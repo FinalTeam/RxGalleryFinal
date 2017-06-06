@@ -5,7 +5,7 @@ import io.reactivex.observers.DisposableObserver;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/22 下午2:40
  */
 public abstract class RxBusSubscriber<T> extends DisposableObserver<T> {

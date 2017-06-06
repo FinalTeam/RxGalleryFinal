@@ -11,7 +11,7 @@ import cn.finalteam.rxgalleryfinal.utils.MediaUtils;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/31 上午11:46
  */
 public class ImageThmbnailJob implements Job {

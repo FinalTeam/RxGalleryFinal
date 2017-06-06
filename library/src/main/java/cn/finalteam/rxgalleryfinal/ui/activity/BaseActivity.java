@@ -12,7 +12,7 @@ import cn.finalteam.rxgalleryfinal.utils.Logger;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/16 下午7:36
  */
 public abstract class BaseActivity extends AppCompatActivity {

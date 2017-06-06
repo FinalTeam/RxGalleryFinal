@@ -6,7 +6,7 @@ import android.widget.LinearLayout;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/17 下午1:48
  */
 public class SquareLinearLayout extends LinearLayout {

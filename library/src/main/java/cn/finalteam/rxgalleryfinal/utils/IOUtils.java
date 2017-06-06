@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/7 上午9:45
  */
 public class IOUtils {

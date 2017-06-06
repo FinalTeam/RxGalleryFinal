@@ -23,7 +23,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 
 /**
- * Created by pengjianbo on 2016/8/13 0013.
+ * Created by pengjianbo  Dujinyang on 2016/8/13 0013.
  */
 public class FrescoImageLoader implements AbsImageLoader {
 

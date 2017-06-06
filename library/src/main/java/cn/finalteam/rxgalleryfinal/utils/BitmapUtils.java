@@ -26,7 +26,7 @@ import java.io.FileOutputStream;
 
 /**
  * Desction:Bitmap处理工具类,图片压缩、裁剪、选择、存储
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/4 下午5:03
  */
 public class BitmapUtils {

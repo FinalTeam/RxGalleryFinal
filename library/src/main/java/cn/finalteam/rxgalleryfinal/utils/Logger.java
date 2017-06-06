@@ -6,7 +6,7 @@ import cn.finalteam.rxgalleryfinal.BuildConfig;
 
 /**
  * Desction:日志工具
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/23 下午3:12
  */
 public class Logger {

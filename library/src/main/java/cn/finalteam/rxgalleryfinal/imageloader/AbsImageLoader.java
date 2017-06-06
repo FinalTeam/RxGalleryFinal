@@ -7,7 +7,7 @@ import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/17 下午1:05
  */
 public interface AbsImageLoader {

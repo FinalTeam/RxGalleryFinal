@@ -6,7 +6,7 @@ import android.widget.RelativeLayout;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/8 下午4:07
  */
 public class SquareRelativeLayout extends RelativeLayout {

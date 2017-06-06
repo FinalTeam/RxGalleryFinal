@@ -12,7 +12,7 @@ import io.reactivex.subjects.Subject;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/22 下午2:40
  */
 public class RxBus {

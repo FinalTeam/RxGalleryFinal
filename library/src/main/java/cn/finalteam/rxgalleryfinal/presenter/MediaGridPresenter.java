@@ -4,7 +4,7 @@ import cn.finalteam.rxgalleryfinal.view.MediaGridView;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/14 上午10:53
  */
 public interface MediaGridPresenter {

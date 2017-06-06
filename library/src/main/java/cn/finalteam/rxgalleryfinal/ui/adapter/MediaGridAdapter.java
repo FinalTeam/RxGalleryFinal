@@ -38,7 +38,7 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/18 下午7:48
  */
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.GridViewHolder> {

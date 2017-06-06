@@ -2,7 +2,7 @@ package cn.finalteam.rxgalleryfinal.rxjob;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/31 上午9:09
  */
 public class RxJob {

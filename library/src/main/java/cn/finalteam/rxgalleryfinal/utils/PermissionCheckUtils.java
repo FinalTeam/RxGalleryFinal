@@ -11,7 +11,7 @@ import android.support.v7.app.AlertDialog;
 
 /**
  * Desction:权限检查工具
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Author:KARL-dujinyang
  * Date:16/6/1 下午7:40
  */

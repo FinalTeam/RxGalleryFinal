@@ -19,7 +19,7 @@ import cn.finalteam.rxgalleryfinal.R;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/3/7 下午6:40
  */
 public class RecyclerViewFinal extends RecyclerView {

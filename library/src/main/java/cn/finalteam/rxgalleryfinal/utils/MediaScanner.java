@@ -6,7 +6,7 @@ import android.net.Uri;
 
 /**
  * Desction:媒体扫描工具类
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/8 上午11:36
  */
 public class MediaScanner {

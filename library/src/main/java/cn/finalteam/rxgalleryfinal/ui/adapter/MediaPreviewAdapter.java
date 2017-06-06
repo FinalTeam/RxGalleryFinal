@@ -14,7 +14,7 @@ import uk.co.senab.photoview.PhotoView;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/21 下午10:12
  */
 public class MediaPreviewAdapter extends RecyclingPagerAdapter {

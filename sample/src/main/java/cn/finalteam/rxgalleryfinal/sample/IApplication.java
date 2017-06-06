@@ -4,7 +4,7 @@ import android.app.Application;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/16 上午9:17
  */
 public class IApplication extends Application {

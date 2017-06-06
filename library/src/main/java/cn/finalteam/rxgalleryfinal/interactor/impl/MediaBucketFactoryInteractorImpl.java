@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/4 下午8:29
  */
 public class MediaBucketFactoryInteractorImpl implements MediaBucketFactoryInteractor {

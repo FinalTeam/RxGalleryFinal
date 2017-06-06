@@ -30,7 +30,7 @@ import io.reactivex.disposables.Disposable;
 
 /**
  * Desction: RxGalleryFinal
- * author: pengjianbo
+ * author: pengjianbo  Dujinyang
  * author: karl-dujinyang
  */
 public class RxGalleryFinal {

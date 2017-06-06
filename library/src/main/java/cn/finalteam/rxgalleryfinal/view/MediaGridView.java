@@ -7,7 +7,7 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/14 上午11:00
  */
 public interface MediaGridView {

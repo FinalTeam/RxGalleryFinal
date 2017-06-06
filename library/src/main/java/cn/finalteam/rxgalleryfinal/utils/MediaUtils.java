@@ -20,7 +20,7 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
 /**
  * Desction:媒体获取工具
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/4 下午4:11
  */
 public class MediaUtils {

@@ -2,7 +2,7 @@ package cn.finalteam.rxgalleryfinal.rxbus.event;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/25 下午3:45
  */
 public class MediaViewPagerChangedEvent {

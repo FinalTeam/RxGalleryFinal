@@ -29,7 +29,7 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/4 下午5:40
  */
 public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketViewHolder> {

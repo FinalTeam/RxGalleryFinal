@@ -4,7 +4,7 @@ import cn.finalteam.rxgalleryfinal.bean.ImageCropBean;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/8/1 下午10:49
  */
 public class ImageRadioResultEvent implements BaseResultEvent {

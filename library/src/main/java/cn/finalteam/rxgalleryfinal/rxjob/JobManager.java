@@ -12,7 +12,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/31 上午9:12
  */
 class JobManager {

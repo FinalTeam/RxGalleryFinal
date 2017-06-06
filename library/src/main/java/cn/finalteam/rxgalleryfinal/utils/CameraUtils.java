@@ -5,7 +5,7 @@ import android.content.pm.PackageManager;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/3 下午8:28
  */
 public class CameraUtils {

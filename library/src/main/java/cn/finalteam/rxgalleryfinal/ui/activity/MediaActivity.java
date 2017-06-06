@@ -45,7 +45,7 @@ import io.reactivex.disposables.Disposable;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/7 上午10:01
  */
 public class MediaActivity extends BaseActivity implements ActivityFragmentView {

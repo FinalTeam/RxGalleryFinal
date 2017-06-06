@@ -6,7 +6,7 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/8/1 下午10:52
  */
 public class ImageMultipleResultEvent implements BaseResultEvent {

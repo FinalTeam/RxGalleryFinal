@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/3 下午8:10
  */
 public class RecyclerImageView extends SquareImageView {

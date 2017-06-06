@@ -299,6 +299,6 @@
 
    * [GalleryFinal 问题系列 ](https://github.com/FinalTeam/RxGalleryFinal/wiki)
    * [RxGalleryFinal 问题系列](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97)
-   * [RxGalleryFinal Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Versio)
+   * [RxGalleryFinal Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 
 

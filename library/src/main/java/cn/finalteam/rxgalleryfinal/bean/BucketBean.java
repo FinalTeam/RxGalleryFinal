@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 /**
  * Desction:文件夹信息
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/9 下午2:47
  */
 public class BucketBean {

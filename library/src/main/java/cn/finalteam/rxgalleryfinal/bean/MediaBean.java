@@ -7,7 +7,7 @@ import java.io.File;
 
 /**
  * Desction:Media Bean
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/4 下午4:14
  */
 public class MediaBean implements Parcelable {
