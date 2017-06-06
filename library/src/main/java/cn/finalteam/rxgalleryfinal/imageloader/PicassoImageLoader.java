@@ -20,6 +20,7 @@ import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
  */
 public class PicassoImageLoader implements AbsImageLoader {
 
+
     @Override
     public void displayImage(Object context, String path, FixImageView imageView,
                              Drawable defaultDrawable, Bitmap.Config config, boolean resize, int width, int height, int rotate) {

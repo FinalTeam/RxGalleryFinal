@@ -16,8 +16,8 @@ import cn.finalteam.rxgalleryfinal.utils.MediaUtils;
  */
 public class ImageThmbnailJob implements Job {
 
-    private MediaBean mediaBean;
-    private Context context;
+    private final MediaBean mediaBean;
+    private final Context context;
 
     public ImageThmbnailJob(Context context, Params params) {
         this.context = context;

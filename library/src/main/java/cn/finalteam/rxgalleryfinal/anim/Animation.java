@@ -7,15 +7,13 @@ import android.view.View;
  */
 public abstract class Animation {
 
-    // constants
-    public static final int DIRECTION_LEFT = 1;
-    public static final int DIRECTION_RIGHT = 2;
-    public static final int DIRECTION_UP = 3;
     public static final int DIRECTION_DOWN = 4;
-
     public static final int DURATION_DEFAULT = 300; // 300 ms
-    public static final int DURATION_SHORT = 100;    // 100 ms
-    public static final int DURATION_LONG = 500;    // 500 ms
+    // constants
+    static final int DIRECTION_LEFT = 1;
+    static final int DIRECTION_RIGHT = 2;
+    static final int DIRECTION_UP = 3;
+    static final int DURATION_LONG = 500;    // 500 ms
 
     View view;
 

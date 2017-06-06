@@ -4,7 +4,7 @@
     <color name="gallery_default_color_toolbar_bg">#2A2A2F</color>
     <dimen name="gallery_default_toolbar_height">@dimen/abc_action_bar_default_height_material
     </dimen>
-    <drawable name="gallery_default_toolbar_close_image">@drawable/gallery_ucrop_ic_cross</drawable>
+    <drawable name="gallery_default_toolbar_close_image">@drawable/gallery_ic_close</drawable>
     <color name="gallery_default_toolbar_widget_color">#ffffff</color>
     <dimen name="gallery_default_toolbar_over_button_text_size">12sp</dimen>
     <color name="gallery_default_toolbar_over_button_text_color">#ffffff</color>

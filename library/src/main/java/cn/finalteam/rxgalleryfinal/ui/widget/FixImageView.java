@@ -3,6 +3,7 @@ package cn.finalteam.rxgalleryfinal.ui.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -49,7 +50,7 @@ public class FixImageView extends AppCompatImageView {
     }
 
     @Override
-    protected boolean verifyDrawable(Drawable dr) {
+    protected boolean verifyDrawable(@NonNull Drawable dr) {
         if (mOnImageViewListener != null) {
             if (mOnImageViewListener.verifyDrawable(dr)) {
                 return true;
@@ -91,7 +92,7 @@ public class FixImageView extends AppCompatImageView {
         return mOnImageViewListener.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
-    public static interface OnImageViewListener {
+    public interface OnImageViewListener {
         void onDetach();
 
         void onAttach();

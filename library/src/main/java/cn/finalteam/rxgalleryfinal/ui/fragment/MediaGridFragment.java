@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -87,18 +88,22 @@ import io.reactivex.schedulers.Schedulers;
 public class MediaGridFragment extends BaseFragment implements MediaGridView, RecyclerViewFinal.OnLoadMoreListener,
         FooterAdapter.OnItemClickListener, View.OnClickListener, MediaScanner.ScanCallback, BucketAdapter.OnRecyclerViewItemClickListener {
 
+    private static final String IMAGE_TYPE = "image/jpeg";
+    //接口-单选-是否裁剪
+    public static IRadioImageCheckedListener iListenerRadio;
+    //预留公开命名接口
+    private static File mImageStoreDir;
+    private static File mImageStoreCropDir; //裁剪目录
+    //裁剪后+name
+    private static File mCropPath = null;
     private final String IMAGE_STORE_FILE_NAME = "IMG_%s.jpg";
-    private static String imgType = "image/jpeg";
     private final int TAKE_IMAGE_REQUEST_CODE = 1001;
     private final int CROP_IMAGE_REQUEST_CODE = 1011;
     private final String TAKE_URL_STORAGE_KEY = "take_url_storage_key";
     private final String BUCKET_ID_KEY = "bucket_id_key";
-
     private final int LIMIT = 23;
-
     MediaGridPresenterImpl mMediaGridPresenter;
     DisplayMetrics mScreenSize;
-
     private List<MediaBean> mMediaBeanList;
     private MediaGridAdapter mMediaGridAdapter;
     private RecyclerViewFinal mRvMedia;
@@ -110,19 +115,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private TextView mTvFolderName;
     private TextView mTvPreview;
     private RelativeLayout mRlRootView;
-
     //扫描
     private MediaScanner mMediaScanner;
-    //接口-单选-是否裁剪
-    public static IRadioImageCheckedListener iListenerRadio;
-
     private int mPage = 1;
-    //预留公开命名接口
-    private static File mImageStoreDir;
-    private static File mImageStoreCropDir; //裁剪目录
-    //裁剪后+name
-    private static File mCropPath = null;
-
     private String mImagePath;
 
     private String mBucketId = String.valueOf(Integer.MIN_VALUE);
@@ -132,6 +127,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private Disposable mSubscrCloseMediaViewPageFragmentEvent;
     private Disposable mSubscrRequestStorageReadAccessPermissionEvent;
 
+    private SlideInUnderneathAnimation slideInUnderneathAnimation;
+    private SlideOutUnderneathAnimation slideOutUnderneathAnimation;
 
     private int uCropStatusColor;
     private int uCropToolbarColor;
@@ -147,17 +144,98 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         return fragment;
     }
 
+    /**
+     * getImageStoreDir
+     *
+     * @return 存储路径
+     */
+    public static File getImageStoreDirByFile() {
+        return mImageStoreDir;
+    }
+
+    /**
+     * getImageStoreDir
+     *
+     * @return 存储路径
+     */
+    public static String getImageStoreDirByStr() {
+        if (mImageStoreDir != null)
+            return mImageStoreDir.getPath();
+        else
+            return null;
+    }
+
+    /**
+     * 设置路径
+     */
+    public static void setImageStoreDir(File imgFile) {
+        Logger.i("设置图片保存路径为：" + imgFile.getAbsolutePath());
+        mImageStoreDir = imgFile;
+    }
+
+    /**
+     * 设置路径
+     */
+    public static void setImageStoreDir(String imgFile) {
+        mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM" + File.separator + imgFile + File.separator);
+        ;
+        Logger.i("设置图片保存路径为：" + mImageStoreDir.getAbsolutePath());
+    }
+
+    /**
+     * getImageStoreDir裁剪
+     *
+     * @return 裁剪存储路径
+     */
+    public static File getImageStoreCropDirByFile() {
+        return mImageStoreCropDir;
+    }
+
+    /**
+     * getImageStoreDir
+     *
+     * @return 存储路径
+     */
+    public static String getImageStoreCropDirByStr() {
+        if (mImageStoreCropDir != null)
+            return mImageStoreCropDir.getPath();
+        else
+            return null;
+    }
+
+    /**
+     * 设置裁剪路径
+     */
+    public static void setImageStoreCropDir(File imgFile) {
+        mImageStoreCropDir = imgFile;
+        Logger.i("设置图片裁剪保存路径为：" + mImageStoreCropDir.getAbsolutePath());
+    }
+
+    /**
+     * 设置裁剪路径
+     *
+     * @param imgFile 裁剪
+     */
+    public static void setImageStoreCropDir(String imgFile) {
+        mImageStoreCropDir = new File(Environment.getExternalStorageDirectory(), "/DCIM" + File.separator + imgFile + File.separator);
+        if (!mImageStoreCropDir.exists()) {
+            mImageStoreCropDir.mkdirs();
+        }
+        Logger.i("设置图片裁剪保存路径为：" + mImageStoreCropDir.getAbsolutePath());
+    }
+
+    public static void setRadioListener(IRadioImageCheckedListener radioListener) {
+        MediaGridFragment.iListenerRadio = radioListener;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof MediaActivity) {
             mMediaActivity = (MediaActivity) context;
         }
-        //onLoadFile()
         mMediaScanner = new MediaScanner(context);
-
     }
-
 
     @Override
     public int getContentView() {
@@ -193,8 +271,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
         mMediaBeanList = new ArrayList<>();
         mScreenSize = DeviceUtils.getScreenSize(getContext());
-        mMediaGridAdapter = new MediaGridAdapter(mMediaActivity, mMediaBeanList,
-                mScreenSize.widthPixels, mConfiguration);
+        mMediaGridAdapter = new MediaGridAdapter(mMediaActivity, mMediaBeanList, mScreenSize.widthPixels, mConfiguration);
         mRvMedia.setAdapter(mMediaGridAdapter);
         mMediaGridPresenter = new MediaGridPresenterImpl(getContext(), mConfiguration.isImage());
         mMediaGridPresenter.setMediaGridView(this);
@@ -209,14 +286,19 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .build());
         mRvBucket.setLayoutManager(linearLayoutManager);
         mBucketBeanList = new ArrayList<>();
-        mBucketAdapter = new BucketAdapter(getContext(), mBucketBeanList, mConfiguration);
+        mBucketAdapter = new BucketAdapter(mBucketBeanList, mConfiguration, ContextCompat.getColor(getContext(), R.color.gallery_bucket_list_item_normal_color));
         mRvBucket.setAdapter(mBucketAdapter);
         mRvMedia.setOnItemClickListener(this);
         mMediaGridPresenter.getBucketList();
         mBucketAdapter.setOnRecyclerViewItemClickListener(this);
 
         mRlBucektOverview.setVisibility(View.INVISIBLE);
-        new SlideInUnderneathAnimation(mRvBucket)
+
+        if (slideInUnderneathAnimation == null) {
+            slideInUnderneathAnimation = new SlideInUnderneathAnimation(mRvBucket);
+        }
+
+        slideInUnderneathAnimation
                 .setDirection(Animation.DIRECTION_DOWN)
                 .animate();
 
@@ -225,6 +307,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         Activity activity = mMediaActivity;
         if (activity == null) {
             activity = getActivity();
+        }
+
+        if (mConfiguration.isImage()) {
+            mTvFolderName.setText(R.string.gallery_all_image);
+        } else {
+            mTvFolderName.setText(R.string.gallery_all_video);
         }
 
         String requestStorageAccessPermissionTips = ThemeUtils.resolveString(getContext(),
@@ -300,7 +388,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -309,10 +396,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         //   refreshUI();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
     @Override
     public void loadMore() {
@@ -363,7 +446,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
         mBucketBeanList.addAll(list);
         mBucketAdapter.setSelectedBucket(list.get(0));
-        mBucketAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -423,8 +505,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     /**
      * 处理回调
-     *
-     * @param mediaBean
      */
     private void setPostMediaBean(MediaBean mediaBean) {
         ImageCropBean bean = new ImageCropBean();
@@ -434,8 +514,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     /**
      * 区分功能
-     *
-     * @param mediaBean
      */
     private void radioNext(MediaBean mediaBean) {
         Logger.i("isCrop :" + mConfiguration.isCrop());
@@ -495,10 +573,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
     }
 
-
-    /**
-     * @Author:Karl-dujinyang 兼容7.0打开路径问题
-     */
     public void openCamera(Context context) {
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (captureIntent.resolveActivity(context.getPackageManager()) != null) {
@@ -507,25 +581,22 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Logger.i("openCamera：" + mImageStoreDir.getAbsolutePath());
             File fileImagePath = new File(mImageStoreDir, filename);
             mImagePath = fileImagePath.getAbsolutePath();
-            if (mImagePath != null) {
-                    /*获取当前系统的android版本号*/
-                int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-                if (currentapiVersion < 24) {
-                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
-                    startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
-                } else {
-                    ContentValues contentValues = new ContentValues(1);
-                    contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
-                    Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                    startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
-                }
+            /*获取当前系统的android版本号*/
+            int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+            if (currentapiVersion < 24) {
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
+                startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
+            } else {
+                ContentValues contentValues = new ContentValues(1);
+                contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
+                Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
             }
         } else {
             Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
         }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -534,7 +605,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (requestCode == TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Logger.i(String.format("拍照成功,图片存储路径:%s", mImagePath));
             //刷新相册数据库
-            mMediaScanner.scanFile(mImagePath, imgType, this);
+            mMediaScanner.scanFile(mImagePath, IMAGE_TYPE, this);
         } else if (requestCode == CROP_IMAGE_REQUEST_CODE && data != null) {
             Logger.i("裁剪成功");
             refreshUI();
@@ -582,17 +653,18 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
     }
 
-
     @Override
     protected void onRestoreState(Bundle savedInstanceState) {
 
     }
+
+
+    //****************************************************************************
 
     @Override
     protected void onSaveState(Bundle outState) {
@@ -634,9 +706,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         return mRlBucektOverview != null && mRlBucektOverview.getVisibility() == View.VISIBLE;
     }
 
+
     public void showRvBucketView() {
         mRlBucektOverview.setVisibility(View.VISIBLE);
-        new SlideInUnderneathAnimation(mRvBucket)
+        slideInUnderneathAnimation
                 .setDirection(Animation.DIRECTION_DOWN)
                 .setDuration(Animation.DURATION_DEFAULT)
                 .setListener(animation -> mTvFolderName.setEnabled(true))
@@ -644,7 +717,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     public void hideRvBucketView() {
-        new SlideOutUnderneathAnimation(mRvBucket)
+        if (slideOutUnderneathAnimation == null) {
+            slideOutUnderneathAnimation = new SlideOutUnderneathAnimation(mRvBucket);
+        }
+        slideOutUnderneathAnimation
                 .setDirection(Animation.DIRECTION_DOWN)
                 .setDuration(Animation.DURATION_DEFAULT)
                 .setListener(animation -> {
@@ -659,17 +735,17 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
      */
     public void refreshUI() {
         try {
-            Logger.i("->getImageStoreDirByFile().getPath().toString()：" + getImageStoreDirByFile().getPath().toString());
-            Logger.i("->getImageStoreCropDirByStr ().toString()：" + getImageStoreCropDirByStr().toString());
+            Logger.i("->getImageStoreDirByFile().getPath().toString()：" + getImageStoreDirByFile().getPath());
+            Logger.i("->getImageStoreCropDirByStr ().toString()：" + getImageStoreCropDirByStr());
     /*        if(getImageStoreDirByFile() !=null ){
                 mMediaScanner.scanFile(getImageStoreDirByFile().getPath().toString(), "image/jpeg", this);
             }*/
             //刷新相册数据库
             if (!TextUtils.isEmpty(mImagePath))
-                mMediaScanner.scanFile(mImagePath, imgType, this);
+                mMediaScanner.scanFile(mImagePath, IMAGE_TYPE, this);
             if (mCropPath != null) {
-                Logger.i("->mCropPath:" + mCropPath.getPath() + " " + imgType);
-                mMediaScanner.scanFile(mCropPath.getPath(), imgType, this);
+                Logger.i("->mCropPath:" + mCropPath.getPath() + " " + IMAGE_TYPE);
+                mMediaScanner.scanFile(mCropPath.getPath(), IMAGE_TYPE, this);
             }
         } catch (Exception e) {
             Logger.e(e.getMessage());
@@ -724,97 +800,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     }
 
-
-    //****************************************************************************
-
-    /**
-     * getImageStoreDir
-     *
-     * @return 存储路径
-     */
-    public static File getImageStoreDirByFile() {
-        return mImageStoreDir;
-    }
-
-    /**
-     * getImageStoreDir
-     *
-     * @return 存储路径
-     */
-    public static String getImageStoreDirByStr() {
-        if (mImageStoreDir != null)
-            return mImageStoreDir.getPath().toString();
-        else
-            return null;
-    }
-
-    /**
-     * 设置路径
-     *
-     * @param imgFile
-     */
-    public static void setImageStoreDir(File imgFile) {
-        Logger.i("设置图片保存路径为：" + imgFile.getAbsolutePath());
-        mImageStoreDir = imgFile;
-    }
-
-    /**
-     * 设置路径
-     *
-     * @param imgFile
-     */
-    public static void setImageStoreDir(String imgFile) {
-        mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM" + File.separator + imgFile + File.separator);
-        ;
-        Logger.i("设置图片保存路径为：" + mImageStoreDir.getAbsolutePath());
-    }
-
-
-    /**
-     * getImageStoreDir裁剪
-     *
-     * @return 裁剪存储路径
-     */
-    public static File getImageStoreCropDirByFile() {
-        return mImageStoreCropDir;
-    }
-
-    /**
-     * getImageStoreDir
-     *
-     * @return 存储路径
-     */
-    public static String getImageStoreCropDirByStr() {
-        if (mImageStoreCropDir != null)
-            return mImageStoreCropDir.getPath().toString();
-        else
-            return null;
-    }
-
-
-    /**
-     * 设置裁剪路径
-     *
-     * @param imgFile
-     */
-    public static void setImageStoreCropDir(File imgFile) {
-        mImageStoreCropDir = imgFile;
-        Logger.i("设置图片裁剪保存路径为：" + mImageStoreCropDir.getAbsolutePath());
-    }
-
-    /**
-     * 设置裁剪路径
-     *
-     * @param imgFile 裁剪
-     */
-    public static void setImageStoreCropDir(String imgFile) {
-        mImageStoreCropDir = new File(Environment.getExternalStorageDirectory(), "/DCIM" + File.separator + imgFile + File.separator);
-        if (!mImageStoreCropDir.exists()) {
-            mImageStoreCropDir.mkdirs();
-        }
-        Logger.i("设置图片裁剪保存路径为：" + mImageStoreCropDir.getAbsolutePath());
-    }
-
     /**
      * onAttach 转 onStart
      */
@@ -834,17 +819,5 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             }
             setImageStoreCropDir(mImageStoreCropDir);
         }
-    }
-
-    /**
-     * 预留黑色图片处理
-     */
-    public static void decode() {
-
-    }
-
-
-    public static void setRadioListener(IRadioImageCheckedListener radioListener) {
-        MediaGridFragment.iListenerRadio = radioListener;
     }
 }

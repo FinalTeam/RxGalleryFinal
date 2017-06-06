@@ -21,22 +21,18 @@ import cn.finalteam.rxgalleryfinal.view.MediaGridView;
 public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFactoryInteractor.OnGenerateMediaListener,
         MediaBucketFactoryInteractor.OnGenerateBucketListener {
 
-    MediaSrcFactoryInteractor mediaSrcFactoryInteractor;
-    MediaBucketFactoryInteractor mediaBucketFactoryInteractor;
+    private final MediaSrcFactoryInteractor mediaSrcFactoryInteractor;
+    private final MediaBucketFactoryInteractor mediaBucketFactoryInteractor;
 
-    Context context;
-    MediaGridView mediaGridView;
+    private MediaGridView mediaGridView;
 
     public MediaGridPresenterImpl(Context context, boolean isImage) {
-        this.context = context;
         this.mediaSrcFactoryInteractor = new MediaSrcFactoryInteractorImpl(context, isImage, this);
         this.mediaBucketFactoryInteractor = new MediaBucketFactoryInteractorImpl(context, isImage, this);
     }
 
     /**
      * 设置MVP view(操作UI接口)
-     *
-     * @param mediaGridView
      */
     @Override
     public void setMediaGridView(MediaGridView mediaGridView) {
@@ -45,10 +41,6 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
 
     /**
      * 分页获取media
-     *
-     * @param bucketId
-     * @param pageSize
-     * @param currentOffset
      */
     @Override
     public void getMediaList(String bucketId, int pageSize, int currentOffset) {
@@ -62,10 +54,6 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
 
     /**
      * Media获取事件回调
-     *
-     * @param pageSize
-     * @param currentOffset
-     * @param list
      */
     @Override
     public void onFinished(String bucketId, int pageSize, int currentOffset, List<MediaBean> list) {
@@ -74,8 +62,6 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
 
     /**
      * BUCKET获取事件回调
-     *
-     * @param list
      */
     @Override
     public void onFinished(List<BucketBean> list) {

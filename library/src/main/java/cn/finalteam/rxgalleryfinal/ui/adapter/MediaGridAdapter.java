@@ -1,9 +1,8 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.io.File;
 import java.util.List;
@@ -29,6 +23,7 @@ import java.util.List;
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
+import cn.finalteam.rxgalleryfinal.imageloader.FrescoImageLoader;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxjob.Job;
@@ -49,38 +44,33 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.GridViewHolder> {
 
     private static IMultiImageCheckedListener iMultiImageCheckedListener;
-    private MediaActivity mMediaActivity;
-    private List<MediaBean> mMediaBeanList;
-    private LayoutInflater mInflater;
-    private int mImageSize;
-    private Configuration mConfiguration;
-    private Drawable mDefaultImage;
-    private Drawable mImageViewBg;
-    private Drawable mCameraImage;
-    private int mCameraImageBgColor;
-    private int mCameraTextColor;
-    //#ADD
+    private final MediaActivity mMediaActivity;
+    private final List<MediaBean> mMediaBeanList;
+    private final int mImageSize;
+    private final Configuration mConfiguration;
+    private final Drawable mDefaultImage;
+    private final Drawable mImageViewBg;
+    private final Drawable mCameraImage;
+    private final int mCameraImageBgColor;
+    private final int mCameraTextColor;
     private int imageLoaderType = 0;
 
-    public MediaGridAdapter(MediaActivity mediaActivity, List<MediaBean> list, int screenWidth, Configuration configuration) {
+    public MediaGridAdapter(
+            MediaActivity mediaActivity,
+            List<MediaBean> list,
+            int screenWidth,
+            Configuration configuration) {
         this.mMediaActivity = mediaActivity;
         this.mMediaBeanList = list;
-        this.mInflater = LayoutInflater.from(mediaActivity);
         this.mImageSize = screenWidth / 3;
         int defaultResId = ThemeUtils.resolveDrawableRes(mediaActivity, R.attr.gallery_default_image, R.drawable.gallery_default_image);
-        this.mDefaultImage = mediaActivity.getResources().getDrawable(defaultResId);
+        this.mDefaultImage = ContextCompat.getDrawable(mediaActivity, defaultResId);
         this.mConfiguration = configuration;
-        //#ADD
         this.imageLoaderType = configuration.getImageLoaderType();
-
-        this.mImageViewBg = ThemeUtils.resolveDrawable(mMediaActivity,
-                R.attr.gallery_imageview_bg, R.drawable.gallery_default_image);
-        this.mCameraImage = ThemeUtils.resolveDrawable(mMediaActivity, R.attr.gallery_camera_image,
-                R.drawable.gallery_ic_camera);
-        this.mCameraImageBgColor = ThemeUtils.resolveColor(mMediaActivity, R.attr.gallery_camera_bg,
-                R.color.gallery_default_camera_bg_color);
-        this.mCameraTextColor = ThemeUtils.resolveColor(mMediaActivity, R.attr.gallery_take_image_text_color,
-                R.color.gallery_default_take_image_text_color);
+        this.mImageViewBg = ThemeUtils.resolveDrawable(mMediaActivity, R.attr.gallery_imageview_bg, R.drawable.gallery_default_image);
+        this.mCameraImage = ThemeUtils.resolveDrawable(mMediaActivity, R.attr.gallery_camera_image, R.drawable.gallery_ic_camera);
+        this.mCameraImageBgColor = ThemeUtils.resolveColor(mMediaActivity, R.attr.gallery_camera_bg, R.color.gallery_default_camera_bg_color);
+        this.mCameraTextColor = ThemeUtils.resolveColor(mMediaActivity, R.attr.gallery_take_image_text_color, R.color.gallery_default_take_image_text_color);
     }
 
     public static void setCheckedListener(IMultiImageCheckedListener checkedListener) {
@@ -91,11 +81,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if (imageLoaderType != 3) {
-            view = mInflater.inflate(R.layout.item_gallery_media_grid, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery_media_grid, parent, false);
         } else {
-            view = mInflater.inflate(R.layout.item_gallery_media_grid_fresco, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery_media_grid_fresco, parent, false);
         }
-        return new GridViewHolder(mMediaActivity, view, imageLoaderType);
+        return new GridViewHolder(view, imageLoaderType);
     }
 
     @Override
@@ -111,6 +101,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mLlCamera.setVisibility(View.VISIBLE);
             holder.mIvCameraImage.setImageDrawable(mCameraImage);
             holder.mTvCameraTxt.setTextColor(mCameraTextColor);
+            holder.mTvCameraTxt.setText(mConfiguration.isImage() ? mMediaActivity.getString(R.string.gallery_take_image) : mMediaActivity.getString(R.string.gallery_video));
             holder.mIvCameraImage.setBackgroundColor(mCameraImageBgColor);
         } else {
             if (mConfiguration.isRadio()) {
@@ -126,11 +117,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.mIvMediaImage_1.setVisibility(View.VISIBLE);
             }
             holder.mLlCamera.setVisibility(View.GONE);
-            if (mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean)) {
-                holder.mCbCheck.setChecked(true);
-            } else {
-                holder.mCbCheck.setChecked(false);
-            }
+            holder.mCbCheck.setChecked(mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean));
             String bitPath = mediaBean.getThumbnailSmallPath();
             String smallPath = mediaBean.getThumbnailSmallPath();
 
@@ -153,7 +140,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                                 true, mImageSize, mImageSize, mediaBean.getOrientation());
             } else {
                 OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage_1, mImageViewBg);
-                setImageSmall("file://" + path, holder.mIvMediaImage_1, mImageSize, mImageSize);
+                FrescoImageLoader.setImageSmall("file://" + path, holder.mIvMediaImage_1);
             }
         }
     }
@@ -163,41 +150,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mMediaBeanList.size();
     }
 
-    public void setImageSmall(String url, SimpleDraweeView simpleDraweeView, int width, int height) {
-        Uri uri = Uri.parse(url);
-        ImageRequest request = ImageRequestBuilder
-                .newBuilderWithSource(uri)
-                .setAutoRotateEnabled(true)
-                .setResizeOptions(new ResizeOptions(simpleDraweeView.getLayoutParams().width,
-                        simpleDraweeView.getLayoutParams().height))
-                .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
-                .build();
-        PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
-                .setTapToRetryEnabled(true)
-                .setImageRequest(request)
-                .setOldController(simpleDraweeView.getController())
-                .build();
 
-        simpleDraweeView.setController(controller);
-    }
-
-    /**
-     * RecyclerView.ViewHolder
-     */
     static class GridViewHolder extends RecyclerView.ViewHolder {
 
+        final AppCompatCheckBox mCbCheck;
+        final LinearLayout mLlCamera;
+        final TextView mTvCameraTxt;
+        final ImageView mIvCameraImage;
         RecyclerImageView mIvMediaImage;
-        AppCompatCheckBox mCbCheck;
-        //#ADD
         SimpleDraweeView mIvMediaImage_1;
 
-        LinearLayout mLlCamera;
-        TextView mTvCameraTxt;
-        ImageView mIvCameraImage;
-
-        public GridViewHolder(Context context, View itemView, int viewType) {
+        GridViewHolder(View itemView, int viewType) {
             super(itemView);
-            //#ADD
             if (viewType != 3) {
                 mIvMediaImage = (RecyclerImageView) itemView.findViewById(R.id.iv_media_image);
             } else {
@@ -209,16 +173,16 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mTvCameraTxt = (TextView) itemView.findViewById(R.id.tv_camera_txt);
             mIvCameraImage = (ImageView) itemView.findViewById(R.id.iv_camera_image);
 
-            int checkTint = ThemeUtils.resolveColor(context, R.attr.gallery_checkbox_button_tint_color, R.color.gallery_default_checkbox_button_tint_color);
+            int checkTint = ThemeUtils.resolveColor(itemView.getContext(), R.attr.gallery_checkbox_button_tint_color, R.color.gallery_default_checkbox_button_tint_color);
             CompoundButtonCompat.setButtonTintList(mCbCheck, ColorStateList.valueOf(checkTint));
         }
     }
 
     private class OnCheckBoxClickListener implements View.OnClickListener {
 
-        private MediaBean mediaBean;
+        private final MediaBean mediaBean;
 
-        public OnCheckBoxClickListener(MediaBean bean) {
+        OnCheckBoxClickListener(MediaBean bean) {
             this.mediaBean = bean;
         }
 
@@ -239,9 +203,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
      * @author KARL-dujinyang
      */
     private class OnCheckBoxCheckListener implements CompoundButton.OnCheckedChangeListener {
-        private MediaBean mediaBean;
+        private final MediaBean mediaBean;
 
-        public OnCheckBoxCheckListener(MediaBean bean) {
+        OnCheckBoxCheckListener(MediaBean bean) {
             this.mediaBean = bean;
         }
 

@@ -19,12 +19,6 @@ public class PermissionCheckUtils {
 
     /**
      * 数组
-     *
-     * @param activity
-     * @param permission
-     * @param permissionDesc
-     * @param requestCode
-     * @return
      */
     public static boolean checkPermission(Activity activity, String permission, String permissionDesc, int requestCode) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
@@ -38,9 +32,7 @@ public class PermissionCheckUtils {
                     alertBuilder.setCancelable(false);
                     alertBuilder.setTitle("授权对话框");
                     alertBuilder.setMessage(permissionDesc);
-                    alertBuilder.setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                        ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode);
-                    });
+                    alertBuilder.setPositiveButton(android.R.string.yes, (dialog, which) -> ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode));
                     AlertDialog alert = alertBuilder.create();
                     alert.show();
                 } else {
@@ -58,11 +50,6 @@ public class PermissionCheckUtils {
 
     /**
      * 检查是否对sd卡读取授权
-     *
-     * @param activity
-     * @param permissionDesc
-     * @param requestCode
-     * @return
      */
     @TargetApi(16)
     public static boolean checkReadExternalPermission(Activity activity, String permissionDesc, int requestCode) {
@@ -72,11 +59,6 @@ public class PermissionCheckUtils {
 
     /**
      * 检查是否对sd卡读取授权
-     *
-     * @param activity
-     * @param permissionDesc
-     * @param requestCode
-     * @return
      */
     @TargetApi(16)
     public static boolean checkWriteExternalPermission(Activity activity, String permissionDesc, int requestCode) {

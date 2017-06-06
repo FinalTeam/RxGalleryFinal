@@ -14,16 +14,16 @@ import android.widget.AdapterView;
  * Author:pengjianbo
  * Date:15/12/22 下午6:21
  */
-public abstract class RecyclingPagerAdapter extends PagerAdapter {
-    static final int IGNORE_ITEM_VIEW_TYPE = AdapterView.ITEM_VIEW_TYPE_IGNORE;
+abstract class RecyclingPagerAdapter extends PagerAdapter {
+    private static final int IGNORE_ITEM_VIEW_TYPE = AdapterView.ITEM_VIEW_TYPE_IGNORE;
 
     private final RecycleBin recycleBin;
 
-    public RecyclingPagerAdapter() {
+    RecyclingPagerAdapter() {
         this(new RecycleBin());
     }
 
-    RecyclingPagerAdapter(RecycleBin recycleBin) {
+    private RecyclingPagerAdapter(RecycleBin recycleBin) {
         this.recycleBin = recycleBin;
         recycleBin.setViewTypeCount(getViewTypeCount());
     }
@@ -75,7 +75,7 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
      *
      * @return The number of types of Views that will be created by this adapter
      */
-    public int getViewTypeCount() {
+    private int getViewTypeCount() {
         return 1;
     }
 
@@ -91,7 +91,7 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
      * @see #IGNORE_ITEM_VIEW_TYPE
      */
     @SuppressWarnings("UnusedParameters") // Argument potentially used by subclasses.
-    public int getItemViewType(int position) {
+    private int getItemViewType(int position) {
         return 0;
     }
 
@@ -113,7 +113,7 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
      * @param container   The parent that this view will eventually be attached to
      * @return A View corresponding to the data at the specified position.
      */
-    public abstract View getView(int position, View convertView, ViewGroup container);
+    protected abstract View getView(int position, View convertView, ViewGroup container);
 
     /**
      * The RecycleBin facilitates reuse of views across layouts. The RecycleBin has two levels of
@@ -132,8 +132,8 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
          * Views in activeViews represent a contiguous range of Views, with position of the first
          * view store in mFirstActivePosition.
          */
-        private View[] activeViews = new View[0];
-        private int[] activeViewTypes = new int[0];
+        private final View[] activeViews = new View[0];
+        private final int[] activeViewTypes = new int[0];
 
         /**
          * Unsorted views that can be used by the adapter as a convert view.
@@ -172,14 +172,14 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
             //noinspection unchecked
             SparseArray<View>[] scrapViews = new SparseArray[viewTypeCount];
             for (int i = 0; i < viewTypeCount; i++) {
-                scrapViews[i] = new SparseArray<View>();
+                scrapViews[i] = new SparseArray<>();
             }
             this.viewTypeCount = viewTypeCount;
             currentScrapViews = scrapViews[0];
             this.scrapViews = scrapViews;
         }
 
-        protected boolean shouldRecycleViewType(int viewType) {
+        boolean shouldRecycleViewType(int viewType) {
             return viewType >= 0;
         }
 

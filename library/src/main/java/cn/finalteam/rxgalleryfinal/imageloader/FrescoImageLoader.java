@@ -10,10 +10,12 @@ import android.view.MotionEvent;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeHolder;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
@@ -56,10 +58,7 @@ public class FrescoImageLoader implements AbsImageLoader {
 
             @Override
             public boolean verifyDrawable(Drawable dr) {
-                if (dr == draweeHolder.getHierarchy().getTopLevelDrawable()) {
-                    return true;
-                }
-                return false;
+                return dr == draweeHolder.getHierarchy().getTopLevelDrawable();
             }
 
             @Override
@@ -92,5 +91,22 @@ public class FrescoImageLoader implements AbsImageLoader {
                 .setImageRequest(request)
                 .build();
         draweeHolder.setController(controller);
+    }
+
+    public static void setImageSmall(String url, SimpleDraweeView simpleDraweeView) {
+        Uri uri = Uri.parse(url);
+        ImageRequest request = ImageRequestBuilder
+                .newBuilderWithSource(uri)
+                .setAutoRotateEnabled(true)
+                .setResizeOptions(new ResizeOptions(simpleDraweeView.getLayoutParams().width,
+                        simpleDraweeView.getLayoutParams().height))
+                .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
+                .build();
+        PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
+                .setTapToRetryEnabled(true)
+                .setImageRequest(request)
+                .setOldController(simpleDraweeView.getController())
+                .build();
+        simpleDraweeView.setController(controller);
     }
 }

@@ -17,7 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * Created by yqritc on 2015/01/08.
+ * by yqritc on 2015/01/08.
  */
 public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecoration {
 
@@ -25,16 +25,17 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
     private static final int[] ATTRS = new int[]{
             android.R.attr.listDivider
     };
-    protected DividerType mDividerType = DividerType.DRAWABLE;
-    protected VisibilityProvider mVisibilityProvider;
-    protected PaintProvider mPaintProvider;
-    protected ColorProvider mColorProvider;
-    protected DrawableProvider mDrawableProvider;
-    protected SizeProvider mSizeProvider;
-    protected boolean mShowLastDivider;
-    protected boolean mPositionInsideItem;
+    final boolean mPositionInsideItem;
+    private final VisibilityProvider mVisibilityProvider;
+    private final boolean mShowLastDivider;
+    DividerType mDividerType = DividerType.DRAWABLE;
+    PaintProvider mPaintProvider;
+    DrawableProvider mDrawableProvider;
+    SizeProvider mSizeProvider;
+    private ColorProvider mColorProvider;
     private Paint mPaint;
-    protected FlexibleDividerDecoration(Builder builder) {
+
+    FlexibleDividerDecoration(Builder builder) {
         if (builder.mPaintProvider != null) {
             mDividerType = DividerType.PAINT;
             mPaintProvider = builder.mPaintProvider;
@@ -49,12 +50,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
                 TypedArray a = builder.mContext.obtainStyledAttributes(ATTRS);
                 final Drawable divider = a.getDrawable(0);
                 a.recycle();
-                mDrawableProvider = new DrawableProvider() {
-                    @Override
-                    public Drawable drawableProvider(int position, RecyclerView parent) {
-                        return divider;
-                    }
-                };
+                mDrawableProvider = (position, parent) -> divider;
             } else {
                 mDrawableProvider = builder.mDrawableProvider;
             }
@@ -69,12 +65,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
     private void setSizeProvider(Builder builder) {
         mSizeProvider = builder.mSizeProvider;
         if (mSizeProvider == null) {
-            mSizeProvider = new SizeProvider() {
-                @Override
-                public int dividerSize(int position, RecyclerView parent) {
-                    return DEFAULT_SIZE;
-                }
-            };
+            mSizeProvider = (position, parent) -> DEFAULT_SIZE;
         }
     }
 
@@ -158,13 +149,9 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
      * @param parent RecyclerView
      * @return true if recyclerview is reverse layout
      */
-    protected boolean isReverseLayout(RecyclerView parent) {
+    boolean isReverseLayout(RecyclerView parent) {
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
-        if (layoutManager instanceof LinearLayoutManager) {
-            return ((LinearLayoutManager) layoutManager).getReverseLayout();
-        } else {
-            return false;
-        }
+        return layoutManager instanceof LinearLayoutManager && ((LinearLayoutManager) layoutManager).getReverseLayout();
     }
 
     /**
@@ -318,18 +305,13 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
 
     public static class Builder<T extends Builder> {
 
-        protected Resources mResources;
-        private Context mContext;
+        final Resources mResources;
+        private final Context mContext;
         private PaintProvider mPaintProvider;
         private ColorProvider mColorProvider;
         private DrawableProvider mDrawableProvider;
         private SizeProvider mSizeProvider;
-        private VisibilityProvider mVisibilityProvider = new VisibilityProvider() {
-            @Override
-            public boolean shouldHideDivider(int position, RecyclerView parent) {
-                return false;
-            }
-        };
+        private VisibilityProvider mVisibilityProvider = (position, parent) -> false;
         private boolean mShowLastDivider = false;
         private boolean mPositionInsideItem = false;
 
@@ -339,12 +321,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         }
 
         public T paint(final Paint paint) {
-            return paintProvider(new PaintProvider() {
-                @Override
-                public Paint dividerPaint(int position, RecyclerView parent) {
-                    return paint;
-                }
-            });
+            return paintProvider((position, parent) -> paint);
         }
 
         public T paintProvider(PaintProvider provider) {
@@ -353,12 +330,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         }
 
         public T color(final int color) {
-            return colorProvider(new ColorProvider() {
-                @Override
-                public int dividerColor(int position, RecyclerView parent) {
-                    return color;
-                }
-            });
+            return colorProvider((position, parent) -> color);
         }
 
         public T colorResId(@ColorRes int colorId) {
@@ -375,12 +347,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         }
 
         public T drawable(final Drawable drawable) {
-            return drawableProvider(new DrawableProvider() {
-                @Override
-                public Drawable drawableProvider(int position, RecyclerView parent) {
-                    return drawable;
-                }
-            });
+            return drawableProvider((position, parent) -> drawable);
         }
 
         public T drawableProvider(DrawableProvider provider) {
@@ -389,12 +356,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         }
 
         public T size(final int size) {
-            return sizeProvider(new SizeProvider() {
-                @Override
-                public int dividerSize(int position, RecyclerView parent) {
-                    return size;
-                }
-            });
+            return sizeProvider((position, parent) -> size);
         }
 
         public T sizeResId(@DimenRes int sizeId) {
@@ -421,7 +383,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
             return (T) this;
         }
 
-        protected void checkBuilderParams() {
+        void checkBuilderParams() {
             if (mPaintProvider != null) {
                 if (mColorProvider != null) {
                     throw new IllegalArgumentException(

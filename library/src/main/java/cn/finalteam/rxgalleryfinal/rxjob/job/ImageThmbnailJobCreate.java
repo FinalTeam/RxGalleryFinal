@@ -13,9 +13,8 @@ import cn.finalteam.rxgalleryfinal.rxjob.JobCreator;
  */
 public class ImageThmbnailJobCreate implements JobCreator {
 
-    private MediaBean mediaBean;
-    private Context context;
-    private Job job;
+    private final MediaBean mediaBean;
+    private final Context context;
 
     public ImageThmbnailJobCreate(Context context, MediaBean mediaBean) {
         this.context = context;
@@ -25,8 +24,7 @@ public class ImageThmbnailJobCreate implements JobCreator {
     @Override
     public Job create() {
         Job.Params params = new Job.Params(mediaBean.getOriginalPath(), mediaBean);
-        job = new ImageThmbnailJob(context, params);
-        return job;
+        return new ImageThmbnailJob(context, params);
     }
 
 

@@ -11,7 +11,6 @@ import android.net.Uri;
  */
 public class MediaScanner {
     private MediaScannerConnection mediaScanConn = null;
-    private MusicSannerClient client = null;
     private String fileType = null;
     private String[] filePaths = null;
     private ScanCallback scanCallback;
@@ -20,9 +19,8 @@ public class MediaScanner {
      * 然后调用MediaScanner.scanFile("/sdcard/2.mp3");
      */
     public MediaScanner(Context context) {
-        if (client == null) {
-            client = new MusicSannerClient();
-        }
+        MusicSannerClient client;
+        client = new MusicSannerClient();
 
         if (mediaScanConn == null) {
             mediaScanConn = new MediaScannerConnection(context, client);

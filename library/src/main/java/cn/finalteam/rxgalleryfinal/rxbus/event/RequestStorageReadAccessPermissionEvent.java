@@ -7,7 +7,7 @@ package cn.finalteam.rxgalleryfinal.rxbus.event;
  */
 public class RequestStorageReadAccessPermissionEvent {
 
-    private boolean success;
+    private final boolean success;
 
     public RequestStorageReadAccessPermissionEvent(boolean success) {
         this.success = success;

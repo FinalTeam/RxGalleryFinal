@@ -53,9 +53,6 @@ public class RxGalleryFinalApi {
 
     /**
      * 默认使用 ImageLoaderType.GLIDE
-     *
-     * @param context
-     * @return RxGalleryFinalApi
      */
     public static RxGalleryFinalApi getInstance(Activity context) {
         if (context == null) {
@@ -76,9 +73,7 @@ public class RxGalleryFinalApi {
     /**
      * 单选图片
      *
-     * @param context
-     * @param rxBusResultSubscriber
-     * @param flag                  标识是否开启裁剪
+     * @param flag 标识是否开启裁剪
      * @Override protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
      * <p>
      * }
@@ -128,9 +123,6 @@ public class RxGalleryFinalApi {
 
     /**
      * 得到多选限制事件
-     *
-     * @param flag
-     * @return
      */
     public static RxGalleryFinalApi onCrop(boolean flag) {
         if (rxGalleryFinal == null)
@@ -141,8 +133,6 @@ public class RxGalleryFinalApi {
 
     /**
      * 单选默认设置
-     *
-     * @return
      */
     public static RxGalleryFinalApi openGalleryRadioImgDefault(RxBusResultSubscriber rxBusResultSubscriber) {
         Logger.i("----rxGalleryFinal---" + rxGalleryFinal);
@@ -160,8 +150,6 @@ public class RxGalleryFinalApi {
 
     /**
      * 得到多选限制事件
-     *
-     * @return
      */
     public static RxGalleryFinalApi openGallery() {
         if (rxGalleryFinal == null)
@@ -173,8 +161,6 @@ public class RxGalleryFinalApi {
     /**
      * 单选图片:默认开启全部
      *
-     * @param context
-     * @param rxBusResultSubscriber
      * @Override protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
      * <p>
      * }
@@ -195,8 +181,6 @@ public class RxGalleryFinalApi {
     /**
      * 多选图片：默认开启全部
      *
-     * @param context
-     * @param rxBusResultSubscriber
      * @Override protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
      * <p>
      * }
@@ -217,9 +201,6 @@ public class RxGalleryFinalApi {
     /**
      * 多选图片：
      *
-     * @param context
-     * @param maxSize               最多选择
-     * @param rxBusResultSubscriber
      * @Override protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
      * <p>
      * }
@@ -241,8 +222,6 @@ public class RxGalleryFinalApi {
     /**
      * 单选视频:默认开启全部
      *
-     * @param context
-     * @param rxBusResultSubscriber
      * @Override protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
      * <p>
      * }
@@ -263,8 +242,6 @@ public class RxGalleryFinalApi {
      * 多选视频 ：默认开启全部
      * 默认选9个视频
      *
-     * @param context
-     * @param rxBusResultSubscriber
      * @Override protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
      * <p>
      * }
@@ -284,8 +261,6 @@ public class RxGalleryFinalApi {
 
     /**
      * 打开相机
-     *
-     * @Author:Karl-dujinyang 兼容7.0打开路径问题
      */
     public static void openZKCamera(Activity context) {
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -301,22 +276,20 @@ public class RxGalleryFinalApi {
             fileImagePath = new File(mImageStoreDir, filename);
             String mImagePath = fileImagePath.getAbsolutePath();
             Logger.i("->mImagePath:" + mImagePath);
-            if (mImagePath != null) {
-                    /*获取当前系统的android版本号*/
-                currentapiVersion = android.os.Build.VERSION.SDK_INT;
-                Logger.i("->VERSION:" + currentapiVersion);
-                if (currentapiVersion < 24) {
-                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
-                    /*captureIntent.putExtra(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");*/
-                    context.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
-                } else {
-                    ContentValues contentValues = new ContentValues(1);
-                    contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
-                    contentValues.put(MediaStore.Images.Media.MIME_TYPE, imgType);
-                    Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                    context.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
-                }
+            /*获取当前系统的android版本号*/
+            currentapiVersion = android.os.Build.VERSION.SDK_INT;
+            Logger.i("->VERSION:" + currentapiVersion);
+            if (currentapiVersion < 24) {
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
+                /*captureIntent.putExtra(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");*/
+                context.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
+            } else {
+                ContentValues contentValues = new ContentValues(1);
+                contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
+                contentValues.put(MediaStore.Images.Media.MIME_TYPE, imgType);
+                Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                context.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
             }
         } else {
             Toast.makeText(context, R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
@@ -325,8 +298,6 @@ public class RxGalleryFinalApi {
 
     /**
      * 打开相机
-     *
-     * @Author:Karl-dujinyang 兼容7.0打开路径问题
      */
     public static void openZKCameraAndCrop(Activity context) {
         openZKCamera(context);
@@ -335,14 +306,11 @@ public class RxGalleryFinalApi {
 
     /**
      * 处理拍照返回
-     *
-     * @param context
-     * @param mediaScanner
      */
     public static void openZKCameraForResult(Activity context, MediaScanner.ScanCallback mediaScanner) {
         if (currentapiVersion < 24) {
             MediaScanner scanner = new MediaScanner(context);
-            scanner.scanFile(RxGalleryFinalApi.fileImagePath.getPath().toString(), imgType, mediaScanner);
+            scanner.scanFile(RxGalleryFinalApi.fileImagePath.getPath(), imgType, mediaScanner);
         } else {
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.ImageColumns.TITLE, "title");
@@ -350,7 +318,7 @@ public class RxGalleryFinalApi {
             values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, System.currentTimeMillis());
             values.put(MediaStore.Images.ImageColumns.MIME_TYPE, imgType);
             values.put(MediaStore.Images.ImageColumns.ORIENTATION, 0);
-            values.put(MediaStore.Images.ImageColumns.DATA, RxGalleryFinalApi.fileImagePath.getPath().toString());
+            values.put(MediaStore.Images.ImageColumns.DATA, RxGalleryFinalApi.fileImagePath.getPath());
            /* values.put(MediaStore.Images.ImageColumns.WIDTH, bmp.getWidth());
             values.put(MediaStore.Images.ImageColumns.HEIGHT, bmp.getHeight());*/
             try {
@@ -365,7 +333,7 @@ public class RxGalleryFinalApi {
             } catch (Exception e) {
                 Logger.e("Failed to write MediaStore" + e);
             }
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + RxGalleryFinalApi.fileImagePath.getPath().toString())));
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + RxGalleryFinalApi.fileImagePath.getPath())));
         }
     }
 
@@ -398,10 +366,6 @@ public class RxGalleryFinalApi {
      * 裁剪指定的路径-
      * onActivityResult或者其它地方调用RxGalleryFinalApi.cropActivityForResult方法去刷新图库
      * RxGalleryFinalApi.cropActivityForResult()
-     *
-     * @param context
-     * @param outPPath  输出
-     * @param inputPath 输入     *
      */
     public static void cropScannerForResult(Activity context, String outPPath, String inputPath) {
         if (TextUtils.isEmpty(inputPath)) {
@@ -424,21 +388,18 @@ public class RxGalleryFinalApi {
 
     /**
      * 扫描指定的图片路径--刷新图库
-     *
-     * @param context
      */
     public static void cropActivityForResult(Activity context, MediaScanner.ScanCallback imgScanner) {
         if (cropImagePath != null) {
             MediaScanner scanner = new MediaScanner(context);
-            scanner.scanFile(RxGalleryFinalApi.cropImagePath.getPath().toString(), imgType, imgScanner);
+            scanner.scanFile(RxGalleryFinalApi.cropImagePath.getPath(), imgType, imgScanner);
         }
     }
 
     /**
      * 扫描指定的图片路径--刷新图库
      *
-     * @param context
-     * @param path    路径
+     * @param path 路径
      */
     public static void cropActivityForResult(Activity context, String path, MediaScanner.ScanCallback imgScanner) {
         if (cropImagePath != null) {
@@ -553,8 +514,6 @@ public class RxGalleryFinalApi {
 
     /**
      * 设置单选的按钮事件
-     *
-     * @param t
      */
     public RxGalleryFinalApi setImageRadioResultEvent(RxBusResultSubscriber<ImageRadioResultEvent> t) {
         rxGalleryFinal.image();
@@ -564,8 +523,6 @@ public class RxGalleryFinalApi {
 
     /**
      * 设置多选的按钮事件
-     *
-     * @param t
      */
     public RxGalleryFinalApi setImageMultipleResultEvent(RxBusResultSubscriber<ImageMultipleResultEvent> t) {
         rxGalleryFinal.image();
@@ -575,8 +532,6 @@ public class RxGalleryFinalApi {
 
     /**
      * 设置视频单选的按钮事件
-     *
-     * @param t
      */
     public RxGalleryFinalApi setVDRadioResultEvent(RxBusResultSubscriber<ImageRadioResultEvent> t) {
         rxGalleryFinal.video();
@@ -586,8 +541,6 @@ public class RxGalleryFinalApi {
 
     /**
      * 设置视频多选的按钮事件
-     *
-     * @param t
      */
     public RxGalleryFinalApi setVDMultipleResultEvent(RxBusResultSubscriber<ImageMultipleResultEvent> t) {
         rxGalleryFinal.video();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -41,7 +42,6 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
 
     private AppCompatCheckBox mCbCheck;
     private ViewPager mViewPager;
-    private MediaPreviewAdapter mMediaPreviewAdapter;
     private List<MediaBean> mMediaBeanList;
     private RelativeLayout mRlRootView;
 
@@ -81,8 +81,10 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         if (mMediaActivity.getCheckedList() != null) {
             mMediaBeanList.addAll(mMediaActivity.getCheckedList());
         }
-        mMediaPreviewAdapter = new MediaPreviewAdapter(getContext(), mMediaBeanList,
-                mScreenSize.widthPixels, mScreenSize.heightPixels, mConfiguration);
+        MediaPreviewAdapter mMediaPreviewAdapter = new MediaPreviewAdapter(mMediaBeanList,
+                mScreenSize.widthPixels, mScreenSize.heightPixels, mConfiguration,
+                ThemeUtils.resolveColor(getActivity(), R.attr.gallery_page_bg, R.color.gallery_default_page_bg),
+                ContextCompat.getDrawable(getActivity(), ThemeUtils.resolveDrawableRes(getActivity(), R.attr.gallery_default_image, R.drawable.gallery_default_image)));
         mViewPager.setAdapter(mMediaPreviewAdapter);
         mCbCheck.setOnClickListener(this);
 
@@ -98,7 +100,6 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
         mViewPager.addOnPageChangeListener(this);
         //#ADD UI预览数量的BUG
         RxBus.getDefault().post(new MediaViewPagerChangedEvent(mPagerPosition, mMediaBeanList.size(), true));
-
     }
 
     @Override
@@ -155,8 +156,6 @@ public class MediaPreviewFragment extends BaseFragment implements ViewPager.OnPa
 
     /**
      * 改变选择
-     *
-     * @param view
      */
     @Override
     public void onClick(View view) {

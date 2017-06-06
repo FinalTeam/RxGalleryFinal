@@ -13,10 +13,6 @@ public interface MediaSrcFactoryInteractor {
 
     /**
      * 生产资源
-     *
-     * @param bucketId
-     * @param page
-     * @param limit
      */
     void generateMeidas(String bucketId, int page, int limit);
 

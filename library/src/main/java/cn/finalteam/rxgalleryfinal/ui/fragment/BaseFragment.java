@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,8 +64,9 @@ public abstract class BaseFragment extends Fragment {
             onViewCreatedOk(view, argsBundle);
             setTheme();
         } else {
-            if (getActivity() != null && !getActivity().isFinishing()) {
-                getActivity().finish();
+            FragmentActivity activity = getActivity();
+            if (activity != null && !activity.isFinishing()) {
+                activity.finish();
             }
         }
     }
@@ -203,8 +205,6 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * 恢复数据
-     *
-     * @param savedInstanceState
      */
     protected abstract void onRestoreState(Bundle savedInstanceState);
 

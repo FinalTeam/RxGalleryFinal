@@ -15,6 +15,7 @@ public class OsCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             view.setBackground(drawable);
         } else {
+            //noinspection deprecation
             view.setBackgroundDrawable(drawable);
         }
     }

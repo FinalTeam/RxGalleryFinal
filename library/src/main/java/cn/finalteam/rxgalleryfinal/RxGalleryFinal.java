@@ -38,6 +38,7 @@ public class RxGalleryFinal {
     static RxGalleryFinal instance;
     Configuration configuration = new Configuration();
     RxBusResultSubscriber<BaseResultEvent> rxBusResultSubscriber;
+
     private RxGalleryFinal() {
     }
 
@@ -131,8 +132,6 @@ public class RxGalleryFinal {
 
     /**
      * 隐藏相机
-     *
-     * @return
      */
     public RxGalleryFinal hideCamera() {
         configuration.setHideCamera(true);
@@ -141,9 +140,6 @@ public class RxGalleryFinal {
 
     /**
      * set to true to hide the bottom controls (shown by default)
-     *
-     * @param hide
-     * @return
      */
     public RxGalleryFinal cropHideBottomControls(boolean hide) {
         configuration.setHideBottomControls(hide);
@@ -152,8 +148,6 @@ public class RxGalleryFinal {
 
     /**
      * Set compression quality [0-100] that will be used to save resulting Bitmap.
-     *
-     * @param compressQuality
      */
     public RxGalleryFinal cropropCompressionQuality(@IntRange(from = 0) int compressQuality) {
         configuration.setCompressionQuality(compressQuality);
@@ -162,10 +156,6 @@ public class RxGalleryFinal {
 
     /**
      * Choose what set of gestures will be enabled on each tab - if any.
-     *
-     * @param tabScale
-     * @param tabRotate
-     * @param tabAspectRatio
      */
     public RxGalleryFinal cropAllowedGestures(@UCropActivity.GestureTypes int tabScale,
                                               @UCropActivity.GestureTypes int tabRotate,
@@ -231,8 +221,6 @@ public class RxGalleryFinal {
 
     /**
      * set to true to let user resize crop bounds (disabled by default)
-     *
-     * @param enabled
      */
     public RxGalleryFinal cropFreeStyleCropEnabled(boolean enabled) {
         configuration.setFreestyleCropEnabled(enabled);
@@ -241,8 +229,6 @@ public class RxGalleryFinal {
 
     /**
      * set it to true if you want dimmed layer to have an oval inside
-     *
-     * @param isOval
      */
     public RxGalleryFinal cropOvalDimmedLayer(boolean isOval) {
         configuration.setOvalDimmedLayer(isOval);
@@ -251,9 +237,6 @@ public class RxGalleryFinal {
 
     /**
      * 设置裁剪结果最大宽度和高度
-     *
-     * @param width
-     * @param height
      */
     public RxGalleryFinal cropMaxResultSize(@IntRange(from = 100) int width, @IntRange(from = 100) int height) {
         configuration.setMaxResultSize(width, height);
@@ -262,9 +245,6 @@ public class RxGalleryFinal {
 
     /**
      * 设置回调
-     *
-     * @param rxBusResultSubscriber
-     * @return
      */
     public RxGalleryFinal subscribe(@NonNull RxBusResultSubscriber<? extends BaseResultEvent> rxBusResultSubscriber) {
         this.rxBusResultSubscriber = (RxBusResultSubscriber<BaseResultEvent>) rxBusResultSubscriber;
