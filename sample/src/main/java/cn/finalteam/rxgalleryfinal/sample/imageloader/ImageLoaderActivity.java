@@ -26,18 +26,6 @@ public class ImageLoaderActivity extends AppCompatActivity {
         findViewById(R.id.btn_picasso).setOnClickListener(v -> start(ImageLoaderType.PICASSO));
         findViewById(R.id.btn_fresco).setOnClickListener(v -> start(ImageLoaderType.FRESCO));
         findViewById(R.id.btn_universal).setOnClickListener(v -> start(ImageLoaderType.UNIVERSAL));
-
-        findViewById(R.id.btn_customize).setOnClickListener(v -> RxGalleryFinal
-                .with(v.getContext())
-                .image()
-                .radio()
-                .imageLoader(ImageLoaderType.GLIDE)
-                .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
-                    @Override
-                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                        Toast.makeText(getBaseContext(), "选中了图片路径：" + imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
-                    }
-                }).openGallery());
     }
 
     private void start(ImageLoaderType imageLoaderType) {
