@@ -3,20 +3,23 @@
     package="cn.finalteam.rxgalleryfinal.sample">
 
     <!--声明使用相机-->
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".IApplication"
         android:allowBackup="true"
+        android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme_Light"
-        android:debuggable="true"
-        android:name=".IApplication">
-        <activity android:name=".MainActivity"
+        android:theme="@style/Theme_Light">
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,14 +28,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
-            android:screenOrientation="portrait"
+        <activity
+            android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
             android:exported="true"
-            android:theme="@style/Theme_Light.Test"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_Light.Test" />
 
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity android:name=".imageloader.ImageLoaderActivity" />
     </application>
 
 </manifest>

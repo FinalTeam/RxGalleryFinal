@@ -7,10 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.MotionEvent;
+import android.widget.RelativeLayout;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -21,6 +21,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
+import cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout;
 
 /**
  * Created by pengjianbo  Dujinyang on 2016/8/13 0013.
@@ -93,20 +94,20 @@ public class FrescoImageLoader implements AbsImageLoader {
         draweeHolder.setController(controller);
     }
 
-    public static void setImageSmall(String url, SimpleDraweeView simpleDraweeView) {
+    public static void setImageSmall(String url, SimpleDraweeView simpleDraweeView, int width, int height, SquareRelativeLayout relativeLayout) {
         Uri uri = Uri.parse(url);
         ImageRequest request = ImageRequestBuilder
                 .newBuilderWithSource(uri)
                 .setAutoRotateEnabled(true)
-                .setResizeOptions(new ResizeOptions(simpleDraweeView.getLayoutParams().width,
-                        simpleDraweeView.getLayoutParams().height))
+                .setResizeOptions(new ResizeOptions(width, height))
                 .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
                 .build();
-        PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setTapToRetryEnabled(true)
                 .setImageRequest(request)
                 .setOldController(simpleDraweeView.getController())
                 .build();
+        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(width - 5, height));
         simpleDraweeView.setController(controller);
     }
 }

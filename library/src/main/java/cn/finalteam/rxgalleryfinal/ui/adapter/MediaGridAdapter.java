@@ -32,6 +32,7 @@ import cn.finalteam.rxgalleryfinal.rxjob.job.ImageThmbnailJobCreate;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView;
+import cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.OsCompat;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
@@ -140,7 +141,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                                 true, mImageSize, mImageSize, mediaBean.getOrientation());
             } else {
                 OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage_1, mImageViewBg);
-                FrescoImageLoader.setImageSmall("file://" + path, holder.mIvMediaImage_1);
+                FrescoImageLoader.setImageSmall("file://" + path, holder.mIvMediaImage_1, mImageSize, mImageSize, holder.relativeLayout);
             }
         }
     }
@@ -159,12 +160,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         final ImageView mIvCameraImage;
         RecyclerImageView mIvMediaImage;
         SimpleDraweeView mIvMediaImage_1;
+        SquareRelativeLayout relativeLayout;
+
 
         GridViewHolder(View itemView, int viewType) {
             super(itemView);
             if (viewType != 3) {
                 mIvMediaImage = (RecyclerImageView) itemView.findViewById(R.id.iv_media_image);
             } else {
+                relativeLayout = (SquareRelativeLayout) itemView.findViewById(R.id.fresco_rootView);
                 mIvMediaImage_1 = (SimpleDraweeView) itemView.findViewById(R.id.iv_media_image);
             }
             mCbCheck = (AppCompatCheckBox) itemView.findViewById(R.id.cb_check);
