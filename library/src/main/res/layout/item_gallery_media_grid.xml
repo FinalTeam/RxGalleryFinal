@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
-    tools:ignore="ResourceName">
+    android:layout_height="wrap_content">
 
     <cn.finalteam.rxgalleryfinal.ui.widget.SquareLinearLayout
         android:id="@+id/ll_camera"
@@ -26,7 +24,7 @@
             android:text="@string/gallery_take_image" />
     </cn.finalteam.rxgalleryfinal.ui.widget.SquareLinearLayout>
 
-    <cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView
+    <cn.finalteam.rxgalleryfinal.ui.widget.SquareImageView
         android:id="@+id/iv_media_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

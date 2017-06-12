@@ -17,6 +17,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
@@ -30,6 +31,29 @@ public class FrescoImageLoader implements AbsImageLoader {
 
     private DraweeHolder<GenericDraweeHierarchy> draweeHolder;
 
+    public static void setImageSmall(String url,
+                                     SimpleDraweeView simpleDraweeView,
+                                     int width,
+                                     int height,
+                                     SquareRelativeLayout relativeLayout, boolean playGif) {
+
+        Uri uri = Uri.parse(url);
+        ImageRequest request = ImageRequestBuilder
+                .newBuilderWithSource(uri)
+                .setRotationOptions(RotationOptions.autoRotate())
+                .setResizeOptions(new ResizeOptions(width, height))
+                .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
+                .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setTapToRetryEnabled(true)
+                .setImageRequest(request)
+                .setAutoPlayAnimations(playGif)
+                .setOldController(simpleDraweeView.getController())
+                .build();
+        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(width - 5, height));
+        simpleDraweeView.setController(controller);
+    }
+
     private void init(Context ctx, Drawable defaultDrawable) {
         if (draweeHolder == null) {
             Resources resources = ctx.getResources();
@@ -42,9 +66,16 @@ public class FrescoImageLoader implements AbsImageLoader {
     }
 
     @Override
-    public void displayImage(Object context, String path, FixImageView imageView, Drawable defaultDrawable, Bitmap.Config config, boolean resize, int width, int height, int rotate) {
-        Context ctx = (Context) context;
-        init(ctx, defaultDrawable);
+    public void displayImage(Context context,
+                             String path,
+                             FixImageView imageView,
+                             Drawable defaultDrawable,
+                             Bitmap.Config config,
+                             boolean resize, boolean isGif,
+                             int width,
+                             int height,
+                             int rotate) {
+        init(context, defaultDrawable);
 
         imageView.setOnImageViewListener(new FixImageView.OnImageViewListener() {
             @Override
@@ -92,22 +123,5 @@ public class FrescoImageLoader implements AbsImageLoader {
                 .setImageRequest(request)
                 .build();
         draweeHolder.setController(controller);
-    }
-
-    public static void setImageSmall(String url, SimpleDraweeView simpleDraweeView, int width, int height, SquareRelativeLayout relativeLayout) {
-        Uri uri = Uri.parse(url);
-        ImageRequest request = ImageRequestBuilder
-                .newBuilderWithSource(uri)
-                .setAutoRotateEnabled(true)
-                .setResizeOptions(new ResizeOptions(width, height))
-                .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
-                .build();
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setTapToRetryEnabled(true)
-                .setImageRequest(request)
-                .setOldController(simpleDraweeView.getController())
-                .build();
-        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(width - 5, height));
-        simpleDraweeView.setController(controller);
     }
 }

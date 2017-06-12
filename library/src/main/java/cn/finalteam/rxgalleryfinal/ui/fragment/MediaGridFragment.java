@@ -654,11 +654,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onRestoreState(Bundle savedInstanceState) {
 
     }
@@ -708,6 +703,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
 
     public void showRvBucketView() {
+        if (mRlBucektOverview == null) {
+            slideInUnderneathAnimation = new SlideInUnderneathAnimation(mRlBucektOverview);
+        }
         mRlBucektOverview.setVisibility(View.VISIBLE);
         slideInUnderneathAnimation
                 .setDirection(Animation.DIRECTION_DOWN)
@@ -737,10 +735,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         try {
             Logger.i("->getImageStoreDirByFile().getPath().toString()：" + getImageStoreDirByFile().getPath());
             Logger.i("->getImageStoreCropDirByStr ().toString()：" + getImageStoreCropDirByStr());
-    /*        if(getImageStoreDirByFile() !=null ){
-                mMediaScanner.scanFile(getImageStoreDirByFile().getPath().toString(), "image/jpeg", this);
-            }*/
-            //刷新相册数据库
             if (!TextUtils.isEmpty(mImagePath))
                 mMediaScanner.scanFile(mImagePath, IMAGE_TYPE, this);
             if (mCropPath != null) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -36,14 +37,13 @@ import cn.finalteam.rxgalleryfinal.utils.SimpleDateUtils;
  * Created by KARL-dujinyang on 2017-03-23 03-03-00.
  */
 public class RxGalleryFinalApi {
-    //***********************************************************************//
     public static final int TAKE_IMAGE_REQUEST_CODE = 19001;
+    private static String IMG_TYPE = "image/jpeg";
     public static File fileImagePath;//拍照图片
     public static File cropImagePath;//裁剪图片
-    static RxGalleryFinalApi mRxApi;
+
+    private static RxGalleryFinalApi mRxApi;
     private static RxGalleryFinal rxGalleryFinal;
-    private static String imgType = "image/jpeg";
-    private static int currentapiVersion = 0;
 
     static {
         if (mRxApi == null) {
@@ -56,13 +56,12 @@ public class RxGalleryFinalApi {
      */
     public static RxGalleryFinalApi getInstance(Activity context) {
         if (context == null) {
-            return null;
+            throw new NullPointerException("context == null");
         }
         if (mRxApi == null) {
             mRxApi = new RxGalleryFinalApi();
         }
-        rxGalleryFinal = rxGalleryFinal.with(context)
-                //  .image()
+        rxGalleryFinal = RxGalleryFinal.with(context)
                 .imageLoader(ImageLoaderType.GLIDE)
                 .subscribe(null);
 
@@ -269,24 +268,19 @@ public class RxGalleryFinalApi {
             String imageName = "immqy_%s.jpg";
             String filename = String.format(imageName, dateFormat.format(new Date()));
             File mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/IMMQY/");
-            ;
             if (!mImageStoreDir.exists()) {
                 mImageStoreDir.mkdirs();
             }
             fileImagePath = new File(mImageStoreDir, filename);
             String mImagePath = fileImagePath.getAbsolutePath();
             Logger.i("->mImagePath:" + mImagePath);
-            /*获取当前系统的android版本号*/
-            currentapiVersion = android.os.Build.VERSION.SDK_INT;
-            Logger.i("->VERSION:" + currentapiVersion);
-            if (currentapiVersion < 24) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
-                /*captureIntent.putExtra(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");*/
                 context.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
             } else {
                 ContentValues contentValues = new ContentValues(1);
                 contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
-                contentValues.put(MediaStore.Images.Media.MIME_TYPE, imgType);
+                contentValues.put(MediaStore.Images.Media.MIME_TYPE, IMG_TYPE);
                 Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                 captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 context.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
@@ -297,30 +291,20 @@ public class RxGalleryFinalApi {
     }
 
     /**
-     * 打开相机
-     */
-    public static void openZKCameraAndCrop(Activity context) {
-        openZKCamera(context);
-
-    }
-
-    /**
      * 处理拍照返回
      */
     public static void openZKCameraForResult(Activity context, MediaScanner.ScanCallback mediaScanner) {
-        if (currentapiVersion < 24) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             MediaScanner scanner = new MediaScanner(context);
-            scanner.scanFile(RxGalleryFinalApi.fileImagePath.getPath(), imgType, mediaScanner);
+            scanner.scanFile(RxGalleryFinalApi.fileImagePath.getPath(), IMG_TYPE, mediaScanner);
         } else {
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.ImageColumns.TITLE, "title");
             values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, "filename.jpg");
             values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, System.currentTimeMillis());
-            values.put(MediaStore.Images.ImageColumns.MIME_TYPE, imgType);
+            values.put(MediaStore.Images.ImageColumns.MIME_TYPE, IMG_TYPE);
             values.put(MediaStore.Images.ImageColumns.ORIENTATION, 0);
             values.put(MediaStore.Images.ImageColumns.DATA, RxGalleryFinalApi.fileImagePath.getPath());
-           /* values.put(MediaStore.Images.ImageColumns.WIDTH, bmp.getWidth());
-            values.put(MediaStore.Images.ImageColumns.HEIGHT, bmp.getHeight());*/
             try {
                 Uri uri = context.getContentResolver().insert(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
@@ -392,7 +376,7 @@ public class RxGalleryFinalApi {
     public static void cropActivityForResult(Activity context, MediaScanner.ScanCallback imgScanner) {
         if (cropImagePath != null) {
             MediaScanner scanner = new MediaScanner(context);
-            scanner.scanFile(RxGalleryFinalApi.cropImagePath.getPath(), imgType, imgScanner);
+            scanner.scanFile(RxGalleryFinalApi.cropImagePath.getPath(), IMG_TYPE, imgScanner);
         }
     }
 
@@ -404,7 +388,7 @@ public class RxGalleryFinalApi {
     public static void cropActivityForResult(Activity context, String path, MediaScanner.ScanCallback imgScanner) {
         if (cropImagePath != null) {
             MediaScanner scanner = new MediaScanner(context);
-            scanner.scanFile(path.trim(), imgType, imgScanner);
+            scanner.scanFile(path.trim(), IMG_TYPE, imgScanner);
         }
     }
 

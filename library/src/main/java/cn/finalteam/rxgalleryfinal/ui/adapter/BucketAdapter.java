@@ -77,7 +77,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
         String path = bucketBean.getCover();
         mConfiguration.getImageLoader()
                 .displayImage(holder.itemView.getContext(), path, holder.mIvBucketCover, mDefaultImage, mConfiguration.getImageConfig(),
-                        true, 100, 100, bucketBean.getOrientation());
+                        true, mConfiguration.isPlayGif(), 100, 100, bucketBean.getOrientation());
     }
 
     public void setSelectedBucket(BucketBean bucketBean) {

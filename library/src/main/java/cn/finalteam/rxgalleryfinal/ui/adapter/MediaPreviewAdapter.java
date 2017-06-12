@@ -56,7 +56,7 @@ public class MediaPreviewAdapter extends RecyclingPagerAdapter {
         }
         ivImage.setBackgroundColor(mPageColor);
         mConfiguration.getImageLoader().displayImage(container.getContext(), path, ivImage, mDefaultImage, mConfiguration.getImageConfig(),
-                false, mScreenWidth, mScreenHeight, mediaBean.getOrientation());
+                false, mConfiguration.isPlayGif(), mScreenWidth, mScreenHeight, mediaBean.getOrientation());
         return convertView;
     }
 

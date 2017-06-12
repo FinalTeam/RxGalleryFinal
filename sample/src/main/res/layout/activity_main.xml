@@ -165,7 +165,7 @@
         android:id="@+id/btn_image_loader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="imageloader" />
+        android:text="imageloader and gif" />
 
 
     <View
