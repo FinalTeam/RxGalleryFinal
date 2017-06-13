@@ -8,18 +8,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Toast;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+
 import com.yalantis.ucrop.model.AspectRatio;
+
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
+import cn.finalteam.rxgalleryfinal.sample.imageloader.ImageLoaderActivity;
 import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
@@ -29,13 +27,14 @@ import cn.finalteam.rxgalleryfinal.utils.ModelUtils;
 
 /**
  * 示例
+ *
  * @author KARL-dujinyang
  */
 public class MainActivity extends AppCompatActivity {
 
-    RadioButton mRbRadioIMG, mRbMutiIMG, mRbOpenC,mRbRadioVD,mRbMutiVD,mRbCropZD,mRbCropZVD;
-    Button mBtnOpenSetDir,mBtnOpenDefRadio,mBtnOpenDefMulti,mBtnOpenIMG,mBtnOpenVD,mBtnOpenCrop;
-    boolean mFlagOpenCrop =false ; //是否拍照并裁剪
+    RadioButton mRbRadioIMG, mRbMutiIMG, mRbOpenC, mRbRadioVD, mRbMutiVD, mRbCropZD, mRbCropZVD;
+    Button mBtnOpenSetDir, mBtnOpenDefRadio, mBtnOpenDefMulti, mBtnOpenIMG, mBtnOpenVD, mBtnOpenCrop;
+    boolean mFlagOpenCrop = false; //是否拍照并裁剪
 
     //ID
     private void initView() {
@@ -54,21 +53,6 @@ public class MainActivity extends AppCompatActivity {
         mRbCropZVD = (RadioButton) findViewById(R.id.rb_radio_crop_vz);
     }
 
-    //ImageLoaderConfiguration
-    private void initImageLoader() {
-        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
-        config.threadPriority(Thread.NORM_PRIORITY - 2);
-        config.denyCacheImageMultipleSizesInMemory();
-        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
-        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
-        config.tasksProcessingOrder(QueueProcessingType.LIFO);
-        ImageLoader.getInstance().init(config.build());
-    }
-
-    //Fresco
-    private void initFresco() {
-        Fresco.initialize(this);
-    }
 
     //*************************************************************************//
 
@@ -79,9 +63,6 @@ public class MainActivity extends AppCompatActivity {
         //手动打开日志。
         ModelUtils.setDebugModel(true);
         initView();
-        initImageLoader();
-        initFresco();
-
         //自定义使用
         onClickZDListener();
         //调用图片选择器Api
@@ -92,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
         onClickImgCropListener();
         //多选事件的回调
         getMultiListener();
+
+        findViewById(R.id.btn_image_loader).setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), ImageLoaderActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        });
     }
 
     //***********************************************************
@@ -99,16 +86,16 @@ public class MainActivity extends AppCompatActivity {
     //***********************************************************
 
     /**
-     *  调用裁剪
+     * 调用裁剪
      */
     private void onClickImgCropListener() {
         mBtnOpenCrop.setOnClickListener(view -> {
-            if(mRbCropZD.isChecked()){
+            if (mRbCropZD.isChecked()) {
                 //直接裁剪
                 String inputImg = "";
                 Toast.makeText(MainActivity.this, "没有图片演示，请选择‘拍照裁剪’功能", Toast.LENGTH_SHORT).show();
-              //  RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), inputImg);//调用裁剪.RxGalleryFinalApi.getModelPath()为模拟的输出路径
-            }else{
+                //  RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), inputImg);//调用裁剪.RxGalleryFinalApi.getModelPath()为模拟的输出路径
+            } else {
                 //拍照并裁剪
                 mFlagOpenCrop = true;
                 //然后直接打开相机 - onActivityResult 回调里面处理裁剪
@@ -118,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *  调用视频选择器Api
+     * 调用视频选择器Api
      */
     private void onClickSelVDListener() {
         mBtnOpenVD.setOnClickListener(view -> {
@@ -132,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         })
                         .open();
-
 
 
             } else if (mRbMutiVD.isChecked()) {
@@ -153,7 +139,8 @@ public class MainActivity extends AppCompatActivity {
                             protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                                 Logger.i("多选视频的回调");
                             }
-                        }).open();;
+                        }).open();
+                ;
 
                 //3.直接打开
             /*    RxGalleryFinalApi.openMultiSelectVD(this, new RxBusResultSubscriber() {
@@ -167,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *  调用图片选择器Api
+     * 调用图片选择器Api
      */
     private void onClickSelImgListener() {
         mBtnOpenIMG.setOnClickListener(view -> {
@@ -285,11 +272,11 @@ public class MainActivity extends AppCompatActivity {
                         .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
                             @Override
                             protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                                Toast.makeText(getBaseContext(), "选中了图片路径："+imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getBaseContext(), "选中了图片路径：" + imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
                             }
                         });
                 //自定义裁剪
-                rx.cropAspectRatioOptions(0, new AspectRatio("3:3",30, 10)).crop()
+                rx.cropAspectRatioOptions(0, new AspectRatio("3:3", 30, 10)).crop()
                         .openGallery();
 
             }
@@ -325,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 自定义的多选事件都会在这里执行
      */
-    public void getMultiListener(){
+    public void getMultiListener() {
         //得到多选的事件
         RxGalleryListener.getInstance().setMultiImageCheckedListener(new IMultiImageCheckedListener() {
             @Override
@@ -341,28 +328,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.i("onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode + " data:" + data);
-            if (requestCode == RxGalleryFinalApi.TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-                Logger.i("拍照OK，图片路径:"+RxGalleryFinalApi.fileImagePath.getPath().toString());
-                    //刷新相册数据库
-                    RxGalleryFinalApi.openZKCameraForResult(MainActivity.this, new MediaScanner.ScanCallback() {
-                        @Override
-                        public void onScanCompleted(String[] strings) {
-                            Logger.i(String.format("拍照成功,图片存储路径:%s", strings[0]));
-                            if (mFlagOpenCrop) {
-                                Logger.d("演示拍照后进行图片裁剪，根据实际开发需求可去掉上面的判断");
-                                RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), strings[0]);//调用裁剪.RxGalleryFinalApi.getModelPath()为默认的输出路径
-                            }
-                        }
-                    });
-            } else {
-                Logger.i("失敗");
-            }
+        if (requestCode == RxGalleryFinalApi.TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Logger.i("拍照OK，图片路径:" + RxGalleryFinalApi.fileImagePath.getPath().toString());
+            //刷新相册数据库
+            RxGalleryFinalApi.openZKCameraForResult(MainActivity.this, new MediaScanner.ScanCallback() {
+                @Override
+                public void onScanCompleted(String[] strings) {
+                    Logger.i(String.format("拍照成功,图片存储路径:%s", strings[0]));
+                    if (mFlagOpenCrop) {
+                        Logger.d("演示拍照后进行图片裁剪，根据实际开发需求可去掉上面的判断");
+                        RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), strings[0]);//调用裁剪.RxGalleryFinalApi.getModelPath()为默认的输出路径
+                    }
+                }
+            });
+        } else {
+            Logger.i("失敗");
+        }
     }
 
     @Override

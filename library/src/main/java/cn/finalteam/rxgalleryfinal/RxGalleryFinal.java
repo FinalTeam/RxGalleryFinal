@@ -15,7 +15,6 @@ import com.yalantis.ucrop.model.AspectRatio;
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import cn.finalteam.rxgalleryfinal.exception.UnknownImageLoaderTypeException;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
@@ -35,9 +34,9 @@ import io.reactivex.disposables.Disposable;
  */
 public class RxGalleryFinal {
 
-    static RxGalleryFinal instance;
-    Configuration configuration = new Configuration();
-    RxBusResultSubscriber<BaseResultEvent> rxBusResultSubscriber;
+    private static RxGalleryFinal instance;
+    private Configuration configuration = new Configuration();
+    private RxBusResultSubscriber<BaseResultEvent> rxBusResultSubscriber;
 
     private RxGalleryFinal() {
     }
@@ -62,6 +61,16 @@ public class RxGalleryFinal {
 //        configuration.setFilterMimes(mediaTypes);
 //        return this;
 //    }
+
+    public RxGalleryFinal gif() {
+        configuration.setPlayGif(true);
+        return this;
+    }
+
+    public RxGalleryFinal gif(boolean flag) {
+        configuration.setPlayGif(flag);
+        return this;
+    }
 
     public RxGalleryFinal radio() {
         configuration.setRadio(true);
@@ -109,9 +118,7 @@ public class RxGalleryFinal {
                 c = 4;
                 break;
         }
-
         configuration.setImageConfig(c);
-
         return this;
     }
 
@@ -273,7 +280,7 @@ public class RxGalleryFinal {
         }
 
         if (configuration.getImageLoader() == null) {
-            throw new UnknownImageLoaderTypeException();
+            throw new NullPointerException("imageLoader == null , please check imageLoader");
         }
 
         if (rxBusResultSubscriber == null) {

@@ -31,7 +31,8 @@ import cn.finalteam.rxgalleryfinal.rxjob.RxJob;
 import cn.finalteam.rxgalleryfinal.rxjob.job.ImageThmbnailJobCreate;
 import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
-import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerImageView;
+import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
+import cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.OsCompat;
 import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
@@ -85,7 +86,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery_media_grid_fresco, parent, false);
         }
-        return new GridViewHolder(view, imageLoaderType);
+        return new GridViewHolder(view);
     }
 
     @Override
@@ -93,11 +94,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         MediaBean mediaBean = mMediaBeanList.get(position);
         if (mediaBean.getId() == Integer.MIN_VALUE) {
             holder.mCbCheck.setVisibility(View.GONE);
-            if (imageLoaderType != 3) {
-                holder.mIvMediaImage.setVisibility(View.GONE);
-            } else {
-                holder.mIvMediaImage_1.setVisibility(View.GONE);
-            }
+            holder.mIvMediaImage.setVisibility(View.GONE);
             holder.mLlCamera.setVisibility(View.VISIBLE);
             holder.mIvCameraImage.setImageDrawable(mCameraImage);
             holder.mTvCameraTxt.setTextColor(mCameraTextColor);
@@ -111,11 +108,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
                 holder.mCbCheck.setOnCheckedChangeListener(new OnCheckBoxCheckListener(mediaBean));
             }
-            if (imageLoaderType != 3) {
-                holder.mIvMediaImage.setVisibility(View.VISIBLE);
-            } else {
-                holder.mIvMediaImage_1.setVisibility(View.VISIBLE);
-            }
+            holder.mIvMediaImage.setVisibility(View.VISIBLE);
             holder.mLlCamera.setVisibility(View.GONE);
             holder.mCbCheck.setChecked(mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean));
             String bitPath = mediaBean.getThumbnailSmallPath();
@@ -125,22 +118,28 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 Job job = new ImageThmbnailJobCreate(mMediaActivity, mediaBean).create();
                 RxJob.getDefault().addJob(job);
             }
-            String path = mediaBean.getThumbnailSmallPath();
-            if (TextUtils.isEmpty(path)) {
-                path = mediaBean.getThumbnailBigPath();
-            }
-            if (TextUtils.isEmpty(path)) {
+            String path;
+            if (mConfiguration.isPlayGif() && (imageLoaderType == 3 || imageLoaderType == 2)) {
                 path = mediaBean.getOriginalPath();
+            } else {
+                path = mediaBean.getThumbnailSmallPath();
+                if (TextUtils.isEmpty(path)) {
+                    path = mediaBean.getThumbnailBigPath();
+                }
+                if (TextUtils.isEmpty(path)) {
+                    path = mediaBean.getOriginalPath();
+                }
             }
             Logger.w("提示path：" + path);
             if (imageLoaderType != 3) {
                 OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
                 mConfiguration.getImageLoader()
-                        .displayImage(mMediaActivity, path, holder.mIvMediaImage, mDefaultImage, mConfiguration.getImageConfig(),
-                                true, mImageSize, mImageSize, mediaBean.getOrientation());
+                        .displayImage(mMediaActivity, path, (FixImageView) holder.mIvMediaImage, mDefaultImage, mConfiguration.getImageConfig(),
+                                true, mConfiguration.isPlayGif(), mImageSize, mImageSize, mediaBean.getOrientation());
             } else {
-                OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage_1, mImageViewBg);
-                FrescoImageLoader.setImageSmall("file://" + path, holder.mIvMediaImage_1);
+                OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
+                FrescoImageLoader.setImageSmall("file://" + path, (SimpleDraweeView) holder.mIvMediaImage,
+                        mImageSize, mImageSize, holder.relativeLayout, mConfiguration.isPlayGif());
             }
         }
     }
@@ -157,18 +156,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         final LinearLayout mLlCamera;
         final TextView mTvCameraTxt;
         final ImageView mIvCameraImage;
-        RecyclerImageView mIvMediaImage;
-        SimpleDraweeView mIvMediaImage_1;
+        View mIvMediaImage;
+        SquareRelativeLayout relativeLayout;
 
-        GridViewHolder(View itemView, int viewType) {
+
+        GridViewHolder(View itemView) {
             super(itemView);
-            if (viewType != 3) {
-                mIvMediaImage = (RecyclerImageView) itemView.findViewById(R.id.iv_media_image);
-            } else {
-                mIvMediaImage_1 = (SimpleDraweeView) itemView.findViewById(R.id.iv_media_image);
-            }
+            mIvMediaImage = itemView.findViewById(R.id.iv_media_image);
             mCbCheck = (AppCompatCheckBox) itemView.findViewById(R.id.cb_check);
-
+            relativeLayout = (SquareRelativeLayout) itemView.findViewById(R.id.rootView);
             mLlCamera = (LinearLayout) itemView.findViewById(R.id.ll_camera);
             mTvCameraTxt = (TextView) itemView.findViewById(R.id.tv_camera_txt);
             mIvCameraImage = (ImageView) itemView.findViewById(R.id.iv_camera_image);

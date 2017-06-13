@@ -61,7 +61,7 @@ public class MediaScanner {
         void onScanCompleted(String[] images);
     }
 
-    class MusicSannerClient implements MediaScannerConnection.MediaScannerConnectionClient {
+    private class MusicSannerClient implements MediaScannerConnection.MediaScannerConnectionClient {
         @Override
         public void onMediaScannerConnected() {
             Logger.i("onMediaScannerConnected");

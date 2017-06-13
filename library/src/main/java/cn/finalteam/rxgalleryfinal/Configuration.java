@@ -48,6 +48,7 @@ public class Configuration implements Parcelable {
     private int imageLoaderType;
     private int imageConfig;
     private boolean hideCamera;
+    private boolean isPlayGif;
 
     //==========UCrop START==========
     //是否隐藏裁剪页面底部控制栏,默认显示
@@ -101,6 +102,15 @@ public class Configuration implements Parcelable {
         imageLoaderType = in.readInt();
         imageConfig = in.readInt();
         hideCamera = in.readByte() != 0;
+        isPlayGif = in.readByte() != 0;
+    }
+
+    public boolean isPlayGif() {
+        return isPlayGif;
+    }
+
+    public void setPlayGif(boolean playGif) {
+        isPlayGif = playGif;
     }
 
     public boolean isImage() {
@@ -342,5 +352,6 @@ public class Configuration implements Parcelable {
         parcel.writeInt(imageLoaderType);
         parcel.writeInt(imageConfig);
         parcel.writeByte((byte) (hideCamera ? 1 : 0));
+        parcel.writeByte((byte) (isPlayGif ? 1 : 0));
     }
 }
