@@ -22,16 +22,16 @@
 
 ### gradle
 
-       compile 'cn.finalteam.rxgalleryfinal:library:1.0.7'
+       compile 'cn.finalteam.rxgalleryfinal:library:1.0.8'
       
 * RxJava升级到最新 - RxJava2.1
 * 修复相关bug -  #136,#135,#134,#129,#99
-
+* 代码优化
 
 ## 使用
 ### 下载或添加依赖
 
-    compile 'cn.finalteam.rxgalleryfinal:library:1.0.7'
+    compile 'cn.finalteam.rxgalleryfinal:library:1.0.8'
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
 

@@ -20,7 +20,7 @@
 
 ### gradle
 
-       compile 'cn.finalteam.rxgalleryfinal:library:1.0.7'
+       compile 'cn.finalteam.rxgalleryfinal:library:1.0.8'
        
 * RxJava Update to - RxJava2.1
 * Repair bug ->  #136,#135,#134,#129,#99
