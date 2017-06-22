@@ -28,7 +28,7 @@
 ## Use
 ### Download or add a dependency
 
-    compile 'cn.finalteam.rxgalleryfinal:library:1.0.7'
+    compile 'cn.finalteam.rxgalleryfinal:library:1.0.8'
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
 
