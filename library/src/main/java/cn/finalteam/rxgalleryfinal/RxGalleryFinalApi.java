@@ -41,15 +41,9 @@ public class RxGalleryFinalApi {
     private static String IMG_TYPE = "image/jpeg";
     public static File fileImagePath;//拍照图片
     public static File cropImagePath;//裁剪图片
-
-    private static RxGalleryFinalApi mRxApi;
+    private static RxGalleryFinalApi mRxApi = new RxGalleryFinalApi();
     private static RxGalleryFinal rxGalleryFinal;
 
-    static {
-        if (mRxApi == null) {
-            mRxApi = new RxGalleryFinalApi();
-        }
-    }
 
     /**
      * 默认使用 ImageLoaderType.GLIDE
@@ -58,13 +52,9 @@ public class RxGalleryFinalApi {
         if (context == null) {
             throw new NullPointerException("context == null");
         }
-        if (mRxApi == null) {
-            mRxApi = new RxGalleryFinalApi();
-        }
         rxGalleryFinal = RxGalleryFinal.with(context)
                 .imageLoader(ImageLoaderType.GLIDE)
                 .subscribe(null);
-
         Logger.i("==========" + mRxApi + "====" + rxGalleryFinal);
         return mRxApi;
     }
@@ -79,7 +69,7 @@ public class RxGalleryFinalApi {
      * }
      * @see new RxBusResultSubscriber<ImageRadioResultEvent>() {
      */
-    public static RxGalleryFinalApi openRadioSelectImage(Activity context, RxBusResultSubscriber rxBusResultSubscriber, boolean flag) {
+    public static RxGalleryFinalApi openRadioSelectImage(Activity context, RxBusResultSubscriber<ImageRadioResultEvent> rxBusResultSubscriber, boolean flag) {
         getInstance(context);
         if (flag) {
             rxGalleryFinal
@@ -105,7 +95,7 @@ public class RxGalleryFinalApi {
      *
      * @return RxGalleryFinalApi
      */
-    public static RxGalleryFinalApi onCropImageResult(IRadioImageCheckedListener listener) {
+    public RxGalleryFinalApi onCropImageResult(IRadioImageCheckedListener listener) {
         RxGalleryListener.getInstance().setRadioImageCheckedListener(listener);
         return mRxApi;
     }
@@ -133,7 +123,7 @@ public class RxGalleryFinalApi {
     /**
      * 单选默认设置
      */
-    public static RxGalleryFinalApi openGalleryRadioImgDefault(RxBusResultSubscriber rxBusResultSubscriber) {
+    public RxGalleryFinalApi openGalleryRadioImgDefault(RxBusResultSubscriber<ImageRadioResultEvent> rxBusResultSubscriber) {
         Logger.i("----rxGalleryFinal---" + rxGalleryFinal);
         if (rxGalleryFinal == null)
             return null;
@@ -186,7 +176,7 @@ public class RxGalleryFinalApi {
      * }
      * @see new RxBusResultSubscriber<ImageRadioResultEvent>() {
      */
-    public static void openMultiSelectImage(Activity context, RxBusResultSubscriber rxBusResultSubscriber) {
+    public static void openMultiSelectImage(Activity context, RxBusResultSubscriber<ImageMultipleResultEvent> rxBusResultSubscriber) {
         RxGalleryFinal
                 .with(context)
                 .image()

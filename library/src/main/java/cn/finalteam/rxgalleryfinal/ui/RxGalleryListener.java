@@ -11,16 +11,12 @@ import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
  */
 public class RxGalleryListener {
 
-    private static RxGalleryListener rxGalleryListener;
-
-    private RxGalleryListener() {
+    private static final class RxGalleryListenerHolder {
+        private static final RxGalleryListener RX_GALLERY_LISTENER = new RxGalleryListener();
     }
 
     public static RxGalleryListener getInstance() {
-        if (rxGalleryListener == null) {
-            rxGalleryListener = new RxGalleryListener();
-        }
-        return rxGalleryListener;
+        return RxGalleryListenerHolder.RX_GALLERY_LISTENER;
     }
 
     /**

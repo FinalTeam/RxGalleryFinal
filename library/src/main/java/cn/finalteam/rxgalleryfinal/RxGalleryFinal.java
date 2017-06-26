@@ -34,7 +34,6 @@ import io.reactivex.disposables.Disposable;
  */
 public class RxGalleryFinal {
 
-    private static RxGalleryFinal instance;
     private Configuration configuration = new Configuration();
     private RxBusResultSubscriber<BaseResultEvent> rxBusResultSubscriber;
 
@@ -42,8 +41,8 @@ public class RxGalleryFinal {
     }
 
     public static RxGalleryFinal with(@NonNull Context context) {
-        instance = new RxGalleryFinal();
-        instance.configuration.setContext(context);
+        RxGalleryFinal instance = new RxGalleryFinal();
+        instance.configuration.setContext(context.getApplicationContext());
         return instance;
     }
 
@@ -269,7 +268,7 @@ public class RxGalleryFinal {
      * 执行
      */
     private void execute() {
-        Context context = configuration.getContext();
+        Context context = configuration.getContext().getApplicationContext();
         if (context == null) {
             return;
         }

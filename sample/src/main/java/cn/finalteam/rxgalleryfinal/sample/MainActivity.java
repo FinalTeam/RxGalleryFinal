@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -19,31 +18,41 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.sample.imageloader.ImageLoaderActivity;
 import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
+import cn.finalteam.rxgalleryfinal.ui.adapter.MediaGridAdapter;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
+import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
-import cn.finalteam.rxgalleryfinal.utils.ModelUtils;
 
 /**
  * 示例
  *
  * @author KARL-dujinyang
+ *         <p>
+ *         openGallery 返回 void,如果想使用RxGalleryFinal对象，请在 openGallery() 之前返回 RxGalleryFinal 对象
+ *         <p>
+ *         <p>
+ *         RxGalleryFinal radio = RxGalleryFinal
+ *         with(MainActivity.this)
+ *         image()
+ *         radio();
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     RadioButton mRbRadioIMG, mRbMutiIMG, mRbOpenC, mRbRadioVD, mRbMutiVD, mRbCropZD, mRbCropZVD;
-    Button mBtnOpenSetDir, mBtnOpenDefRadio, mBtnOpenDefMulti, mBtnOpenIMG, mBtnOpenVD, mBtnOpenCrop;
-    boolean mFlagOpenCrop = false; //是否拍照并裁剪
 
-    //ID
-    private void initView() {
-        mBtnOpenSetDir = (Button) findViewById(R.id.btn_open_set_path);
-        mBtnOpenIMG = (Button) findViewById(R.id.btn_open_img);
-        mBtnOpenVD = (Button) findViewById(R.id.btn_open_vd);
-        mBtnOpenDefRadio = (Button) findViewById(R.id.btn_open_def_radio);
-        mBtnOpenDefMulti = (Button) findViewById(R.id.btn_open_def_multi);
-        mBtnOpenCrop = (Button) findViewById(R.id.btn_open_crop);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        findViewById(R.id.btn_image_loader).setOnClickListener(this);
+        findViewById(R.id.btn_open_def_radio).setOnClickListener(this);
+        findViewById(R.id.btn_open_def_multi).setOnClickListener(this);
+        findViewById(R.id.btn_open_img).setOnClickListener(this);
+        findViewById(R.id.btn_open_vd).setOnClickListener(this);
+        findViewById(R.id.btn_open_crop).setOnClickListener(this);
+        findViewById(R.id.btn_open_set_path).setOnClickListener(this);
         mRbRadioIMG = (RadioButton) findViewById(R.id.rb_radio_img);
         mRbMutiIMG = (RadioButton) findViewById(R.id.rb_muti_img);
         mRbRadioVD = (RadioButton) findViewById(R.id.rb_radio_vd);
@@ -51,175 +60,253 @@ public class MainActivity extends AppCompatActivity {
         mRbOpenC = (RadioButton) findViewById(R.id.rb_openC);
         mRbCropZD = (RadioButton) findViewById(R.id.rb_radio_crop_z);
         mRbCropZVD = (RadioButton) findViewById(R.id.rb_radio_crop_vz);
-    }
-
-
-    //*************************************************************************//
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //手动打开日志。
-        ModelUtils.setDebugModel(true);
-        initView();
-        //自定义使用
-        onClickZDListener();
-        //调用图片选择器Api
-        onClickSelImgListener();
-        //调用视频选择器Api
-        onClickSelVDListener();
-        //调用裁剪
-        onClickImgCropListener();
         //多选事件的回调
-        getMultiListener();
-
-        findViewById(R.id.btn_image_loader).setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), ImageLoaderActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        });
-    }
-
-    //***********************************************************
-    //**  以下为调用方法 onClick *
-    //***********************************************************
-
-    /**
-     * 调用裁剪
-     */
-    private void onClickImgCropListener() {
-        mBtnOpenCrop.setOnClickListener(view -> {
-            if (mRbCropZD.isChecked()) {
-                //直接裁剪
-                String inputImg = "";
-                Toast.makeText(MainActivity.this, "没有图片演示，请选择‘拍照裁剪’功能", Toast.LENGTH_SHORT).show();
-                //  RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), inputImg);//调用裁剪.RxGalleryFinalApi.getModelPath()为模拟的输出路径
-            } else {
-                //拍照并裁剪
-                mFlagOpenCrop = true;
-                //然后直接打开相机 - onActivityResult 回调里面处理裁剪
-                RxGalleryFinalApi.openZKCamera(MainActivity.this);
-            }
-        });
-    }
-
-    /**
-     * 调用视频选择器Api
-     */
-    private void onClickSelVDListener() {
-        mBtnOpenVD.setOnClickListener(view -> {
-            if (mRbRadioVD.isChecked()) {
-                RxGalleryFinalApi.getInstance(this)
-                        .setType(RxGalleryFinalApi.SelectRXType.TYPE_VIDEO, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_RADIO)
-                        .setVDRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+        RxGalleryListener
+                .getInstance()
+                .setMultiImageCheckedListener(
+                        new IMultiImageCheckedListener() {
                             @Override
-                            protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                                //回调还没
+                            public void selectedImg(Object t, boolean isChecked) {
+                                Toast.makeText(getBaseContext(), isChecked ? "选中" : "取消选中", Toast.LENGTH_SHORT).show();
                             }
-                        })
-                        .open();
 
-
-            } else if (mRbMutiVD.isChecked()) {
-                //多选图片的方式
-                //1.使用默认的参数
-              /*  RxGalleryFinalApi.getInstance(this).setVDMultipleResultEvent(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
-                    @Override
-                    protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                        Logger.i("多选视频的回调");
-                    }
-                }).open();
-*/
-                //2.使用自定义的参数
-                RxGalleryFinalApi.getInstance(this)
-                        .setType(RxGalleryFinalApi.SelectRXType.TYPE_VIDEO, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_MULTI)
-                        .setVDMultipleResultEvent(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
                             @Override
-                            protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                                Logger.i("多选视频的回调");
+                            public void selectedImgMax(Object t, boolean isChecked, int maxSize) {
+                                Toast.makeText(getBaseContext(), "你最多只能选择" + maxSize + "张图片", Toast.LENGTH_SHORT).show();
                             }
-                        }).open();
-                ;
-
-                //3.直接打开
-            /*    RxGalleryFinalApi.openMultiSelectVD(this, new RxBusResultSubscriber() {
-                    @Override
-                    protected void onEvent(Object o) throws Exception {
-                        Logger.i("多选视频的回调");
-                    }
-                });*/
-            }
-        });
-    }
-
-    /**
-     * 调用图片选择器Api
-     */
-    private void onClickSelImgListener() {
-        mBtnOpenIMG.setOnClickListener(view -> {
-            if (mRbRadioIMG.isChecked()) {
-                //以下方式 -- 可选其一：
-                //1.打开单选图片，默认参数
-     /*             RxGalleryFinalApi.getInstance(this).setImageRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
-                    @Override
-                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                        Logger.i("单选图片的回调");
-                    }
-                }).open();
-
-                //2.设置自定义的参数
-                RxGalleryFinalApi.getInstance(this).setType(RxGalleryFinalApi.SelectRXType.TYPE_IMAGE, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_RADIO)
-                        .setImageRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
-                            @Override
-                            protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                                Logger.i("单选图片的回调");
-                            }
-                        }).open();
-*/
-                //3. 快速打开单选图片,flag使用true不裁剪
-
-               /* RxGalleryFinalApi.openRadioSelectImage(this, new RxBusResultSubscriber<ImageRadioResultEvent>() {
-                    @Override
-                    protected void onEvent(ImageRadioResultEvent o) throws Exception {
-                        Logger.i("单选图片的回调");
-                    }
-                }, true);*/
-
-
-                //4.演示 单选裁剪 并且增加回掉 （onCrop裁剪必须在open..之前）
-                RxGalleryFinalApi.getInstance(this)
-                        .onCrop(true)//是否裁剪
-                        .openGalleryRadioImgDefault(new RxBusResultSubscriber() {
-                            @Override
-                            protected void onEvent(Object o) throws Exception {
-                                Logger.i("只要选择图片就会触发");
-                            }
-                        })
-                        .onCropImageResult(new IRadioImageCheckedListener() {
+                        });
+        //裁剪图片的回调
+        RxGalleryListener
+                .getInstance()
+                .setRadioImageCheckedListener(
+                        new IRadioImageCheckedListener() {
                             @Override
                             public void cropAfter(Object t) {
-                                Logger.i("裁剪完成");
+                                Toast.makeText(getBaseContext(), t.toString(), Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
                             public boolean isActivityFinish() {
-                                Logger.i("返回false不关闭，返回true则为关闭");
-                                return true;
+                                return false;
                             }
                         });
-            } else if (mRbMutiIMG.isChecked()) {
-                //多选图片的方式
-                //1.使用默认的参数
-                RxGalleryFinalApi.getInstance(this).setImageMultipleResultEvent(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_image_loader:
+                Intent intent = new Intent(v.getContext(), ImageLoaderActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
+            case R.id.btn_open_def_radio:
+                openRadio();
+                break;
+            case R.id.btn_open_def_multi:
+                openMulti();
+                break;
+            case R.id.btn_open_img:
+                openImageSelect();
+                break;
+            case R.id.btn_open_vd:
+                openVideoSelect();
+                break;
+            case R.id.btn_open_crop:
+                openCrop();
+                break;
+            case R.id.btn_open_set_path:
+                setPath();
+                break;
+        }
+
+    }
+
+    /**
+     * 设置 照片路径 和 裁剪路径
+     */
+    private void setPath() {
+        RxGalleryFinalApi.setImgSaveRxSDCard("dujinyang");
+        RxGalleryFinalApi.setImgSaveRxCropSDCard("dujinyang/crop");//裁剪会自动生成路径；也可以手动设置裁剪的路径；
+    }
+
+    /**
+     * 直接裁剪  or  拍照并裁剪( 查看 onActivityResult())
+     */
+    private void openCrop() {
+        if (mRbCropZD.isChecked()) {
+            //直接裁剪
+            String inputImg = "";
+            Toast.makeText(MainActivity.this, "没有图片演示，请选择‘拍照裁剪’功能", Toast.LENGTH_SHORT).show();
+            //  RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), inputImg);//调用裁剪.RxGalleryFinalApi.getModelPath()为模拟的输出路径
+        } else {
+            RxGalleryFinalApi.openZKCamera(MainActivity.this);
+        }
+    }
+
+    /**
+     * 视频
+     * 单选 多选
+     */
+    private void openVideoSelect() {
+        if (mRbRadioVD.isChecked()) {
+            openVideoSelectRadioMethod();
+        } else if (mRbMutiVD.isChecked()) {
+            openVideoSelectMultiMethod(0);
+        }
+    }
+
+    /**
+     * 图片
+     * 单选，多选，  直接打开相机
+     */
+    private void openImageSelect() {
+        if (mRbRadioIMG.isChecked()) {
+            openImageSelectRadioMethod(3);
+        } else if (mRbMutiIMG.isChecked()) {
+            openImageSelectMultiMethod(1);
+        } else {
+            RxGalleryFinalApi.openZKCamera(MainActivity.this);
+        }
+    }
+
+    /**
+     * 自定义多选
+     */
+    private void openMulti() {
+        RxGalleryFinal
+                .with(MainActivity.this)
+                .image()
+                .multiple()
+                .maxSize(8)
+                .imageLoader(ImageLoaderType.FRESCO)
+                .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                        Logger.i("多选图片的回调");
+                        Toast.makeText(getBaseContext(), "已选择" + imageMultipleResultEvent.getResult().size() + "张图片", Toast.LENGTH_SHORT).show();
                     }
-                }).open();
-/*
-                //2.使用自定义的参数
-                RxGalleryFinalApi.getInstance(this)
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        Toast.makeText(getBaseContext(), "OVER", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .openGallery();
+    }
+
+    /**
+     * 自定义单选
+     */
+    private void openRadio() {
+        RxGalleryFinal
+                .with(MainActivity.this)
+                .image()
+                .radio()
+                .cropAspectRatioOptions(0, new AspectRatio("3:3", 30, 10))
+                .crop()
+                .imageLoader(ImageLoaderType.FRESCO)
+                .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                    @Override
+                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+                        Toast.makeText(getBaseContext(), "选中了图片路径：" + imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .openGallery();
+    }
+
+    /**
+     * 视频多选回调
+     */
+    private void openVideoSelectMultiMethod(int type) {
+        switch (type) {
+            case 0:
+
+                //使用默认的参数
+                RxGalleryFinalApi
+                        .getInstance(this)
+                        .setVDMultipleResultEvent(
+                                new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                                    @Override
+                                    protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
+                                        Logger.i("多选视频的回调");
+                                    }
+                                }).open();
+
+                break;
+            case 1:
+
+                //使用自定义的参数
+                RxGalleryFinalApi
+                        .getInstance(this)
+                        .setType(RxGalleryFinalApi.SelectRXType.TYPE_VIDEO, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_MULTI)
+                        .setVDMultipleResultEvent(
+                                new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                                    @Override
+                                    protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
+                                        Logger.i("多选视频的回调");
+                                    }
+                                }).open();
+
+                break;
+            case 2:
+
+                //直接打开
+                RxGalleryFinalApi
+                        .openMultiSelectVD(this, new RxBusResultSubscriber() {
+                            @Override
+                            protected void onEvent(Object o) throws Exception {
+                                Logger.i("多选视频的回调");
+                            }
+                        });
+
+                break;
+        }
+    }
+
+    /**
+     * 视频单选回调
+     */
+    private void openVideoSelectRadioMethod() {
+        RxGalleryFinalApi.getInstance(MainActivity.this)
+                .setType(RxGalleryFinalApi.SelectRXType.TYPE_VIDEO, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_RADIO)
+                .setVDRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                    @Override
+                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+                        //回调还没
+                    }
+                })
+                .open();
+    }
+
+    /**
+     * OPEN 图片多选实现方法
+     * <p>
+     * 默认使用 第三个 ，如果运行sample,可自行改变Type，运行Demo查看效果
+     */
+    private void openImageSelectMultiMethod(int type) {
+        switch (type) {
+            case 0:
+
+                //使用默认的参数
+                RxGalleryFinalApi
+                        .getInstance(MainActivity.this)
+                        .setImageMultipleResultEvent(
+                                new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                                    @Override
+                                    protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
+                                        Logger.i("多选图片的回调");
+                                    }
+                                }).open();
+
+                break;
+            case 1:
+
+                //使用自定义的参数
+                RxGalleryFinalApi
+                        .getInstance(MainActivity.this)
                         .setType(RxGalleryFinalApi.SelectRXType.TYPE_IMAGE, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_MULTI)
                         .setImageMultipleResultEvent(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
                             @Override
@@ -227,146 +314,113 @@ public class MainActivity extends AppCompatActivity {
                                 Logger.i("多选图片的回调");
                             }
                         }).open();
-                ;
 
-                //3.直接打开
-                RxGalleryFinalApi.openMultiSelectImage(this, new RxBusResultSubscriber() {
+                break;
+            case 2:
+
+                //直接打开
+                RxGalleryFinalApi.openMultiSelectImage(this, new RxBusResultSubscriber<ImageMultipleResultEvent>() {
                     @Override
-                    protected void onEvent(Object o) throws Exception {
+                    protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                         Logger.i("多选图片的回调");
                     }
-                });*/
-            } else {
-                mFlagOpenCrop = false;
-                //直接打开相机
-                RxGalleryFinalApi.openZKCamera(MainActivity.this);
-            }
-        });
+                });
+
+                break;
+        }
+
     }
 
-
     /**
-     * 如果不使用api定义好的，则自己定义使用
-     * ImageLoaderType :自己选择使用
+     * OPEN 图片单选实现方法
+     * <p>
+     * 默认使用 第三个 ，如果运行sample,可自行改变Type，运行Demo查看效果
      */
-    private void onClickZDListener() {
+    private void openImageSelectRadioMethod(int type) {
+        RxGalleryFinalApi instance = RxGalleryFinalApi.getInstance(MainActivity.this);
+        switch (type) {
+            case 0:
 
-        mBtnOpenSetDir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //图片会自动会存储到下面路径
-                RxGalleryFinalApi.setImgSaveRxSDCard("dujinyang");
-                RxGalleryFinalApi.setImgSaveRxCropSDCard("dujinyang/crop");//裁剪会自动生成路径；也可以手动设置裁剪的路径；
-            }
-        });
-
-        mBtnOpenDefRadio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //单选图片
-                RxGalleryFinal rx = RxGalleryFinal
-                        .with(MainActivity.this)
-                        .image()
-                        .radio()
-                        .imageLoader(ImageLoaderType.FRESCO)
-                        .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                //打开单选图片，默认参数
+                instance
+                        .setImageRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
                             @Override
                             protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                                Toast.makeText(getBaseContext(), "选中了图片路径：" + imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
+                                Logger.i("单选图片的回调");
                             }
-                        });
-                //自定义裁剪
-                rx.cropAspectRatioOptions(0, new AspectRatio("3:3", 30, 10)).crop()
-                        .openGallery();
+                        }).open();
 
-            }
-        });
+                break;
+            case 1:
 
-        mBtnOpenDefMulti.setOnClickListener(view -> {
-            //多选图片
-            RxGalleryFinal
-                    .with(MainActivity.this)
-                    .image()
-                    .multiple()
-                    .maxSize(8)
-                    .imageLoader(ImageLoaderType.FRESCO)
-                    .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                //设置自定义的参数
+                instance
+                        .setType(RxGalleryFinalApi.SelectRXType.TYPE_IMAGE, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_RADIO)
+                        .setImageRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                            @Override
+                            protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+                                Logger.i("单选图片的回调");
+                            }
+                        }).open();
 
-                        @Override
-                        protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                            Toast.makeText(getBaseContext(), "已选择" + imageMultipleResultEvent.getResult().size() + "张图片", Toast.LENGTH_SHORT).show();
-                        }
+                break;
+            case 2:
 
-                        @Override
-                        public void onComplete() {
-                            super.onComplete();
-                            Toast.makeText(getBaseContext(), "OVER", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .openGallery();
+                //快速打开单选图片,flag使用true不裁剪
+                RxGalleryFinalApi
+                        .openRadioSelectImage(MainActivity.this, new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                            @Override
+                            protected void onEvent(ImageRadioResultEvent o) throws Exception {
+                                Logger.i("单选图片的回调");
+                            }
+                        }, true);
 
-        });
+                break;
+            case 3:
+
+                //单选，使用RxGalleryFinal默认设置，并且带有裁剪
+                instance
+                        .openGalleryRadioImgDefault(
+                                new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                                    @Override
+                                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+                                        Logger.i("只要选择图片就会触发");
+                                    }
+                                })
+                        .onCropImageResult(
+                                new IRadioImageCheckedListener() {
+                                    @Override
+                                    public void cropAfter(Object t) {
+                                        Logger.i("裁剪完成");
+                                    }
+
+                                    @Override
+                                    public boolean isActivityFinish() {
+                                        Logger.i("返回false不关闭，返回true则为关闭");
+                                        return true;
+                                    }
+                                });
+
+                break;
+        }
     }
-
-
-    /**
-     * 自定义的多选事件都会在这里执行
-     */
-    public void getMultiListener() {
-        //得到多选的事件
-        RxGalleryListener.getInstance().setMultiImageCheckedListener(new IMultiImageCheckedListener() {
-            @Override
-            public void selectedImg(Object t, boolean isChecked) {
-                //这个主要点击或者按到就会触发，所以不建议在这里进行Toast
-            }
-
-            @Override
-            public void selectedImgMax(Object t, boolean isChecked, int maxSize) {
-                Toast.makeText(getBaseContext(), "你最多只能选择" + maxSize + "张图片", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Logger.i("onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode + " data:" + data);
         if (requestCode == RxGalleryFinalApi.TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Logger.i("拍照OK，图片路径:" + RxGalleryFinalApi.fileImagePath.getPath().toString());
+            Logger.i("拍照OK，图片路径:" + RxGalleryFinalApi.fileImagePath.getPath());
             //刷新相册数据库
             RxGalleryFinalApi.openZKCameraForResult(MainActivity.this, new MediaScanner.ScanCallback() {
                 @Override
                 public void onScanCompleted(String[] strings) {
                     Logger.i(String.format("拍照成功,图片存储路径:%s", strings[0]));
-                    if (mFlagOpenCrop) {
-                        Logger.d("演示拍照后进行图片裁剪，根据实际开发需求可去掉上面的判断");
-                        RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), strings[0]);//调用裁剪.RxGalleryFinalApi.getModelPath()为默认的输出路径
-                    }
+                    Logger.d("演示拍照后进行图片裁剪，根据实际开发需求可去掉上面的判断");
+                    RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), strings[0]);//调用裁剪.RxGalleryFinalApi.getModelPath()为默认的输出路径
                 }
             });
         } else {
             Logger.i("失敗");
         }
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //选择调用：裁剪图片的回调
-        RxGalleryFinalApi.cropActivityForResult(this, new MediaScanner.ScanCallback() {
-            @Override
-            public void onScanCompleted(String[] images) {
-                Logger.i(String.format("裁剪图片成功,图片裁剪后存储路径:%s", images[0]));
-            }
-        });
-    }
-
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-
 }
