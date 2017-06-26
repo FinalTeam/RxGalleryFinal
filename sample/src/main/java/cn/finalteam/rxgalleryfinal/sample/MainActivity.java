@@ -13,15 +13,13 @@ import com.yalantis.ucrop.model.AspectRatio;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.sample.imageloader.ImageLoaderActivity;
 import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
-import cn.finalteam.rxgalleryfinal.ui.adapter.MediaGridAdapter;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
-import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
 
@@ -181,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .multiple()
                 .maxSize(8)
                 .imageLoader(ImageLoaderType.FRESCO)
-                .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                .subscribe(new RxBusResultDisposable<ImageMultipleResultEvent>() {
 
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
@@ -208,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .cropAspectRatioOptions(0, new AspectRatio("3:3", 30, 10))
                 .crop()
                 .imageLoader(ImageLoaderType.FRESCO)
-                .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                .subscribe(new RxBusResultDisposable<ImageRadioResultEvent>() {
                     @Override
                     protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
                         Toast.makeText(getBaseContext(), "选中了图片路径：" + imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
@@ -228,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 RxGalleryFinalApi
                         .getInstance(this)
                         .setVDMultipleResultEvent(
-                                new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                                new RxBusResultDisposable<ImageMultipleResultEvent>() {
                                     @Override
                                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                                         Logger.i("多选视频的回调");
@@ -243,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .getInstance(this)
                         .setType(RxGalleryFinalApi.SelectRXType.TYPE_VIDEO, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_MULTI)
                         .setVDMultipleResultEvent(
-                                new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                                new RxBusResultDisposable<ImageMultipleResultEvent>() {
                                     @Override
                                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                                         Logger.i("多选视频的回调");
@@ -255,9 +253,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //直接打开
                 RxGalleryFinalApi
-                        .openMultiSelectVD(this, new RxBusResultSubscriber() {
+                        .openMultiSelectVD(this, new RxBusResultDisposable<ImageMultipleResultEvent>() {
                             @Override
-                            protected void onEvent(Object o) throws Exception {
+                            protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                                 Logger.i("多选视频的回调");
                             }
                         });
@@ -272,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void openVideoSelectRadioMethod() {
         RxGalleryFinalApi.getInstance(MainActivity.this)
                 .setType(RxGalleryFinalApi.SelectRXType.TYPE_VIDEO, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_RADIO)
-                .setVDRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                .setVDRadioResultEvent(new RxBusResultDisposable<ImageRadioResultEvent>() {
                     @Override
                     protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
                         //回调还没
@@ -294,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 RxGalleryFinalApi
                         .getInstance(MainActivity.this)
                         .setImageMultipleResultEvent(
-                                new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                                new RxBusResultDisposable<ImageMultipleResultEvent>() {
                                     @Override
                                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                                         Logger.i("多选图片的回调");
@@ -308,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 RxGalleryFinalApi
                         .getInstance(MainActivity.this)
                         .setType(RxGalleryFinalApi.SelectRXType.TYPE_IMAGE, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_MULTI)
-                        .setImageMultipleResultEvent(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                        .setImageMultipleResultEvent(new RxBusResultDisposable<ImageMultipleResultEvent>() {
                             @Override
                             protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                                 Logger.i("多选图片的回调");
@@ -319,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case 2:
 
                 //直接打开
-                RxGalleryFinalApi.openMultiSelectImage(this, new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                RxGalleryFinalApi.openMultiSelectImage(this, new RxBusResultDisposable<ImageMultipleResultEvent>() {
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                         Logger.i("多选图片的回调");
@@ -343,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //打开单选图片，默认参数
                 instance
-                        .setImageRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                        .setImageRadioResultEvent(new RxBusResultDisposable<ImageRadioResultEvent>() {
                             @Override
                             protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
                                 Logger.i("单选图片的回调");
@@ -356,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //设置自定义的参数
                 instance
                         .setType(RxGalleryFinalApi.SelectRXType.TYPE_IMAGE, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_RADIO)
-                        .setImageRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                        .setImageRadioResultEvent(new RxBusResultDisposable<ImageRadioResultEvent>() {
                             @Override
                             protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
                                 Logger.i("单选图片的回调");
@@ -368,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //快速打开单选图片,flag使用true不裁剪
                 RxGalleryFinalApi
-                        .openRadioSelectImage(MainActivity.this, new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                        .openRadioSelectImage(MainActivity.this, new RxBusResultDisposable<ImageRadioResultEvent>() {
                             @Override
                             protected void onEvent(ImageRadioResultEvent o) throws Exception {
                                 Logger.i("单选图片的回调");
@@ -381,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //单选，使用RxGalleryFinal默认设置，并且带有裁剪
                 instance
                         .openGalleryRadioImgDefault(
-                                new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                                new RxBusResultDisposable<ImageRadioResultEvent>() {
                                     @Override
                                     protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
                                         Logger.i("只要选择图片就会触发");

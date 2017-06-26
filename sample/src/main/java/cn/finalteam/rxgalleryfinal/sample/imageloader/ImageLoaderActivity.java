@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.sample.R;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
@@ -67,7 +67,7 @@ public class ImageLoaderActivity extends AppCompatActivity {
                 .radio()
                 .gif(appCompatCheckBox.isChecked())
                 .imageLoader(imageLoaderType)
-                .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                .subscribe(new RxBusResultDisposable<ImageRadioResultEvent>() {
                     @Override
                     protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
                         Toast.makeText(getBaseContext(), "选中了图片路径：" + imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();

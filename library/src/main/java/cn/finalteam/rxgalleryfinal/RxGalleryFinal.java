@@ -17,7 +17,7 @@ import java.util.List;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
@@ -35,7 +35,7 @@ import io.reactivex.disposables.Disposable;
 public class RxGalleryFinal {
 
     private Configuration configuration = new Configuration();
-    private RxBusResultSubscriber<BaseResultEvent> rxBusResultSubscriber;
+    private RxBusResultDisposable<BaseResultEvent> isRadioDisposable;
 
     private RxGalleryFinal() {
     }
@@ -252,8 +252,8 @@ public class RxGalleryFinal {
     /**
      * 设置回调
      */
-    public RxGalleryFinal subscribe(@NonNull RxBusResultSubscriber<? extends BaseResultEvent> rxBusResultSubscriber) {
-        this.rxBusResultSubscriber = (RxBusResultSubscriber<BaseResultEvent>) rxBusResultSubscriber;
+    public RxGalleryFinal subscribe(@NonNull RxBusResultDisposable<? extends BaseResultEvent> rxBusResultSubscriber) {
+        this.isRadioDisposable = (RxBusResultDisposable<BaseResultEvent>) rxBusResultSubscriber;
         return this;
     }
 
@@ -268,7 +268,7 @@ public class RxGalleryFinal {
      * 执行
      */
     private void execute() {
-        Context context = configuration.getContext().getApplicationContext();
+        Context context = configuration.getContext();
         if (context == null) {
             return;
         }
@@ -281,20 +281,18 @@ public class RxGalleryFinal {
         if (configuration.getImageLoader() == null) {
             throw new NullPointerException("imageLoader == null , please check imageLoader");
         }
-
-        if (rxBusResultSubscriber == null) {
+        if (isRadioDisposable == null) {
             return;
         }
-
         Disposable disposable;
         if (configuration.isRadio()) {
             disposable = RxBus.getDefault()
                     .toObservable(ImageRadioResultEvent.class)
-                    .subscribeWith(rxBusResultSubscriber);
+                    .subscribeWith(isRadioDisposable);
         } else {
             disposable = RxBus.getDefault()
                     .toObservable(ImageMultipleResultEvent.class)
-                    .subscribeWith(rxBusResultSubscriber);
+                    .subscribeWith(isRadioDisposable);
         }
         RxBus.getDefault().add(disposable);
 

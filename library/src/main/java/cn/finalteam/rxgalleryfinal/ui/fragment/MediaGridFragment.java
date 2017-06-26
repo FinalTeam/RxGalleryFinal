@@ -43,7 +43,7 @@ import cn.finalteam.rxgalleryfinal.bean.ImageCropBean;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
@@ -123,9 +123,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private String mBucketId = String.valueOf(Integer.MIN_VALUE);
 
     private MediaActivity mMediaActivity;
-    private Disposable mSubscrMediaCheckChangeEvent;
-    private Disposable mSubscrCloseMediaViewPageFragmentEvent;
-    private Disposable mSubscrRequestStorageReadAccessPermissionEvent;
+    private Disposable mMediaCheckChangeDisposable;
+    private Disposable mCloseMediaViewPageFragmentDisposable;
+    private Disposable mRequestStorageReadAccessPermissionDisposable;
 
     private SlideInUnderneathAnimation slideInUnderneathAnimation;
     private SlideOutUnderneathAnimation slideOutUnderneathAnimation;
@@ -330,8 +330,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
      * RxBus
      */
     private void subscribeEvent() {
-        mSubscrMediaCheckChangeEvent = RxBus.getDefault().toObservable(MediaCheckChangeEvent.class)
-                .subscribeWith(new RxBusSubscriber<MediaCheckChangeEvent>() {
+        mMediaCheckChangeDisposable = RxBus.getDefault().toObservable(MediaCheckChangeEvent.class)
+                .subscribeWith(new RxBusDisposable<MediaCheckChangeEvent>() {
                     @Override
                     protected void onEvent(MediaCheckChangeEvent mediaCheckChangeEvent) {
                         if (mMediaActivity.getCheckedList().size() == 0) {
@@ -342,19 +342,19 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
                     }
                 });
-        RxBus.getDefault().add(mSubscrMediaCheckChangeEvent);
+        RxBus.getDefault().add(mMediaCheckChangeDisposable);
 
-        mSubscrCloseMediaViewPageFragmentEvent = RxBus.getDefault().toObservable(CloseMediaViewPageFragmentEvent.class)
-                .subscribeWith(new RxBusSubscriber<CloseMediaViewPageFragmentEvent>() {
+        mCloseMediaViewPageFragmentDisposable = RxBus.getDefault().toObservable(CloseMediaViewPageFragmentEvent.class)
+                .subscribeWith(new RxBusDisposable<CloseMediaViewPageFragmentEvent>() {
                     @Override
                     protected void onEvent(CloseMediaViewPageFragmentEvent closeMediaViewPageFragmentEvent) throws Exception {
                         mMediaGridAdapter.notifyDataSetChanged();
                     }
                 });
-        RxBus.getDefault().add(mSubscrCloseMediaViewPageFragmentEvent);
+        RxBus.getDefault().add(mCloseMediaViewPageFragmentDisposable);
 
-        mSubscrRequestStorageReadAccessPermissionEvent = RxBus.getDefault().toObservable(RequestStorageReadAccessPermissionEvent.class)
-                .subscribeWith(new RxBusSubscriber<RequestStorageReadAccessPermissionEvent>() {
+        mRequestStorageReadAccessPermissionDisposable = RxBus.getDefault().toObservable(RequestStorageReadAccessPermissionEvent.class)
+                .subscribeWith(new RxBusDisposable<RequestStorageReadAccessPermissionEvent>() {
                     @Override
                     protected void onEvent(RequestStorageReadAccessPermissionEvent requestStorageReadAccessPermissionEvent) throws Exception {
                         if (requestStorageReadAccessPermissionEvent.isSuccess()) {
@@ -364,7 +364,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                         }
                     }
                 });
-        RxBus.getDefault().add(mSubscrRequestStorageReadAccessPermissionEvent);
+        RxBus.getDefault().add(mRequestStorageReadAccessPermissionDisposable);
 
     }
 
@@ -789,8 +789,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        RxBus.getDefault().remove(mSubscrMediaCheckChangeEvent);
-        RxBus.getDefault().remove(mSubscrCloseMediaViewPageFragmentEvent);
+        RxBus.getDefault().remove(mMediaCheckChangeDisposable);
+        RxBus.getDefault().remove(mCloseMediaViewPageFragmentDisposable);
 
     }
 

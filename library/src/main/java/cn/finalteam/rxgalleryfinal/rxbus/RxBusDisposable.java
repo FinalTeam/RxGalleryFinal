@@ -8,7 +8,7 @@ import io.reactivex.observers.DisposableObserver;
  * Author:pengjianbo  Dujinyang
  * Date:16/7/22 下午2:40
  */
-public abstract class RxBusSubscriber<T> extends DisposableObserver<T> {
+public abstract class RxBusDisposable<T> extends DisposableObserver<T> {
 
     @Override
     public void onNext(T t) {

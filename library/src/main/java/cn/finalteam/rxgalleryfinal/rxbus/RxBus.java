@@ -21,11 +21,11 @@ public class RxBus {
     private final Subject<Object> mBus;
     private final Map<Class<?>, Object> mStickyEventMap;
 
-    private final CompositeDisposable mSubscriptions;
+    private final CompositeDisposable mDisposable;
 
     private RxBus() {
         mBus = PublishSubject.create().toSerialized();
-        mSubscriptions = new CompositeDisposable();
+        mDisposable = new CompositeDisposable();
         mStickyEventMap = new HashMap<>();
     }
 
@@ -70,7 +70,7 @@ public class RxBus {
      * 是否被取消订阅
      */
     public boolean isUnsubscribed() {
-        return mSubscriptions.isDisposed();
+        return mDisposable.isDisposed();
     }
 
     /**
@@ -78,7 +78,7 @@ public class RxBus {
      */
     public void add(Disposable s) {
         if (s != null) {
-            mSubscriptions.add(s);
+            mDisposable.add(s);
         }
     }
 
@@ -87,7 +87,7 @@ public class RxBus {
      */
     public void remove(Disposable s) {
         if (s != null) {
-            mSubscriptions.remove(s);
+            mDisposable.remove(s);
         }
     }
 
@@ -95,14 +95,14 @@ public class RxBus {
      * 清除所有订阅
      */
     public void clear() {
-        mSubscriptions.clear();
+        mDisposable.clear();
     }
 
     /**
      * 取消订阅
      */
     public void unsubscribe() {
-        mSubscriptions.dispose();
+        mDisposable.dispose();
     }
 
     /**
