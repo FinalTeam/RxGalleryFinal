@@ -537,9 +537,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             if (!file.exists()) {
                 file.mkdirs();
             }
-
             Uri inputUri = Uri.fromFile(new File(mediaBean.getOriginalPath()));
             Intent intent = new Intent(getContext(), UCropActivity.class);
+
+            int[] allowedGestures = mConfiguration.getAllowedGestures();
+
+
             Bundle bundle = new Bundle();
             bundle.putParcelable(UCrop.EXTRA_OUTPUT_URI, outUri);
             bundle.putParcelable(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS, mediaBean);//EXTRA_INPUT_BEAN
@@ -548,9 +551,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             bundle.putString(UCrop.Options.EXTRA_UCROP_TITLE_TEXT_TOOLBAR, uCropTitle);
             bundle.putInt(UCrop.Options.EXTRA_UCROP_COLOR_WIDGET_ACTIVE, uCropActivityWidgetColor);
             bundle.putInt(UCrop.Options.EXTRA_UCROP_WIDGET_COLOR_TOOLBAR, uCropToolbarWidgetColor);
+            bundle.putBoolean(UCrop.Options.EXTRA_HIDE_BOTTOM_CONTROLS, mConfiguration.isHideBottomControls());
+            bundle.putIntArray(UCrop.Options.EXTRA_ALLOWED_GESTURES, mConfiguration.getAllowedGestures());
             bundle.putParcelable(UCrop.EXTRA_INPUT_URI, inputUri);
             int bk = FileUtils.existImageDir(inputUri.getPath());
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Logger.i("--->" + inputUri.getPath());
             Logger.i("--->" + outUri.getPath());
             ArrayList<AspectRatio> aspectRatioList = new ArrayList<>();
