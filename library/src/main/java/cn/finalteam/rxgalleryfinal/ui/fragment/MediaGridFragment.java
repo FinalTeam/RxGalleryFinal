@@ -43,7 +43,7 @@ import cn.finalteam.rxgalleryfinal.bean.ImageCropBean;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
@@ -123,9 +123,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private String mBucketId = String.valueOf(Integer.MIN_VALUE);
 
     private MediaActivity mMediaActivity;
-    private Disposable mSubscrMediaCheckChangeEvent;
-    private Disposable mSubscrCloseMediaViewPageFragmentEvent;
-    private Disposable mSubscrRequestStorageReadAccessPermissionEvent;
+    private Disposable mMediaCheckChangeDisposable;
+    private Disposable mCloseMediaViewPageFragmentDisposable;
+    private Disposable mRequestStorageReadAccessPermissionDisposable;
 
     private SlideInUnderneathAnimation slideInUnderneathAnimation;
     private SlideOutUnderneathAnimation slideOutUnderneathAnimation;
@@ -330,8 +330,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
      * RxBus
      */
     private void subscribeEvent() {
-        mSubscrMediaCheckChangeEvent = RxBus.getDefault().toObservable(MediaCheckChangeEvent.class)
-                .subscribeWith(new RxBusSubscriber<MediaCheckChangeEvent>() {
+        mMediaCheckChangeDisposable = RxBus.getDefault().toObservable(MediaCheckChangeEvent.class)
+                .subscribeWith(new RxBusDisposable<MediaCheckChangeEvent>() {
                     @Override
                     protected void onEvent(MediaCheckChangeEvent mediaCheckChangeEvent) {
                         if (mMediaActivity.getCheckedList().size() == 0) {
@@ -342,19 +342,19 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
                     }
                 });
-        RxBus.getDefault().add(mSubscrMediaCheckChangeEvent);
+        RxBus.getDefault().add(mMediaCheckChangeDisposable);
 
-        mSubscrCloseMediaViewPageFragmentEvent = RxBus.getDefault().toObservable(CloseMediaViewPageFragmentEvent.class)
-                .subscribeWith(new RxBusSubscriber<CloseMediaViewPageFragmentEvent>() {
+        mCloseMediaViewPageFragmentDisposable = RxBus.getDefault().toObservable(CloseMediaViewPageFragmentEvent.class)
+                .subscribeWith(new RxBusDisposable<CloseMediaViewPageFragmentEvent>() {
                     @Override
                     protected void onEvent(CloseMediaViewPageFragmentEvent closeMediaViewPageFragmentEvent) throws Exception {
                         mMediaGridAdapter.notifyDataSetChanged();
                     }
                 });
-        RxBus.getDefault().add(mSubscrCloseMediaViewPageFragmentEvent);
+        RxBus.getDefault().add(mCloseMediaViewPageFragmentDisposable);
 
-        mSubscrRequestStorageReadAccessPermissionEvent = RxBus.getDefault().toObservable(RequestStorageReadAccessPermissionEvent.class)
-                .subscribeWith(new RxBusSubscriber<RequestStorageReadAccessPermissionEvent>() {
+        mRequestStorageReadAccessPermissionDisposable = RxBus.getDefault().toObservable(RequestStorageReadAccessPermissionEvent.class)
+                .subscribeWith(new RxBusDisposable<RequestStorageReadAccessPermissionEvent>() {
                     @Override
                     protected void onEvent(RequestStorageReadAccessPermissionEvent requestStorageReadAccessPermissionEvent) throws Exception {
                         if (requestStorageReadAccessPermissionEvent.isSuccess()) {
@@ -364,7 +364,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                         }
                     }
                 });
-        RxBus.getDefault().add(mSubscrRequestStorageReadAccessPermissionEvent);
+        RxBus.getDefault().add(mRequestStorageReadAccessPermissionDisposable);
 
     }
 
@@ -537,20 +537,35 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             if (!file.exists()) {
                 file.mkdirs();
             }
-
             Uri inputUri = Uri.fromFile(new File(mediaBean.getOriginalPath()));
             Intent intent = new Intent(getContext(), UCropActivity.class);
+
+
+            // UCrop 参数 start
             Bundle bundle = new Bundle();
+
             bundle.putParcelable(UCrop.EXTRA_OUTPUT_URI, outUri);
-            bundle.putParcelable(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS, mediaBean);//EXTRA_INPUT_BEAN
+            bundle.putParcelable(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS, mediaBean);
             bundle.putInt(UCrop.Options.EXTRA_STATUS_BAR_COLOR, uCropStatusColor);
             bundle.putInt(UCrop.Options.EXTRA_TOOL_BAR_COLOR, uCropToolbarColor);
             bundle.putString(UCrop.Options.EXTRA_UCROP_TITLE_TEXT_TOOLBAR, uCropTitle);
             bundle.putInt(UCrop.Options.EXTRA_UCROP_COLOR_WIDGET_ACTIVE, uCropActivityWidgetColor);
             bundle.putInt(UCrop.Options.EXTRA_UCROP_WIDGET_COLOR_TOOLBAR, uCropToolbarWidgetColor);
+            bundle.putBoolean(UCrop.Options.EXTRA_HIDE_BOTTOM_CONTROLS, mConfiguration.isHideBottomControls());
+            bundle.putIntArray(UCrop.Options.EXTRA_ALLOWED_GESTURES, mConfiguration.getAllowedGestures());
+            bundle.putInt(UCrop.Options.EXTRA_COMPRESSION_QUALITY, mConfiguration.getCompressionQuality());
+            bundle.putInt(UCrop.Options.EXTRA_MAX_BITMAP_SIZE, mConfiguration.getMaxBitmapSize());
+            bundle.putFloat(UCrop.Options.EXTRA_MAX_SCALE_MULTIPLIER, mConfiguration.getMaxScaleMultiplier());
+            bundle.putFloat(UCrop.EXTRA_ASPECT_RATIO_X, mConfiguration.getAspectRatioX());
+            bundle.putFloat(UCrop.EXTRA_ASPECT_RATIO_Y, mConfiguration.getAspectRatioY());
+            bundle.putInt(UCrop.EXTRA_MAX_SIZE_X, mConfiguration.getMaxResultWidth());
+            bundle.putInt(UCrop.EXTRA_MAX_SIZE_Y, mConfiguration.getMaxResultHeight());
+            bundle.putInt(UCrop.Options.EXTRA_ASPECT_RATIO_SELECTED_BY_DEFAULT, mConfiguration.getSelectedByDefault());
+            bundle.putBoolean(UCrop.Options.EXTRA_FREE_STYLE_CROP, mConfiguration.isFreestyleCropEnabled());
             bundle.putParcelable(UCrop.EXTRA_INPUT_URI, inputUri);
+            // UCrop 参数 end
+
             int bk = FileUtils.existImageDir(inputUri.getPath());
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Logger.i("--->" + inputUri.getPath());
             Logger.i("--->" + outUri.getPath());
             ArrayList<AspectRatio> aspectRatioList = new ArrayList<>();
@@ -789,8 +804,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        RxBus.getDefault().remove(mSubscrMediaCheckChangeEvent);
-        RxBus.getDefault().remove(mSubscrCloseMediaViewPageFragmentEvent);
+        RxBus.getDefault().remove(mMediaCheckChangeDisposable);
+        RxBus.getDefault().remove(mCloseMediaViewPageFragmentDisposable);
 
     }
 

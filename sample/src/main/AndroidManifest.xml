@@ -31,7 +31,6 @@
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme_Light.Test" />
 
         <activity

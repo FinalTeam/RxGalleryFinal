@@ -6,8 +6,8 @@ apply plugin: "com.jfrog.bintray"
 version = "1.0.8"
 
 android {
-   compileSdkVersion 25
-   buildToolsVersion '25.0.3'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.3'
 
     // compileSdkVersion 24
     // buildToolsVersion '24'
@@ -41,7 +41,7 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.0'
     compile 'com.yalantis:ucrop:2.2.0'
-   compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile "com.android.support:exifinterface:25.3.1"
     /* compile 'com.android.support:recyclerview-v7:24.2.0'

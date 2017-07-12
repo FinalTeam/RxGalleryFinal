@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
@@ -41,15 +41,9 @@ public class RxGalleryFinalApi {
     private static String IMG_TYPE = "image/jpeg";
     public static File fileImagePath;//拍照图片
     public static File cropImagePath;//裁剪图片
-
-    private static RxGalleryFinalApi mRxApi;
+    private static RxGalleryFinalApi mRxApi = new RxGalleryFinalApi();
     private static RxGalleryFinal rxGalleryFinal;
 
-    static {
-        if (mRxApi == null) {
-            mRxApi = new RxGalleryFinalApi();
-        }
-    }
 
     /**
      * 默认使用 ImageLoaderType.GLIDE
@@ -58,13 +52,9 @@ public class RxGalleryFinalApi {
         if (context == null) {
             throw new NullPointerException("context == null");
         }
-        if (mRxApi == null) {
-            mRxApi = new RxGalleryFinalApi();
-        }
         rxGalleryFinal = RxGalleryFinal.with(context)
                 .imageLoader(ImageLoaderType.GLIDE)
                 .subscribe(null);
-
         Logger.i("==========" + mRxApi + "====" + rxGalleryFinal);
         return mRxApi;
     }
@@ -79,14 +69,14 @@ public class RxGalleryFinalApi {
      * }
      * @see new RxBusResultSubscriber<ImageRadioResultEvent>() {
      */
-    public static RxGalleryFinalApi openRadioSelectImage(Activity context, RxBusResultSubscriber rxBusResultSubscriber, boolean flag) {
+    public static RxGalleryFinalApi openRadioSelectImage(Activity context, RxBusResultDisposable<ImageRadioResultEvent> rxBusResultDisposable, boolean flag) {
         getInstance(context);
         if (flag) {
             rxGalleryFinal
                     .image()
                     .radio()
                     .imageLoader(ImageLoaderType.GLIDE)
-                    .subscribe(rxBusResultSubscriber)
+                    .subscribe(rxBusResultDisposable)
                     .openGallery();
         } else {
             rxGalleryFinal
@@ -94,7 +84,7 @@ public class RxGalleryFinalApi {
                     .radio()
                     .crop()
                     .imageLoader(ImageLoaderType.GLIDE)
-                    .subscribe(rxBusResultSubscriber)
+                    .subscribe(rxBusResultDisposable)
                     .openGallery();
         }
         return mRxApi;
@@ -105,7 +95,7 @@ public class RxGalleryFinalApi {
      *
      * @return RxGalleryFinalApi
      */
-    public static RxGalleryFinalApi onCropImageResult(IRadioImageCheckedListener listener) {
+    public RxGalleryFinalApi onCropImageResult(IRadioImageCheckedListener listener) {
         RxGalleryListener.getInstance().setRadioImageCheckedListener(listener);
         return mRxApi;
     }
@@ -133,7 +123,7 @@ public class RxGalleryFinalApi {
     /**
      * 单选默认设置
      */
-    public static RxGalleryFinalApi openGalleryRadioImgDefault(RxBusResultSubscriber rxBusResultSubscriber) {
+    public RxGalleryFinalApi openGalleryRadioImgDefault(RxBusResultDisposable<ImageRadioResultEvent> rxBusResultDisposable) {
         Logger.i("----rxGalleryFinal---" + rxGalleryFinal);
         if (rxGalleryFinal == null)
             return null;
@@ -142,7 +132,7 @@ public class RxGalleryFinalApi {
                 .radio()
                 .crop()
                 .imageLoader(ImageLoaderType.GLIDE)
-                .subscribe(rxBusResultSubscriber)
+                .subscribe(rxBusResultDisposable)
                 .openGallery();
         return mRxApi;
     }
@@ -166,14 +156,14 @@ public class RxGalleryFinalApi {
      * }
      * @see new RxBusResultSubscriber<ImageRadioResultEvent>() {
      */
-    public static void openRadioSelectImage(Activity context, RxBusResultSubscriber rxBusResultSubscriber) {
+    public static void openRadioSelectImage(Activity context, RxBusResultDisposable rxBusResultDisposable) {
         RxGalleryFinal
                 .with(context)
                 .image()
                 .radio()
                 .crop()
                 .imageLoader(ImageLoaderType.GLIDE)
-                .subscribe(rxBusResultSubscriber)
+                .subscribe(rxBusResultDisposable)
                 .openGallery();
     }
 
@@ -186,14 +176,14 @@ public class RxGalleryFinalApi {
      * }
      * @see new RxBusResultSubscriber<ImageRadioResultEvent>() {
      */
-    public static void openMultiSelectImage(Activity context, RxBusResultSubscriber rxBusResultSubscriber) {
+    public static void openMultiSelectImage(Activity context, RxBusResultDisposable<ImageMultipleResultEvent> rxBusResultDisposable) {
         RxGalleryFinal
                 .with(context)
                 .image()
                 .multiple()
                 .crop()
                 .imageLoader(ImageLoaderType.GLIDE)
-                .subscribe(rxBusResultSubscriber)
+                .subscribe(rxBusResultDisposable)
                 .openGallery();
     }
 
@@ -206,7 +196,7 @@ public class RxGalleryFinalApi {
      * }
      * @see new RxBusResultSubscriber<ImageRadioResultEvent>() {
      */
-    public static void openMultiSelectImage(Activity context, int maxSize, RxBusResultSubscriber rxBusResultSubscriber) {
+    public static void openMultiSelectImage(Activity context, int maxSize, RxBusResultDisposable<ImageMultipleResultEvent> rxBusResultDisposable) {
         RxGalleryFinal
                 .with(context)
                 .image()
@@ -214,7 +204,7 @@ public class RxGalleryFinalApi {
                 .multiple()
                 .crop()
                 .imageLoader(ImageLoaderType.GLIDE)
-                .subscribe(rxBusResultSubscriber)
+                .subscribe(rxBusResultDisposable)
                 .openGallery();
     }
 
@@ -227,13 +217,13 @@ public class RxGalleryFinalApi {
      * }
      * @see new RxBusResultSubscriber<ImageRadioResultEvent>() {
      */
-    public static void openRadioSelectVD(Activity context, RxBusResultSubscriber rxBusResultSubscriber) {
+    public static void openRadioSelectVD(Activity context, RxBusResultDisposable<ImageRadioResultEvent> rxBusResultDisposable) {
         RxGalleryFinal
                 .with(context)
                 .multiple()
                 .video()
                 .imageLoader(ImageLoaderType.GLIDE)
-                .subscribe(rxBusResultSubscriber)
+                .subscribe(rxBusResultDisposable)
                 .openGallery();
     }
 
@@ -247,14 +237,14 @@ public class RxGalleryFinalApi {
      * }
      * @see new RxBusResultSubscriber<ImageRadioResultEvent>() {
      */
-    public static void openMultiSelectVD(Activity context, RxBusResultSubscriber rxBusResultSubscriber) {
+    public static void openMultiSelectVD(Activity context, RxBusResultDisposable<ImageMultipleResultEvent> rxBusResultDisposable) {
         RxGalleryFinal
                 .with(context)
                 .video()
                 .multiple()
                 .maxSize(9)
                 .imageLoader(ImageLoaderType.UNIVERSAL)
-                .subscribe(rxBusResultSubscriber)
+                .subscribe(rxBusResultDisposable)
                 .openGallery();
     }
 
@@ -499,7 +489,7 @@ public class RxGalleryFinalApi {
     /**
      * 设置单选的按钮事件
      */
-    public RxGalleryFinalApi setImageRadioResultEvent(RxBusResultSubscriber<ImageRadioResultEvent> t) {
+    public RxGalleryFinalApi setImageRadioResultEvent(RxBusResultDisposable<ImageRadioResultEvent> t) {
         rxGalleryFinal.image();
         rxGalleryFinal.subscribe(t);
         return mRxApi;
@@ -508,7 +498,7 @@ public class RxGalleryFinalApi {
     /**
      * 设置多选的按钮事件
      */
-    public RxGalleryFinalApi setImageMultipleResultEvent(RxBusResultSubscriber<ImageMultipleResultEvent> t) {
+    public RxGalleryFinalApi setImageMultipleResultEvent(RxBusResultDisposable<ImageMultipleResultEvent> t) {
         rxGalleryFinal.image();
         rxGalleryFinal.subscribe(t);
         return mRxApi;
@@ -517,7 +507,7 @@ public class RxGalleryFinalApi {
     /**
      * 设置视频单选的按钮事件
      */
-    public RxGalleryFinalApi setVDRadioResultEvent(RxBusResultSubscriber<ImageRadioResultEvent> t) {
+    public RxGalleryFinalApi setVDRadioResultEvent(RxBusResultDisposable<ImageRadioResultEvent> t) {
         rxGalleryFinal.video();
         rxGalleryFinal.subscribe(t);
         return mRxApi;
@@ -526,7 +516,7 @@ public class RxGalleryFinalApi {
     /**
      * 设置视频多选的按钮事件
      */
-    public RxGalleryFinalApi setVDMultipleResultEvent(RxBusResultSubscriber<ImageMultipleResultEvent> t) {
+    public RxGalleryFinalApi setVDMultipleResultEvent(RxBusResultDisposable<ImageMultipleResultEvent> t) {
         rxGalleryFinal.video();
         rxGalleryFinal.subscribe(t);
         return mRxApi;
