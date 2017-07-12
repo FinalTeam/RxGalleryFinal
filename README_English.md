@@ -22,9 +22,13 @@
 
        compile 'cn.finalteam.rxgalleryfinal:library:1.0.9'
 
-* [History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
-* RxJava Update to - RxJava2.1
-* Repair bug ->  #136,#135,#134,#129,#99
+### 1.0.9 Characteristic
+
+ * Repair bug -  #160
+ * Add UCROP setting
+ * Update Sample code
+ * RxJava Update
+ * [History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 
 ## Use
 ### Download or add a dependency

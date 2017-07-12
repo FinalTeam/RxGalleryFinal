@@ -23,11 +23,14 @@
 ### gradle
 
        compile 'cn.finalteam.rxgalleryfinal:library:1.0.9'
-      
-* RxJava升级到最新 - RxJava2.1
-* 修复相关bug -  #136,#135,#134,#129,#99
-* 代码优化
-* [History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
+
+### 1.0.9 特性
+
+ * 修复相关bug -  #160
+ * 增加UCROP的设置
+ * 更新Sample代码
+ * RxJava升级
+ * [History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 
 ## 使用
 ### 下载或添加依赖
