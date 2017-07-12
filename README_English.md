@@ -20,15 +20,16 @@
 
 ### gradle
 
-       compile 'cn.finalteam.rxgalleryfinal:library:1.0.8'
-       
+       compile 'cn.finalteam.rxgalleryfinal:library:1.0.9'
+
+* [History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 * RxJava Update to - RxJava2.1
 * Repair bug ->  #136,#135,#134,#129,#99
 
 ## Use
 ### Download or add a dependency
 
-    compile 'cn.finalteam.rxgalleryfinal:library:1.0.8'
+    compile 'cn.finalteam.rxgalleryfinal:library:1.0.9'
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
 
