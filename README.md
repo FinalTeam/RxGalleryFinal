@@ -27,6 +27,7 @@
 * RxJava升级到最新 - RxJava2.1
 * 修复相关bug -  #136,#135,#134,#129,#99
 * 代码优化
+* [History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 
 ## 使用
 ### 下载或添加依赖

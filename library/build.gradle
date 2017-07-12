@@ -3,7 +3,7 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: "com.jfrog.bintray"
 
-version = "1.0.8"
+version = "1.0.9"
 
 android {
     compileSdkVersion 25
@@ -47,7 +47,6 @@ dependencies {
     /* compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile "com.android.support:exifinterface:25.1.0"*/
-
     provided 'com.squareup.picasso:picasso:2.5.2'
     provided 'com.facebook.fresco:fresco:1.3.0'
     provided 'com.facebook.fresco:animated-gif:1.3.0'
