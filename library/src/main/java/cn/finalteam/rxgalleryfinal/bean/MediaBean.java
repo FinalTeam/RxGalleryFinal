@@ -109,7 +109,7 @@ public class MediaBean implements Parcelable {
         this.id = id;
     }
 
-    String getTitle() {
+    public String getTitle() {
         return title;
     }
 
@@ -125,7 +125,7 @@ public class MediaBean implements Parcelable {
         this.originalPath = originalPath;
     }
 
-    long getCreateDate() {
+    public long getCreateDate() {
         return createDate;
     }
 
@@ -133,7 +133,7 @@ public class MediaBean implements Parcelable {
         this.createDate = createDate;
     }
 
-    long getModifiedDate() {
+    public long getModifiedDate() {
         return modifiedDate;
     }
 
@@ -141,7 +141,7 @@ public class MediaBean implements Parcelable {
         this.modifiedDate = modifiedDate;
     }
 
-    String getMimeType() {
+    public String getMimeType() {
         return mimeType;
     }
 
@@ -149,7 +149,7 @@ public class MediaBean implements Parcelable {
         this.mimeType = mimeType;
     }
 
-    String getBucketId() {
+    public String getBucketId() {
         return bucketId;
     }
 
@@ -157,7 +157,7 @@ public class MediaBean implements Parcelable {
         this.bucketId = bucketId;
     }
 
-    String getBucketDisplayName() {
+    public String getBucketDisplayName() {
         return bucketDisplayName;
     }
 
