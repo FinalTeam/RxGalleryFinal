@@ -22,9 +22,7 @@
 
 ### gradle
 
-        [#161]()
-	    New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.0' -> 紧急修复bug
-
+	    New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.0' -> 紧急修复bug.#161
 
         compile 'cn.finalteam.rxgalleryfinal:library:1.0.9'
 
