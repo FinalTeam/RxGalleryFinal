@@ -20,9 +20,8 @@
 
 ### gradle
 
-       #[161](https://github.com/FinalTeam/RxGalleryFinal/issues/161)
 
-	   New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.0' -> Emergency repair bug.
+	   New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.0' -> Emergency repair bug.<a href="https://github.com/FinalTeam/RxGalleryFinal/issues/161" target ="_top">#161</a>
 
        compile 'cn.finalteam.rxgalleryfinal:library:1.0.9'
 

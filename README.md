@@ -22,7 +22,7 @@
 
 ### gradle
 
-        [#161](https://github.com/FinalTeam/RxGalleryFinal/issues/161)
+        [#161]()
 	    New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.0' -> 紧急修复bug
 
 
