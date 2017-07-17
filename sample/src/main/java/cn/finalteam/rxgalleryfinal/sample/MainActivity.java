@@ -2,7 +2,10 @@ package cn.finalteam.rxgalleryfinal.sample;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioButton;
@@ -21,7 +24,6 @@ import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
-import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
 
 /**
  * 示例
@@ -139,7 +141,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(MainActivity.this, "没有图片演示，请选择‘拍照裁剪’功能", Toast.LENGTH_SHORT).show();
             //  RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), inputImg);//调用裁剪.RxGalleryFinalApi.getModelPath()为模拟的输出路径
         } else {
-            RxGalleryFinalApi.openZKCamera(MainActivity.this);
+            //            RxGalleryFinalApi.openZKCamera(MainActivity.this);
+
+            SimpleRxGalleryFinal.get().init(
+                    new SimpleRxGalleryFinal.RxGalleryFinalCropListener() {
+                        @NonNull
+                        @Override
+                        public Activity getSimpleActivity() {
+                            return MainActivity.this;
+                        }
+
+                        @Override
+                        public void onCropCancel() {
+                            Toast.makeText(getSimpleActivity(), "裁剪被取消", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onCropSuccess(@Nullable Uri uri) {
+                            Toast.makeText(getSimpleActivity(), "裁剪成功：" + uri, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onCropError(@NonNull String errorMessage) {
+                            Toast.makeText(getSimpleActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+            ).openCamera();
         }
     }
 
@@ -406,19 +433,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RxGalleryFinalApi.TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Logger.i("拍照OK，图片路径:" + RxGalleryFinalApi.fileImagePath.getPath());
-            //刷新相册数据库
-            RxGalleryFinalApi.openZKCameraForResult(MainActivity.this, new MediaScanner.ScanCallback() {
-                @Override
-                public void onScanCompleted(String[] strings) {
-                    Logger.i(String.format("拍照成功,图片存储路径:%s", strings[0]));
-                    Logger.d("演示拍照后进行图片裁剪，根据实际开发需求可去掉上面的判断");
-                    RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), strings[0]);//调用裁剪.RxGalleryFinalApi.getModelPath()为默认的输出路径
-                }
-            });
-        } else {
-            Logger.i("失敗");
-        }
+        SimpleRxGalleryFinal.get().onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == RxGalleryFinalApi.TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+//            Logger.i("拍照OK，图片路径:" + RxGalleryFinalApi.fileImagePath.getPath());
+//            //刷新相册数据库
+//            RxGalleryFinalApi.openZKCameraForResult(MainActivity.this, new MediaScanner.ScanCallback() {
+//                @Override
+//                public void onScanCompleted(String[] strings) {
+//                    Logger.i(String.format("拍照成功,图片存储路径:%s", strings[0]));
+//                    Logger.d("演示拍照后进行图片裁剪，根据实际开发需求可去掉上面的判断");
+//                    RxGalleryFinalApi.cropScannerForResult(MainActivity.this, RxGalleryFinalApi.getModelPath(), strings[0]);//调用裁剪.RxGalleryFinalApi.getModelPath()为默认的输出路径
+//                }
+//            });
+//        } else {
+//            Logger.i("失敗");
+//        }
     }
 }
