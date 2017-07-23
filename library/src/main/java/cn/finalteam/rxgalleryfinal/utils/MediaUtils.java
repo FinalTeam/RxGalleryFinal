@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.media.ExifInterface;
 import android.text.TextUtils;
 
@@ -68,7 +69,11 @@ public class MediaUtils {
                 cursor.moveToFirst();
                 do {
                     MediaBean mediaBean = parseImageCursorAndCreateThumImage(context, cursor);
-                    mediaBeanList.add(mediaBean);
+                    if (mediaBean != null) {
+                        mediaBeanList.add(mediaBean);
+                    }else{
+                        Logger.d("mediaBean == null , 获取的图片Size应该为0，跳过插入");
+                    }
                 } while (cursor.moveToNext());
             }
         }
@@ -172,24 +177,36 @@ public class MediaUtils {
 
     /**
      * 解析图片cursor并且创建缩略图
+     * <p>
+     * update 17.07.23 log
+     * <p>
+     * 判断图片 Size ，如果小于等于0则返回 Null，避免出现 No such file or directory
      */
+    @Nullable
     private static MediaBean parseImageCursorAndCreateThumImage(Context context, Cursor cursor) {
-        MediaBean mediaBean = new MediaBean();
+        long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.SIZE));
+        Logger.d(String.valueOf(size));
+        if (size <= 0) {
+            return null;
+        }
+
         long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID));
-        mediaBean.setId(id);
         String title = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.TITLE));
-        mediaBean.setTitle(title);
         String originalPath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-        mediaBean.setOriginalPath(originalPath);
         String bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
-        mediaBean.setBucketId(bucketId);
         String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
-        mediaBean.setBucketDisplayName(bucketDisplayName);
         String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE));
-        mediaBean.setMimeType(mimeType);
         long createDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
-        mediaBean.setCreateDate(createDate);
         long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED));
+
+        MediaBean mediaBean = new MediaBean();
+        mediaBean.setId(id);
+        mediaBean.setTitle(title);
+        mediaBean.setOriginalPath(originalPath);
+        mediaBean.setBucketId(bucketId);
+        mediaBean.setBucketDisplayName(bucketDisplayName);
+        mediaBean.setMimeType(mimeType);
+        mediaBean.setCreateDate(createDate);
         mediaBean.setModifiedDate(modifiedDate);
         mediaBean.setThumbnailBigPath(createThumbnailBigFileName(context, originalPath).getAbsolutePath());
         mediaBean.setThumbnailSmallPath(createThumbnailSmallFileName(context, originalPath).getAbsolutePath());

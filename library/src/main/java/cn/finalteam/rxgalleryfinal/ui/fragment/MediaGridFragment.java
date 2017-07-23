@@ -178,7 +178,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
      */
     public static void setImageStoreDir(String imgFile) {
         mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM" + File.separator + imgFile + File.separator);
-        ;
         Logger.i("设置图片保存路径为：" + mImageStoreDir.getAbsolutePath());
     }
 
@@ -323,6 +322,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (success) {
             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
         }
+
+        Logger.d(String.valueOf(mConfiguration.getSelectedList()));
 
     }
 
@@ -768,6 +769,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             return;
         }
 
+        // mediaBean 有可能为Null，onNext 做了处理，在 getMediaBeanWithImage 时候就不处理Null了
         Observable.create((ObservableOnSubscribe<MediaBean>) subscriber -> {
             MediaBean mediaBean = MediaUtils.getMediaBeanWithImage(getContext(), images[0]);
             subscriber.onNext(mediaBean);

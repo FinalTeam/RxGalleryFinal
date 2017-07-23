@@ -13,8 +13,11 @@ import android.widget.Toast;
 
 import com.yalantis.ucrop.model.AspectRatio;
 
+import java.util.List;
+
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
+import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
@@ -196,20 +199,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private List<MediaBean> list = null;
+
     /**
      * 自定义多选
      */
     private void openMulti() {
-        RxGalleryFinal
+        RxGalleryFinal rxGalleryFinal = RxGalleryFinal
                 .with(MainActivity.this)
                 .image()
-                .multiple()
-                .maxSize(8)
+                .multiple();
+        if (list != null && !list.isEmpty()) {
+            rxGalleryFinal
+                    .selected(list);
+        }
+        rxGalleryFinal.maxSize(8)
                 .imageLoader(ImageLoaderType.FRESCO)
                 .subscribe(new RxBusResultDisposable<ImageMultipleResultEvent>() {
 
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
+                        list = imageMultipleResultEvent.getResult();
                         Toast.makeText(getBaseContext(), "已选择" + imageMultipleResultEvent.getResult().size() + "张图片", Toast.LENGTH_SHORT).show();
                     }
 
