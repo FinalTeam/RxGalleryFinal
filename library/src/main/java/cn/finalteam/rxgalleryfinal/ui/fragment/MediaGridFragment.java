@@ -135,6 +135,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private int uCropActivityWidgetColor;
     private int uCropToolbarWidgetColor;
     private String uCropTitle;
+    private String requestStorageAccessPermissionTips;
 
     public static MediaGridFragment newInstance(Configuration configuration) {
         MediaGridFragment fragment = new MediaGridFragment();
@@ -271,7 +272,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             if (mConfiguration.isHidePreview()) {
                 view.findViewById(R.id.tv_preview_vr).setVisibility(View.GONE);
                 mTvPreview.setVisibility(View.GONE);
-            }else{
+            } else {
                 view.findViewById(R.id.tv_preview_vr).setVisibility(View.VISIBLE);
                 mTvPreview.setVisibility(View.VISIBLE);
             }
@@ -332,7 +333,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
         }
 
-        Logger.d(String.valueOf(mConfiguration.getSelectedList()));
 
     }
 
@@ -367,10 +367,16 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .subscribeWith(new RxBusDisposable<RequestStorageReadAccessPermissionEvent>() {
                     @Override
                     protected void onEvent(RequestStorageReadAccessPermissionEvent requestStorageReadAccessPermissionEvent) throws Exception {
-                        if (requestStorageReadAccessPermissionEvent.isSuccess()) {
-                            mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+                        if (requestStorageReadAccessPermissionEvent.getType() == RequestStorageReadAccessPermissionEvent.TYPE_WRITE) {
+                            if (requestStorageReadAccessPermissionEvent.isSuccess()) {
+                                mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+                            } else {
+                                getActivity().finish();
+                            }
                         } else {
-                            getActivity().finish();
+                            if (requestStorageReadAccessPermissionEvent.isSuccess()) {
+                                openCamera(mMediaActivity);
+                            }
                         }
                     }
                 });
@@ -391,6 +397,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         uCropTitle = ThemeUtils.resolveString(getActivity(), R.attr.gallery_ucrop_toolbar_title, R.string.gallery_edit_phote);
         int pageColor = ThemeUtils.resolveColor(getContext(), R.attr.gallery_page_bg, R.color.gallery_default_page_bg);
         mRlRootView.setBackgroundColor(pageColor);
+        requestStorageAccessPermissionTips = ThemeUtils.resolveString(getContext(), R.attr.gallery_request_camera_permission_tips, R.string.gallery_default_camera_access_permission_tips);
     }
 
     @Override
@@ -491,9 +498,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 Toast.makeText(getContext(), R.string.gallery_device_no_camera_tips, Toast.LENGTH_SHORT).show();
                 return;
             }
-            //打开
-            openCamera(getActivity());
 
+            boolean b = PermissionCheckUtils.checkCameraPermission(mMediaActivity, requestStorageAccessPermissionTips, MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION);
+            if (b) {
+                openCamera(mMediaActivity);
+            }
         } else {
             if (mConfiguration.isRadio()) {
                 radioNext(mediaBean);

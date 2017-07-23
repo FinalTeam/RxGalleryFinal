@@ -65,4 +65,12 @@ public class PermissionCheckUtils {
         return checkPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionDesc, requestCode);
     }
 
+    /**
+     * 检查是否对相机读取授权
+     */
+    @TargetApi(16)
+    public static boolean checkCameraPermission(Activity activity, String permissionDesc, int requestCode) {
+        return checkPermission(activity, Manifest.permission.CAMERA, permissionDesc, requestCode);
+    }
+
 }
