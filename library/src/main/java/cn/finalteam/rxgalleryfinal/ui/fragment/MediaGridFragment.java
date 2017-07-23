@@ -266,6 +266,15 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (mConfiguration.isRadio()) {
             view.findViewById(R.id.tv_preview_vr).setVisibility(View.GONE);
             mTvPreview.setVisibility(View.GONE);
+
+        } else {
+            if (mConfiguration.isHidePreview()) {
+                view.findViewById(R.id.tv_preview_vr).setVisibility(View.GONE);
+                mTvPreview.setVisibility(View.GONE);
+            }else{
+                view.findViewById(R.id.tv_preview_vr).setVisibility(View.VISIBLE);
+                mTvPreview.setVisibility(View.VISIBLE);
+            }
         }
 
         mMediaBeanList = new ArrayList<>();

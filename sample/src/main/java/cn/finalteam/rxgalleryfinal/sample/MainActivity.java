@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 自定义多选
      */
     private void openMulti() {
+//        RxGalleryFinal.with(this).hidePreview();
         RxGalleryFinal rxGalleryFinal = RxGalleryFinal
                 .with(MainActivity.this)
                 .image()
