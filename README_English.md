@@ -20,17 +20,21 @@
 
 ### gradle
 
-	   New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.0' -> Emergency repair bug.#161
+	   New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.1' -> Emergency repair bug.#170,#165 ,#167 and fix Image No such file or directory
+	    -  [History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 
-       compile 'cn.finalteam.rxgalleryfinal:library:1.0.9'
+### 1.1.1 Characteristic
+
+ * Repair bug
+ * #170,#165 ,#167 and fix Image No such file or directory
+ * Update Sample Code
 
 ### 1.0.9 Characteristic
 
  * Repair bug -  #160
  * Add UCROP setting
- * Update Sample code
+ * Update Sample Code
  * RxJava Update
- * [History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 
 ## Use
 ### Download or add a dependency

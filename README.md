@@ -18,13 +18,19 @@
 ### 待完善
 
     1.视频选择器的回调
-    2.卡顿测试，可在 Issues 里搜索：【精】觉得卡顿的点我 #130
+    2.卡顿问题，可在 Issues 里搜索： #130 【精】觉得卡顿的点我
 
 ### gradle
 
-	    New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.0' -> 紧急修复bug.#161
+	    New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.1' -> 紧急修复bug .#170,#165 ,#167 and fix Image No such file or directory
+	    -  [History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 
-        compile 'cn.finalteam.rxgalleryfinal:library:1.0.9'
+
+### 1.1.1 特性
+
+ * 修复相关bug
+ * #170,#165 ,#167 and fix Image No such file or directory
+ * 更新Sample代码
 
 ### 1.0.9 特性
 
@@ -32,7 +38,6 @@
  * 增加UCROP的设置
  * 更新Sample代码
  * RxJava升级
- * [History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 
 ## 使用
 ### 下载或添加依赖
