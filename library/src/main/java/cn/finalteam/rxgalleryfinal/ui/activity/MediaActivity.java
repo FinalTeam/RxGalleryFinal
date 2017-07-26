@@ -52,6 +52,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
 
     public static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     public static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102;
+    public static final int REQUEST_CAMERA_ACCESS_PERMISSION = 103;
 
     private static final String EXTRA_CHECKED_LIST = EXTRA_PREFIX + ".CheckedList";
     private static final String EXTRA_SELECTED_INDEX = EXTRA_PREFIX + ".SelectedIndex";
@@ -102,6 +103,14 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         List<MediaBean> selectedList = mConfiguration.getSelectedList();
         if (selectedList != null && selectedList.size() > 0) {
             mCheckedList.addAll(selectedList);
+            if (mCheckedList.size() > 0) {
+                String text = getResources().getString(R.string.gallery_over_button_text_checked, mCheckedList.size(), mConfiguration.getMaxSize());
+                mTvOverAction.setText(text);
+                mTvOverAction.setEnabled(true);
+            } else {
+                mTvOverAction.setText(R.string.gallery_over_button_text);
+                mTvOverAction.setEnabled(false);
+            }
         }
 
         showMediaGridFragment();
@@ -407,16 +416,21 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         switch (requestCode) {
             case REQUEST_STORAGE_READ_ACCESS_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    RxBus.getDefault().post(new RequestStorageReadAccessPermissionEvent(true));
+                    RxBus.getDefault().post(new RequestStorageReadAccessPermissionEvent(true, RequestStorageReadAccessPermissionEvent.TYPE_WRITE));
                 } else {
                     finish();
                 }
                 break;
             case REQUEST_STORAGE_WRITE_ACCESS_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    RxBus.getDefault().post(new RequestStorageReadAccessPermissionEvent(true));
+                    RxBus.getDefault().post(new RequestStorageReadAccessPermissionEvent(true, RequestStorageReadAccessPermissionEvent.TYPE_WRITE));
                 } else {
                     finish();
+                }
+                break;
+            case REQUEST_CAMERA_ACCESS_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    RxBus.getDefault().post(new RequestStorageReadAccessPermissionEvent(true, RequestStorageReadAccessPermissionEvent.TYPE_CAMERA));
                 }
                 break;
             default:
