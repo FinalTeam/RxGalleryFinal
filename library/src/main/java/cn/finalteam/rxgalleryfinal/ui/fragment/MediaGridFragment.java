@@ -643,7 +643,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         } else if (requestCode == CROP_IMAGE_REQUEST_CODE && data != null) {
             Logger.i("裁剪成功");
             refreshUI();
-            onCropFinished(data);
+            onCropFinished();
         }
     }
 
@@ -655,11 +655,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
      * .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_WIDTH, imageWidth)
      * .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_HEIGHT, imageHeight)
      */
-    private void onCropFinished(Intent data) {
+    private void onCropFinished() {
         if (iListenerRadio != null && mCropPath != null) {
             if (mConfiguration.isCrop()) {
-                Uri outputUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
-                Logger.i("# crop image is #" + outputUri.getPath());
                 iListenerRadio.cropAfter(mCropPath);
             }
         } else {
