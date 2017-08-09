@@ -7,6 +7,7 @@
 
    * [English](https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md)
    * [Japanese](https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_Japanese.md)
+   * [Chinese](https://github.com/FinalTeam/RxGalleryFinal)
 
 ## 版本描述
 
