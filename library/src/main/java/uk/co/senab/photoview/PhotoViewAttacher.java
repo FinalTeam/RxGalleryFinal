@@ -439,10 +439,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             return; // Do not drag if we are already scaling
         }
 
-        if (DEBUG) {
-            Logger.d(String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
-        }
-
         ImageView imageView = getImageView();
         mSuppMatrix.postTranslate(dx, dy);
         checkAndDisplayMatrix();
@@ -475,10 +471,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public void onFling(float startX, float startY, float velocityX,
                         float velocityY) {
-        if (DEBUG) {
-            Logger.d("onFling. sX: " + startX + " sY: " + startY + " Vx: "
-                    + velocityX + " Vy: " + velocityY);
-        }
         ImageView imageView = getImageView();
         mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
         mCurrentFlingRunnable.fling(getImageViewWidth(imageView),
@@ -523,11 +515,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void onScale(float scaleFactor, float focusX, float focusY) {
-        if (DEBUG) {
-            Logger.d(String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
-                    scaleFactor, focusX, focusY));
-        }
-
         if ((getScale() < mMaxScale || scaleFactor < 1f) && (getScale() > mMinScale || scaleFactor > 1f)) {
             if (null != mScaleChangeListener) {
                 mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
@@ -1147,9 +1134,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
 
         public void cancelFling() {
-            if (DEBUG) {
-                Logger.d("Cancel Fling");
-            }
             mScroller.forceFinished(true);
         }
 
@@ -1181,11 +1165,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             mCurrentX = startX;
             mCurrentY = startY;
 
-            if (DEBUG) {
-                Logger.d("fling. StartX:" + startX + " StartY:" + startY
-                        + " MaxX:" + maxX + " MaxY:" + maxY);
-            }
-
             // If we actually can move, fling the scroller
             if (startX != maxX || startY != maxY) {
                 mScroller.fling(startX, startY, velocityX, velocityY, minX,
@@ -1204,12 +1183,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
                 final int newX = mScroller.getCurrX();
                 final int newY = mScroller.getCurrY();
-
-                if (DEBUG) {
-                    Logger.d("fling run(). CurrentX:" + mCurrentX + " CurrentY:"
-                            + mCurrentY + " NewX:" + newX + " NewY:"
-                            + newY);
-                }
 
                 mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
                 setImageViewMatrix(getDrawMatrix());

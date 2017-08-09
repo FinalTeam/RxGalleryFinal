@@ -71,8 +71,6 @@ public class MediaUtils {
                     MediaBean mediaBean = parseImageCursorAndCreateThumImage(context, cursor);
                     if (mediaBean != null) {
                         mediaBeanList.add(mediaBean);
-                    }else{
-                        Logger.d("mediaBean == null , 获取的图片Size应该为0，跳过插入");
                     }
                 } while (cursor.moveToNext());
             }
@@ -185,14 +183,13 @@ public class MediaUtils {
     @Nullable
     private static MediaBean parseImageCursorAndCreateThumImage(Context context, Cursor cursor) {
         long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.SIZE));
-        Logger.d(String.valueOf(size));
-        if (size <= 0) {
+        String originalPath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+        if (TextUtils.isEmpty(originalPath) || size <= 0 || !new File(originalPath).exists()) {
             return null;
         }
 
         long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID));
         String title = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.TITLE));
-        String originalPath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
         String bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
         String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
         String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE));
