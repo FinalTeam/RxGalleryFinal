@@ -1,10 +1,11 @@
 # RxGalleryFinal
 
+##  翻訳：Dujinyang - 杜锦阳 - [sheep0704](https://github.com/sheep0704)
 
 ## の機能的な記述（JDK1.8）
 
    rxgalleryfinal android画像/ビデオファイルセレクタ。複数の無線のための支援を、フィルムと切断できるカスタムテーマは、義務的な結合のサードパーティのイメージでない。
-   <br/> 翻訳：Dujinyang - 杜锦阳 - [sheep0704](https://github.com/sheep0704)
+
 
    * [English](https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_English.md)
    * [Japanese](https://github.com/FinalTeam/RxGalleryFinal/blob/master/README_Japanese.md)
