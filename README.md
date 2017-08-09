@@ -22,8 +22,8 @@
 
 ### gradle
 
-	    New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.1' -> 紧急修复bug .
-	    (#170,#165 ,#167 and fix Image No such file or directory)
+	    New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.2' -> 紧急修复bug .
+	    (Fix #175 #178)
 
  参考：[History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 

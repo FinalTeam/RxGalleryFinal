@@ -20,7 +20,7 @@
 
 ### gradle
 
-	   New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.1' -> Emergency repair bug.#170,#165 ,#167 and fix Image No such file or directory
+	   New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.2' -> Emergency repair bug.#175,#178
 
  参考：[History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 
@@ -40,7 +40,7 @@
 ## Use
 ### Download or add a dependency
 
-    compile 'cn.finalteam.rxgalleryfinal:library:1.0.9'
+    compile 'cn.finalteam.rxgalleryfinal:library:1.1.2'
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
 
