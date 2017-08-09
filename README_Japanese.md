@@ -2,7 +2,8 @@
 
 ##  翻訳
 
-   情報：Dujinyang - 杜锦阳 - [sheep0704](https://github.com/sheep0704)
+   情報：KARL-Dujinyang 
+   <br/>杜锦阳 - [sheep0704](https://github.com/sheep0704)
 
 ## の機能的な記述（JDK1.8）
 
