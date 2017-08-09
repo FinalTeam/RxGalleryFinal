@@ -3,7 +3,7 @@
 ##  翻訳
 
    <font color="red">情報</font>：KARL-Dujinyang
-   &emsp;&emsp;<br/>杜锦阳 - [sheep0704](https://github.com/sheep0704)
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>杜锦阳 - [sheep0704](https://github.com/sheep0704)
 
 ## の機能的な記述（JDK1.8）
 
