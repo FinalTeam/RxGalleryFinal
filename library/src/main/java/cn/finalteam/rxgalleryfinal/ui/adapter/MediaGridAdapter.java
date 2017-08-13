@@ -111,7 +111,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mIvMediaImage.setVisibility(View.VISIBLE);
             holder.mLlCamera.setVisibility(View.GONE);
             holder.mCbCheck.setChecked(mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean));
-            String bitPath = mediaBean.getThumbnailSmallPath();
+            String bitPath = mediaBean.getThumbnailBigPath();
             String smallPath = mediaBean.getThumbnailSmallPath();
 
             if (!new File(bitPath).exists() || !new File(smallPath).exists()) {
