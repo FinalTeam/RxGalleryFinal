@@ -29,10 +29,10 @@ public class ImageThmbnailJob implements Job {
         String originalPath = mediaBean.getOriginalPath();
         File bigThumFile = MediaUtils.createThumbnailBigFileName(context, originalPath);
         File smallThumFile = MediaUtils.createThumbnailSmallFileName(context, originalPath);
-        if (!smallThumFile.exists()) {
+        if (!bigThumFile.exists()) {
             BitmapUtils.createThumbnailBig(bigThumFile, originalPath);
         }
-        if (!bigThumFile.exists()) {
+        if (!smallThumFile.exists()) {
             BitmapUtils.createThumbnailSmall(smallThumFile, originalPath);
         }
         Result result = Result.SUCCESS;
