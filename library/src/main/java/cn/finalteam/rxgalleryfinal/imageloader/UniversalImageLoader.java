@@ -23,6 +23,7 @@ public class UniversalImageLoader implements AbsImageLoader {
         if (displayImageOptions == null) {
             displayImageOptions = new DisplayImageOptions.Builder()
                     .cacheOnDisk(false)
+                    .cacheInMemory(true)
                     .bitmapConfig(config)
                     .showImageOnFail(defaultDrawable)
                     .showImageOnLoading(defaultDrawable)
