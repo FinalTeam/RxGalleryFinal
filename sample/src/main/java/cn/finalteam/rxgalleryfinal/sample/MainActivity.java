@@ -24,9 +24,11 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.sample.imageloader.ImageLoaderActivity;
 import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
+import cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
+import cn.finalteam.rxgalleryfinal.utils.PermissionCheckUtils;
 
 /**
  * 示例
@@ -195,7 +197,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (mRbMutiIMG.isChecked()) {
             openImageSelectMultiMethod(1);
         } else {
-            RxGalleryFinalApi.openZKCamera(MainActivity.this);
+            if (PermissionCheckUtils.checkCameraPermission(this, "", MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION)) {
+                RxGalleryFinalApi.openZKCamera(MainActivity.this);
+            }
         }
     }
 
