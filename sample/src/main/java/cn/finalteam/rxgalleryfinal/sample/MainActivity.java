@@ -310,12 +310,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 视频单选回调
      */
     private void openVideoSelectRadioMethod() {
-        RxGalleryFinalApi.getInstance(MainActivity.this)
+        RxGalleryFinalApi
+                .getInstance(MainActivity.this)
                 .setType(RxGalleryFinalApi.SelectRXType.TYPE_VIDEO, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_RADIO)
                 .setVDRadioResultEvent(new RxBusResultDisposable<ImageRadioResultEvent>() {
                     @Override
                     protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                        //回调还没
+                        Toast.makeText(getApplicationContext(), imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .open();

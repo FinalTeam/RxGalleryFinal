@@ -50,6 +50,7 @@ public class Configuration implements Parcelable {
     private boolean hideCamera;
     private boolean isPlayGif;
     private boolean hidePreview;
+    private boolean isVideoPreview;
 
     //==========UCrop START==========
     //是否隐藏裁剪页面底部控制栏,默认显示
@@ -105,6 +106,7 @@ public class Configuration implements Parcelable {
         hideCamera = in.readByte() != 0;
         isPlayGif = in.readByte() != 0;
         hidePreview = in.readByte() != 0;
+        isVideoPreview = in.readByte() != 0;
     }
 
     public boolean isHidePreview() {
@@ -364,5 +366,14 @@ public class Configuration implements Parcelable {
         parcel.writeByte((byte) (hideCamera ? 1 : 0));
         parcel.writeByte((byte) (isPlayGif ? 1 : 0));
         parcel.writeByte((byte) (hidePreview ? 1 : 0));
+        parcel.writeByte((byte) (isVideoPreview ? 1 : 0));
+    }
+
+    public boolean isVideoPreview() {
+        return isVideoPreview;
+    }
+
+    public void setVideoPreview(boolean videoPreview) {
+        isVideoPreview = videoPreview;
     }
 }

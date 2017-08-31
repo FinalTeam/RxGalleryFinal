@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -97,6 +98,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     //裁剪后+name
     private static File mCropPath = null;
     private final String IMAGE_STORE_FILE_NAME = "IMG_%s.jpg";
+    private final String VIDEO_STORE_FILE_NAME = "IMG_%s.mp4";
     private final int TAKE_IMAGE_REQUEST_CODE = 1001;
     private final int CROP_IMAGE_REQUEST_CODE = 1011;
     private final String TAKE_URL_STORAGE_KEY = "take_url_storage_key";
@@ -505,7 +507,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             }
         } else {
             if (mConfiguration.isRadio()) {
-                radioNext(mediaBean);
+                if (mConfiguration.isImage()) {
+                    radioNext(mediaBean);
+                } else {
+                    videoRadioNext(mediaBean);
+                }
             } else {
                 MediaBean firstBean = mMediaBeanList.get(0);
                 ArrayList<MediaBean> gridMediaList = new ArrayList<>();
@@ -519,6 +525,26 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 }
                 RxBus.getDefault().post(new OpenMediaPageFragmentEvent(gridMediaList, pos));
             }
+        }
+    }
+
+    /**
+     * 处理 Video  选择  是否预览
+     *
+     * @param mediaBean
+     */
+    private void videoRadioNext(MediaBean mediaBean) {
+        if (!mConfiguration.isVideoPreview()) {
+            setPostMediaBean(mediaBean);
+            getActivity().finish();
+            return;
+        }
+        try {
+            Intent openVideo = new Intent(Intent.ACTION_VIEW);
+            openVideo.setDataAndType(Uri.parse(mediaBean.getOriginalPath()), "video/*");
+            startActivity(openVideo);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "启动播放器失败", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -608,28 +634,33 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     public void openCamera(Context context) {
-        Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (captureIntent.resolveActivity(context.getPackageManager()) != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
-            String filename = String.format(IMAGE_STORE_FILE_NAME, dateFormat.format(new Date()));
-            Logger.i("openCamera：" + mImageStoreDir.getAbsolutePath());
-            File fileImagePath = new File(mImageStoreDir, filename);
-            mImagePath = fileImagePath.getAbsolutePath();
-            /*获取当前系统的android版本号*/
-            int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-            if (currentapiVersion < 24) {
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
-                startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
-            } else {
-                ContentValues contentValues = new ContentValues(1);
-                contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
-                Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
-            }
-        } else {
+
+
+        boolean image = mConfiguration.isImage();
+
+        Intent captureIntent = image ? new Intent(MediaStore.ACTION_IMAGE_CAPTURE) : new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (captureIntent.resolveActivity(context.getPackageManager()) == null) {
             Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+        String filename = String.format(image ? IMAGE_STORE_FILE_NAME : VIDEO_STORE_FILE_NAME, dateFormat.format(new Date()));
+        Logger.i("openCamera：" + mImageStoreDir.getAbsolutePath());
+        File fileImagePath = new File(mImageStoreDir, filename);
+        mImagePath = fileImagePath.getAbsolutePath();
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
+        } else {
+            ContentValues contentValues = new ContentValues(1);
+            contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
+            Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        }
+        // video : 1: 高质量  0 低质量
+//        captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
     }
 
     @Override
@@ -638,8 +669,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         Logger.i("onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
         if (requestCode == TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Logger.i(String.format("拍照成功,图片存储路径:%s", mImagePath));
-            //刷新相册数据库
-            mMediaScanner.scanFile(mImagePath, IMAGE_TYPE, this);
+            mMediaScanner.scanFile(mImagePath, mConfiguration.isImage() ? IMAGE_TYPE : "", this);
+        } else if (requestCode == 222) {
+            Toast.makeText(getActivity(), "摄像成功", Toast.LENGTH_SHORT).show();
         } else if (requestCode == CROP_IMAGE_REQUEST_CODE && data != null) {
             Logger.i("裁剪成功");
             refreshUI();
@@ -787,7 +819,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
         // mediaBean 有可能为Null，onNext 做了处理，在 getMediaBeanWithImage 时候就不处理Null了
         Observable.create((ObservableOnSubscribe<MediaBean>) subscriber -> {
-            MediaBean mediaBean = MediaUtils.getMediaBeanWithImage(getContext(), images[0]);
+            MediaBean mediaBean =
+                    mConfiguration.isImage() ? MediaUtils.getMediaBeanWithImage(getContext(), images[0])
+                            :
+                            MediaUtils.getMediaBeanWithVideo(getContext(), images[0]);
             subscriber.onNext(mediaBean);
             subscriber.onComplete();
         })
@@ -800,7 +835,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
                     @Override
                     public void onError(Throwable e) {
-                        Logger.i("获取MediaBean异常");
+                        Logger.i("获取MediaBean异常" + e.toString());
                     }
 
                     @Override

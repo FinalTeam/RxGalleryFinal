@@ -172,6 +172,43 @@ public class MediaUtils {
         return mediaBean;
     }
 
+    /**
+     * 根据地址获取视频相关信息
+     */
+    public static MediaBean getMediaBeanWithVideo(Context context, String originalPath) {
+        ContentResolver contentResolver = context.getContentResolver();
+        List<String> projection = new ArrayList<>();
+        projection.add(MediaStore.Video.Media._ID);
+        projection.add(MediaStore.Video.Media.TITLE);
+        projection.add(MediaStore.Video.Media.DATA);
+        projection.add(MediaStore.Video.Media.BUCKET_ID);
+        projection.add(MediaStore.Video.Media.BUCKET_DISPLAY_NAME);
+        projection.add(MediaStore.Video.Media.MIME_TYPE);
+        projection.add(MediaStore.Video.Media.DATE_ADDED);
+        projection.add(MediaStore.Video.Media.DATE_MODIFIED);
+        projection.add(MediaStore.Video.Media.LATITUDE);
+        projection.add(MediaStore.Video.Media.LONGITUDE);
+        projection.add(MediaStore.Video.Media.SIZE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            projection.add(MediaStore.Video.Media.WIDTH);
+            projection.add(MediaStore.Video.Media.HEIGHT);
+        }
+        Cursor cursor = contentResolver.query(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                projection.toArray(new String[projection.size()]),
+                MediaStore.Images.Media.DATA + "=?",
+                new String[]{originalPath}, null);
+        MediaBean mediaBean = null;
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            mediaBean = parseVideoCursorAndCreateThumImage(context, cursor);
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return mediaBean;
+    }
+
 
     /**
      * 解析图片cursor并且创建缩略图
