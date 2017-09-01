@@ -23,9 +23,15 @@
 
 ### gradle
 
-	   New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.2' -> Emergency repair bug.#175,#178
+	   New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.3' -> Emergency repair bug.
+	  (Fix #191, add video)
 
  参考：[History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
+
+### 1.1.2 特性
+
+ * Repair bug
+ * Fix #175 #178
 
 ### 1.1.1 Characteristic
 

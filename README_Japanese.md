@@ -28,13 +28,14 @@
 
 ### gradle
 
-	   New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.2' -> 緊急修理のバグ bug.#175,#178
+	   New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.3' -> 緊急修理のバグ bug.
+	   (Fix #191, add video)
 
  参考：[History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
 
 ### 1.1.1 の特性
 
- * 修復のバグ bug
+ * 修復 のバグ bug
  * #170,#165 ,#167 と#修正画像などのファイルまたはディレクトリはありません
  * 最新版のサンプルコード
 
