@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -250,10 +251,33 @@ public class RxGalleryFinalApi {
 
     /**
      * 打开相机
+     * <p>
+     * fragment 或者 activity 直接传入  this，  内部处理
+     * <p>
+     * 这里的 Fragment 指的是 v4包下的Fragment
+     *
+     * @see Fragment
+     * <p>
+     * M 以上的权限处理，拍照以及读取相册需要自行申请，这里不做处理
+     * <p>
+     * 返回值： -1 ： 设备没有相机
      */
-    public static void openZKCamera(Activity context) {
+    public static int openZKCamera(Object activity) {
+
+        if (activity == null) {
+            throw new NullPointerException("activity == null");
+        }
+        Activity cameraActivity = null;
+        if (activity instanceof Activity) {
+            cameraActivity = (Activity) activity;
+        }
+        if (activity instanceof Fragment) {
+            Fragment fragment = (Fragment) activity;
+            cameraActivity = fragment.getActivity();
+        }
+        assert cameraActivity != null;
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (captureIntent.resolveActivity(context.getPackageManager()) != null) {
+        if (captureIntent.resolveActivity(cameraActivity.getPackageManager()) != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
             String imageName = "immqy_%s.jpg";
             String filename = String.format(imageName, dateFormat.format(new Date()));
@@ -266,17 +290,24 @@ public class RxGalleryFinalApi {
             Logger.i("->mImagePath:" + mImagePath);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
-                context.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
             } else {
                 ContentValues contentValues = new ContentValues(1);
                 contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
                 contentValues.put(MediaStore.Images.Media.MIME_TYPE, IMG_TYPE);
-                Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                Uri uri = cameraActivity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                 captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                context.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
             }
+            if (activity instanceof Activity) {
+                cameraActivity.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
+            }
+            if (activity instanceof Fragment) {
+                Fragment fragment = (Fragment) activity;
+                fragment.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
+            }
+            return 0;
         } else {
-            Toast.makeText(context, R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
+            Toast.makeText(cameraActivity, R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
+            return -1;
         }
     }
 
