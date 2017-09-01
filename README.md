@@ -24,7 +24,7 @@
 
 ### gradle
 
-	    New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.2' -> 紧急修复bug .
+	    New : compile 'cn.finalteam.rxgalleryfinal:library:1.1.3' -> 紧急修复bug .
 	    (Fix #191, add video)
 
  参考：[History Version](https://github.com/FinalTeam/RxGalleryFinal/wiki/RxGalleryFinal-Version)
