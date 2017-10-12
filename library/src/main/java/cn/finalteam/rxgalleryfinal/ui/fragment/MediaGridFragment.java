@@ -39,7 +39,9 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPreviewFragmentEvent;
@@ -110,12 +112,14 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private Subscription mSubscrCloseMediaViewPageFragmentEvent;
     private Subscription mSubscrRequestStorageReadAccessPermissionEvent;
     private static boolean openCameraOnStart = false;
+    private static boolean returnAfterShot = false;
     public static MediaGridFragment newInstance(Configuration configuration) {
         MediaGridFragment fragment = new MediaGridFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_CONFIGURATION, configuration);
         fragment.setArguments(bundle);
         openCameraOnStart = configuration.isOpenCameraOnStart();
+        returnAfterShot = configuration.isReturnAfterShot();
         return fragment;
     }
 
@@ -512,8 +516,16 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             public void onNext(MediaBean mediaBean) {
 
                 if(!isDetached() && mediaBean != null) {
-                    mMediaBeanList.add(1, mediaBean);
-                    mMediaGridAdapter.notifyDataSetChanged();
+                    if(returnAfterShot){
+                        ArrayList<MediaBean> list = new ArrayList<>();
+                        list.add(mediaBean);
+                        BaseResultEvent event = new ImageMultipleResultEvent(list);
+                        RxBus.getDefault().post(event);
+                        getActivity().finish();
+                    }else{
+                        mMediaBeanList.add(1, mediaBean);
+                        mMediaGridAdapter.notifyDataSetChanged();
+                    }
                 }
 
             }

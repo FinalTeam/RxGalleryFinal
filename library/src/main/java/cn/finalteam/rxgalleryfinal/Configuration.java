@@ -41,6 +41,7 @@ public class Configuration implements Parcelable{
     private int imageConfig;
     private boolean hideCamera;
     private boolean openCameraOnStart = false;
+    private boolean returnAfterShot = false;
     //==========UCrop START==========
     //是否隐藏裁剪页面底部控制栏,默认显示
     private boolean hideBottomControls;
@@ -93,6 +94,7 @@ public class Configuration implements Parcelable{
         hideCamera = in.readByte() != 0;
         openCameraOnStart = in.readByte() != 0;
         title = in.readString();
+        returnAfterShot = in.readByte() != 0;
     }
 
     public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
@@ -161,6 +163,14 @@ public class Configuration implements Parcelable{
 
     public void setOpenCameraOnStart(boolean openCameraOnStart) {
         this.openCameraOnStart = openCameraOnStart;
+    }
+
+    public boolean isReturnAfterShot() {
+        return returnAfterShot;
+    }
+
+    public void setReturnAfterShot(boolean returnAfterShot) {
+        this.returnAfterShot = returnAfterShot;
     }
 
     public AbsImageLoader getImageLoader() {
@@ -359,5 +369,6 @@ public class Configuration implements Parcelable{
         parcel.writeByte((byte) (hideCamera ? 1 : 0));
         parcel.writeByte((byte) (openCameraOnStart ? 1 : 0));
         parcel.writeString(title);
+        parcel.writeByte((byte) (returnAfterShot ? 1 : 0));
     }
 }

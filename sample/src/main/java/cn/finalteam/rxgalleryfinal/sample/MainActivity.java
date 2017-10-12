@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
                         .radio()
                         .crop()
                         .openCameraOnStart()
+                        .setTitle("标题你设置")
+                        .returnAfterShot()
                         .imageLoader(ImageLoaderType.GLIDE)
                         .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
                             @Override
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 RxGalleryFinal
                         .with(MainActivity.this)
                         .image()
-
+                        .setTitle("标题你设置")
                         .multiple()
                         .maxSize(8)
                         .imageLoader(ImageLoaderType.GLIDE)
