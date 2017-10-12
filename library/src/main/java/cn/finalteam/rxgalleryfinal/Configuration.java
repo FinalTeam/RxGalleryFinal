@@ -67,7 +67,8 @@ public class Configuration implements Parcelable{
     private int maxResultHeight;
 
     //==========UCrop END==========
-
+    //设置显示标题
+    private String title = null;
     protected Configuration(Parcel in) {
         image = in.readByte() != 0;
         selectedList = in.createTypedArrayList(MediaBean.CREATOR);
@@ -91,6 +92,7 @@ public class Configuration implements Parcelable{
         imageConfig = in.readInt();
         hideCamera = in.readByte() != 0;
         openCameraOnStart = in.readByte() != 0;
+        title = in.readString();
     }
 
     public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
@@ -221,6 +223,14 @@ public class Configuration implements Parcelable{
         this.compressionQuality = compressionQuality;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void setAllowedGestures(@UCropActivity.GestureTypes int []gestures) {
         this.gestures = gestures;
     }
@@ -348,5 +358,6 @@ public class Configuration implements Parcelable{
         parcel.writeInt(imageConfig);
         parcel.writeByte((byte) (hideCamera ? 1 : 0));
         parcel.writeByte((byte) (openCameraOnStart ? 1 : 0));
+        parcel.writeString(title);
     }
 }

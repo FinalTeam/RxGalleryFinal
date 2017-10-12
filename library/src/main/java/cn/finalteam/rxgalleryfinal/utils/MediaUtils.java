@@ -375,6 +375,9 @@ public class MediaUtils {
                     bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
                     bucketBean.setBucketId(bucketId);
                     String bucketDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+                    if("RxGalleryFinal".equals(bucketDisplayName)){
+                        continue;
+                    }
                     bucketBean.setBucketName(bucketDisplayName);
                     bucketKey = MediaStore.Images.Media.BUCKET_ID;
                     cover = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));

@@ -101,7 +101,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     private int mPage = 1;
     private File mImageStoreDir;
-    private File mImageStoreCropDir;
     private String mImagePath;
 
     private String mBucketId = String.valueOf(Integer.MIN_VALUE);
@@ -126,11 +125,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if(context instanceof MediaActivity) {
             mMediaActivity = (MediaActivity) context;
         }
+        //临时目录
         mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/RxGalleryFinal/");
-        mImageStoreCropDir = new File(mImageStoreDir, "crop");
-        if (!mImageStoreCropDir.exists()) {
-            mImageStoreCropDir.mkdirs();
-        }
         mMediaScanner = new MediaScanner(context);
     }
 
@@ -376,7 +372,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         } else {
             String originalPath = mediaBean.getOriginalPath();
             File file = new File(originalPath);
-            Uri outUri = Uri.fromFile(new File(mImageStoreCropDir, file.getName()));
+            Uri outUri = Uri.fromFile(new File(mImageStoreDir, file.getName()));
             Intent intent = new Intent(getContext(), UCropActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelable(UCropActivity.EXTRA_OUTPUT_URI, outUri);

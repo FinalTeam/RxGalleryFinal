@@ -255,6 +255,14 @@ public class RxGalleryFinal {
     }
 
     /**
+     * 设置显示标题
+     * @return
+     */
+    public RxGalleryFinal setTitle(String title) {
+        configuration.setTitle(title);
+        return this;
+    }
+    /**
      * 设置回调
      * @param rxBusResultSubscriber
      * @return
