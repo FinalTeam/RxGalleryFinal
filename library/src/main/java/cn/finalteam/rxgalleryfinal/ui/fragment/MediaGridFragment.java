@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
 import java.io.File;
@@ -379,9 +380,19 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Uri outUri = Uri.fromFile(new File(mImageStoreDir, file.getName()));
             Intent intent = new Intent(getContext(), UCropActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putParcelable(UCropActivity.EXTRA_OUTPUT_URI, outUri);
-            bundle.putParcelable(UCropActivity.EXTRA_INPUT_BEAN, mediaBean);
-            bundle.putParcelable(UCropActivity.EXTRA_CONFIGURATION, mConfiguration);
+            bundle.putParcelable(UCrop.EXTRA_OUTPUT_URI, outUri);
+            bundle.putParcelable(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS, mediaBean);
+            bundle.putBoolean(UCrop.Options.EXTRA_HIDE_BOTTOM_CONTROLS, mConfiguration.isHideBottomControls());
+            bundle.putIntArray(UCrop.Options.EXTRA_ALLOWED_GESTURES, mConfiguration.getAllowedGestures());
+            bundle.putInt(UCrop.Options.EXTRA_COMPRESSION_QUALITY, mConfiguration.getCompressionQuality());
+            bundle.putInt(UCrop.Options.EXTRA_MAX_BITMAP_SIZE, mConfiguration.getMaxBitmapSize());
+            bundle.putFloat(UCrop.Options.EXTRA_MAX_SCALE_MULTIPLIER, mConfiguration.getMaxScaleMultiplier());
+            bundle.putFloat(UCrop.EXTRA_ASPECT_RATIO_X, mConfiguration.getAspectRatioX());
+            bundle.putFloat(UCrop.EXTRA_ASPECT_RATIO_Y, mConfiguration.getAspectRatioY());
+            bundle.putInt(UCrop.EXTRA_MAX_SIZE_X, mConfiguration.getMaxResultWidth());
+            bundle.putInt(UCrop.EXTRA_MAX_SIZE_Y, mConfiguration.getMaxResultHeight());
+            bundle.putInt(UCrop.Options.EXTRA_ASPECT_RATIO_SELECTED_BY_DEFAULT, mConfiguration.getSelectedByDefault());
+            bundle.putBoolean(UCrop.Options.EXTRA_FREE_STYLE_CROP, mConfiguration.isFreestyleCropEnabled());
             intent.putExtras(bundle);
             startActivity(intent);
         }

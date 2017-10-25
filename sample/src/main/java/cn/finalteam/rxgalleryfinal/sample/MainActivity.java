@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                         .image()
                         .radio()
                         .crop()
-                        .openCameraOnStart()
+                        //.openCameraOnStart()
                         .setTitle("标题你设置")
                         .returnAfterShot()
                         .imageLoader(ImageLoaderType.GLIDE)
