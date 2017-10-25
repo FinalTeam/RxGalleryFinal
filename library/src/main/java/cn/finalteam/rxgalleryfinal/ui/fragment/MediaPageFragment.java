@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -31,14 +32,14 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/14 下午10:02
  */
 public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageChangeListener,
-        View.OnClickListener{
+        View.OnClickListener {
 
     private static final String EXTRA_MEDIA_LIST = EXTRA_PREFIX + ".MediaList";
-    private static final String EXTRA_ITEM_CLICK_POSITION = EXTRA_PREFIX +".ItemClickPosition";
+    private static final String EXTRA_ITEM_CLICK_POSITION = EXTRA_PREFIX + ".ItemClickPosition";
 
     DisplayMetrics mScreenSize;
 
@@ -51,15 +52,7 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
     private MediaActivity mMediaActivity;
     private int mItemClickPosition;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if(context instanceof  MediaActivity) {
-            mMediaActivity = (MediaActivity) context;
-        }
-    }
-
-    public static MediaPageFragment newInstance(Configuration configuration, ArrayList<MediaBean> list, int position){
+    public static MediaPageFragment newInstance(Configuration configuration, ArrayList<MediaBean> list, int position) {
         MediaPageFragment fragment = new MediaPageFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_CONFIGURATION, configuration);
@@ -67,6 +60,14 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
         bundle.putInt(EXTRA_ITEM_CLICK_POSITION, position);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MediaActivity) {
+            mMediaActivity = (MediaActivity) context;
+        }
     }
 
     @Override
@@ -82,16 +83,18 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
         mScreenSize = DeviceUtils.getScreenSize(getContext());
 
         mMediaBeanList = new ArrayList<>();
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             List<MediaBean> mediaList = savedInstanceState.getParcelableArrayList(EXTRA_MEDIA_LIST);
             mItemClickPosition = savedInstanceState.getInt(EXTRA_ITEM_CLICK_POSITION);
 
-            if(mediaList != null) {
+            if (mediaList != null) {
                 mMediaBeanList.addAll(mediaList);
             }
         }
-        mMediaPreviewAdapter = new MediaPreviewAdapter(getContext(), mMediaBeanList,
-                mScreenSize.widthPixels, mScreenSize.heightPixels, mConfiguration);
+        mMediaPreviewAdapter = new MediaPreviewAdapter(mMediaBeanList,
+                mScreenSize.widthPixels, mScreenSize.heightPixels, mConfiguration
+                , ThemeUtils.resolveColor(getActivity(), R.attr.gallery_page_bg, R.color.gallery_default_page_bg),
+                ContextCompat.getDrawable(getActivity(), ThemeUtils.resolveDrawableRes(getActivity(), R.attr.gallery_default_image, R.drawable.gallery_default_image)));
         mViewPager.setAdapter(mMediaPreviewAdapter);
         mCbCheck.setOnClickListener(this);
         mViewPager.setCurrentItem(mItemClickPosition);
@@ -102,13 +105,13 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
     @Override
     public void onStart() {
         super.onStart();
-        if(mConfiguration == null || mMediaBeanList.size() == 0
+        if (mConfiguration == null || mMediaBeanList.size() == 0
                 || mCbCheck == null || mViewPager == null) {
             return;
         }
         MediaBean mediaBean = mMediaBeanList.get(mItemClickPosition);
-        if(mMediaActivity != null && mMediaActivity.getCheckedList() != null){
-            if(mMediaActivity.getCheckedList().contains(mediaBean)) {
+        if (mMediaActivity != null && mMediaActivity.getCheckedList() != null) {
+            if (mMediaActivity.getCheckedList().contains(mediaBean)) {
                 mCbCheck.setChecked(true);
             }
         }
@@ -133,19 +136,15 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
 
     @Override
     protected void onRestoreState(Bundle savedInstanceState) {
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
             return;
         }
-
         List<MediaBean> mediaList = savedInstanceState.getParcelableArrayList(EXTRA_MEDIA_LIST);
         mItemClickPosition = savedInstanceState.getInt(EXTRA_ITEM_CLICK_POSITION);
-
-        if(mediaList != null) {
+        if (mediaList != null) {
             mMediaBeanList.clear();
-            Logger.i("恢复数据:" + mediaList.size() +"  d=" + mediaList.get(0).getOriginalPath());
+            Logger.i("恢复数据:" + mediaList.size() + "  d=" + mediaList.get(0).getOriginalPath());
             mMediaBeanList.addAll(mediaList);
-        } else{
-            Logger.i("恢复数据: null");
         }
         mViewPager.setCurrentItem(mItemClickPosition);
         mMediaPreviewAdapter.notifyDataSetChanged();
@@ -153,7 +152,7 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
 
     @Override
     protected void onSaveState(Bundle outState) {
-        if(outState==null){
+        if (outState == null) {
             return;
         }
         outState.putParcelableArrayList(EXTRA_MEDIA_LIST, mMediaBeanList);
@@ -170,7 +169,7 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
 
         MediaBean mediaBean = mMediaBeanList.get(position);
         //判断是否选择
-        if(mMediaActivity != null && mMediaActivity.getCheckedList() != null){
+        if (mMediaActivity != null && mMediaActivity.getCheckedList() != null) {
             mCbCheck.setChecked(mMediaActivity.getCheckedList().contains(mediaBean));
         } else {
             mCbCheck.setChecked(false);
@@ -185,17 +184,16 @@ public class MediaPageFragment extends BaseFragment implements ViewPager.OnPageC
 
     /**
      * 改变选择
-     * @param view
      */
     @Override
     public void onClick(View view) {
-        if(mMediaBeanList.size() == 0){
+        if (mMediaBeanList.size() == 0) {
             return;
         }
 
         int position = mViewPager.getCurrentItem();
         MediaBean mediaBean = mMediaBeanList.get(position);
-        if(mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size()
+        if (mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size()
                 && !mMediaActivity.getCheckedList().contains(mediaBean)) {
             Toast.makeText(getContext(), getResources()
                     .getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()), Toast.LENGTH_SHORT).show();

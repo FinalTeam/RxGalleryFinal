@@ -14,16 +14,16 @@ import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * .centerCrop() 预览大图
+ * Author:dujinyang
  * Date:16/6/17 下午1:23
  */
 public class PicassoImageLoader implements AbsImageLoader {
 
+
     @Override
-    public void displayImage(Object context, String path, FixImageView imageView,
-                             Drawable defaultDrawable, Bitmap.Config config, boolean resize, int width, int height, int rotate) {
-        Context ctx = (Context) context;
-        RequestCreator creator = Picasso.with(ctx)
+    public void displayImage(Context context, String path, FixImageView imageView, Drawable defaultDrawable, Bitmap.Config config, boolean resize, boolean isGif, int width, int height, int rotate) {
+        RequestCreator creator = Picasso.with(context)
                 .load(new File(path))
                 .placeholder(defaultDrawable)
                 .error(defaultDrawable)
@@ -31,9 +31,10 @@ public class PicassoImageLoader implements AbsImageLoader {
                 .networkPolicy(NetworkPolicy.NO_STORE)
                 .config(config)
                 .tag(context);
-        if(resize){
-            creator = creator.resize(width, height);
+        if (resize) {
+            creator = creator.resize(width, height)
+                    .centerCrop();
         }
-       creator.into(imageView);
+        creator.into(imageView);
     }
 }

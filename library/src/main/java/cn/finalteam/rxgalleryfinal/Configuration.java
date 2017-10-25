@@ -66,7 +66,9 @@ public class Configuration implements Parcelable{
     private boolean ovalDimmedLayer =  OverlayView.DEFAULT_CIRCLE_DIMMED_LAYER;
     private int maxResultWidth;
     private int maxResultHeight;
-
+    private boolean isPlayGif;
+    private boolean hidePreview;
+    private boolean isVideoPreview;
     //==========UCrop END==========
     //设置显示标题
     private String title = null;
@@ -95,6 +97,9 @@ public class Configuration implements Parcelable{
         openCameraOnStart = in.readByte() != 0;
         title = in.readString();
         returnAfterShot = in.readByte() != 0;
+        isPlayGif = in.readByte() != 0;
+        hidePreview = in.readByte() != 0;
+        isVideoPreview = in.readByte() != 0;
     }
 
     public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
@@ -173,6 +178,30 @@ public class Configuration implements Parcelable{
         this.returnAfterShot = returnAfterShot;
     }
 
+    public boolean isHidePreview() {
+        return hidePreview;
+    }
+
+    public void setHidePreview(boolean hidePreview) {
+        this.hidePreview = hidePreview;
+    }
+
+    public boolean isPlayGif() {
+        return isPlayGif;
+    }
+
+    public void setPlayGif(boolean playGif) {
+        isPlayGif = playGif;
+    }
+
+
+    public boolean isVideoPreview() {
+        return isVideoPreview;
+    }
+
+    public void setVideoPreview(boolean videoPreview) {
+        isVideoPreview = videoPreview;
+    }
     public AbsImageLoader getImageLoader() {
         AbsImageLoader imageLoader = null;
         switch (imageLoaderType){
@@ -371,4 +400,10 @@ public class Configuration implements Parcelable{
         parcel.writeString(title);
         parcel.writeByte((byte) (returnAfterShot ? 1 : 0));
     }
+
+    //#ADD
+    public int getImageLoaderType() {
+        return imageLoaderType;
+    }
+
 }

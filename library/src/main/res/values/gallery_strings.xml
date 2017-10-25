@@ -10,6 +10,7 @@
     <string name="gallery_media_grid_image_title">图片</string>
     <string name="gallery_media_grid_video_title">视频</string>
     <string name="gallery_default_request_storage_access_permission_tips">App请求读取你的相册</string>
+    <string name="gallery_default_camera_access_permission_tips">App请求拍照权限,否则无法拍照</string>
     <string name="gallery_default_media_empty_tips">空空如也</string>
     <string name="gallery_device_no_camera_tips">该设备无摄像头</string>
     <string name="gallery_device_camera_unable">相机不可用</string>
@@ -19,4 +20,6 @@
     <string name="gallery_take_image">拍摄照片</string>
     <string name="gallery_image_selected">选中</string>
     <string name="gallery_image_unit">张</string>
+    <string name="gallery_title_cut">裁剪</string>
+    <string name="gallery_video">录制视频</string>
 </resources>

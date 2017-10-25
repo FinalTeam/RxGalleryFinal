@@ -3,30 +3,29 @@ package cn.finalteam.rxgalleryfinal.rxbus;
 import java.util.HashMap;
 import java.util.Map;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.subjects.PublishSubject;
-import rx.subjects.SerializedSubject;
-import rx.subjects.Subject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
+
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/22 下午2:40
  */
 public class RxBus {
 
     private static volatile RxBus mInstance;
-    private final Subject<Object, Object> mBus;
+    private final Subject<Object> mBus;
     private final Map<Class<?>, Object> mStickyEventMap;
 
-    private final CompositeSubscription mSubscriptions;
+    private final CompositeDisposable mDisposable;
 
-    public RxBus() {
-        mBus = new SerializedSubject<>(PublishSubject.create());
-        mSubscriptions = new CompositeSubscription();
+    private RxBus() {
+        mBus = PublishSubject.create().toSerialized();
+        mDisposable = new CompositeDisposable();
         mStickyEventMap = new HashMap<>();
     }
 
@@ -66,31 +65,29 @@ public class RxBus {
         mInstance = null;
     }
 
+
     /**
      * 是否被取消订阅
-     * @return
      */
     public boolean isUnsubscribed() {
-        return mSubscriptions.isUnsubscribed();
+        return mDisposable.isDisposed();
     }
 
     /**
      * 添加订阅
-     * @param s
      */
-    public void add(Subscription s) {
+    public void add(Disposable s) {
         if (s != null) {
-            mSubscriptions.add(s);
+            mDisposable.add(s);
         }
     }
 
     /**
      * 移除订阅
-     * @param s
      */
-    public void remove(Subscription s) {
+    public void remove(Disposable s) {
         if (s != null) {
-            mSubscriptions.remove(s);
+            mDisposable.remove(s);
         }
     }
 
@@ -98,24 +95,15 @@ public class RxBus {
      * 清除所有订阅
      */
     public void clear() {
-        mSubscriptions.clear();
+        mDisposable.clear();
     }
 
     /**
      * 取消订阅
      */
     public void unsubscribe() {
-        mSubscriptions.unsubscribe();
+        mDisposable.dispose();
     }
-
-    /**
-     * 判断是否有订阅者
-     * @return
-     */
-    public boolean hasSubscriptions() {
-        return mSubscriptions.hasSubscriptions();
-    }
-
 
     /**
      * 发送一个新Sticky事件
@@ -136,12 +124,7 @@ public class RxBus {
             final Object event = mStickyEventMap.get(eventType);
 
             if (event != null) {
-                return Observable.merge(observable, Observable.create(new Observable.OnSubscribe<T>() {
-                    @Override
-                    public void call(Subscriber<? super T> subscriber) {
-                        subscriber.onNext(eventType.cast(event));
-                    }
-                }));
+                return Observable.merge(observable, Observable.create(subscriber -> subscriber.onNext(eventType.cast(event))));
             } else {
                 return observable;
             }

@@ -3,12 +3,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="cn.finalteam.rxgalleryfinal.sample.MainActivity">
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_margin="5dip"
+        android:background="@color/theme_blown_accent" />
+
+
+    <Button
+        android:id="@+id/btn_open_set_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义-输出路径" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_margin="5dip"
+        android:background="@color/theme_cyan_dark" />
+
+    <Button
+        android:id="@+id/btn_open_def_radio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义-单选" />
+
+    <Button
+        android:id="@+id/btn_open_def_multi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义-多选" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_margin="5dip"
+        android:background="@color/theme_red_primary" />
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -16,25 +55,123 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/rb_radio"
+            android:id="@+id/rb_radio_img"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="单选"
-            android:checked="true"/>
+            android:checked="true"
+            android:text="单选" />
 
         <RadioButton
-            android:id="@+id/rb_muti"
+            android:id="@+id/rb_muti_img"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="多选"/>
+            android:text="多选" />
+
+
+        <RadioButton
+            android:id="@+id/rb_openC"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="打开摄像头" />
+
     </RadioGroup>
 
     <Button
-        android:id="@+id/btn_open"
+        android:id="@+id/btn_open_img"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="open"/>
+        android:text="open 图片" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_margin="5dip"
+        android:background="@color/theme_green_dark" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_radio_vd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="单选" />
+
+        <RadioButton
+            android:id="@+id/rb_muti_vd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="多选" />
+
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_open_vd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="open 视频" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_margin="5dip"
+        android:background="@color/theme_blue_primary" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_radio_crop_z"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="直接裁剪" />
+
+        <RadioButton
+            android:id="@+id/rb_radio_crop_vz"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="拍照并裁剪" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_open_crop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="裁剪" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_margin="5dip"
+        android:background="@color/theme_black_dark" />
+
+    <Button
+        android:id="@+id/btn_image_loader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="imageloader and gif" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_margin="5dip"
+        android:background="@color/theme_black_dark" />
 
 </LinearLayout>

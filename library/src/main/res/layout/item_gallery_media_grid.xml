@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <cn.finalteam.rxgalleryfinal.ui.widget.SquareLinearLayout
+        android:id="@+id/ll_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gallery_default_image"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_camera_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside" />
+
+        <TextView
+            android:id="@+id/tv_camera_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gallery_take_image" />
+    </cn.finalteam.rxgalleryfinal.ui.widget.SquareLinearLayout>
+
+    <cn.finalteam.rxgalleryfinal.ui.widget.SquareImageView
+        android:id="@+id/iv_media_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cb_check"
+        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="2dp" />
+</cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout>
