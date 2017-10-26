@@ -6,14 +6,14 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/27 下午11:14
  */
 public class OpenMediaPageFragmentEvent {
-    private ArrayList<MediaBean> mediaBeanList;
-    private int position;
+    private final ArrayList<MediaBean> mediaBeanList;
+    private final int position;
 
-    public OpenMediaPageFragmentEvent(ArrayList<MediaBean> mediaBeanList, int position){
+    public OpenMediaPageFragmentEvent(ArrayList<MediaBean> mediaBeanList, int position) {
         this.mediaBeanList = mediaBeanList;
         this.position = position;
     }

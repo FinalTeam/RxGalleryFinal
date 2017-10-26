@@ -2,14 +2,14 @@ package cn.finalteam.rxgalleryfinal.rxbus.event;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/25 下午3:45
  */
 public class MediaViewPagerChangedEvent {
 
-    private int curIndex;
-    private int totalSize;
-    private boolean isPreview;
+    private final int curIndex;
+    private final int totalSize;
+    private final boolean isPreview;
 
     public MediaViewPagerChangedEvent(int curIndex, int totalSize, boolean isPreview) {
         this.curIndex = curIndex;
