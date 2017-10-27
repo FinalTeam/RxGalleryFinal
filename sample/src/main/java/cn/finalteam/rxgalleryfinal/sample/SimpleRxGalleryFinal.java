@@ -67,7 +67,9 @@ public class SimpleRxGalleryFinal {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
             case Activity.RESULT_CANCELED:
-                listener.onCropCancel();
+                if(listener!=null){
+                    listener.onCropCancel();
+                }
                 break;
             case UCrop.RESULT_ERROR:
                 if (data != null) {
