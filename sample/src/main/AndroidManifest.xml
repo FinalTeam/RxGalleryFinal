@@ -33,6 +33,8 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme_Light.Default"/>
+
+        <activity android:name=".imageloader.ImageLoaderActivity" />
     </application>
 
 </manifest>
