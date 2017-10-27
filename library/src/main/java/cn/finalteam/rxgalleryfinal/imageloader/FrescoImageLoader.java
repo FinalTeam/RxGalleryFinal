@@ -113,7 +113,7 @@ public class FrescoImageLoader implements AbsImageLoader {
                 .path(path)
                 .build();
         ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(uri)
-                .setAutoRotateEnabled(true);
+                .setRotationOptions(RotationOptions.autoRotate());
         if (resize) {
             builder.setResizeOptions(new ResizeOptions(width, height));
         }
