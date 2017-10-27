@@ -78,7 +78,8 @@ public class Configuration implements Parcelable {
     private int maxResultHeight;
 
     //==========UCrop END==========
-
+    //设置显示标题
+    private String title = null;
     protected Configuration() {
     }
 
@@ -107,6 +108,7 @@ public class Configuration implements Parcelable {
         isPlayGif = in.readByte() != 0;
         hidePreview = in.readByte() != 0;
         isVideoPreview = in.readByte() != 0;
+        title = in.readString();
     }
 
     public boolean isHidePreview() {
@@ -367,6 +369,15 @@ public class Configuration implements Parcelable {
         parcel.writeByte((byte) (isPlayGif ? 1 : 0));
         parcel.writeByte((byte) (hidePreview ? 1 : 0));
         parcel.writeByte((byte) (isVideoPreview ? 1 : 0));
+        parcel.writeString(title);
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public boolean isVideoPreview() {

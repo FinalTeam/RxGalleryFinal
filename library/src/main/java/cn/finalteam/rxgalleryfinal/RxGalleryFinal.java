@@ -111,6 +111,15 @@ public class RxGalleryFinal {
         return this;
     }
 
+    /**
+     * 设置显示标题
+     * @return
+     */
+    public RxGalleryFinal setTitle(String title) {
+        configuration.setTitle(title);
+        return this;
+    }
+
     public RxGalleryFinal imageConfig(@NonNull Bitmap.Config config) {
         int c = 3;
         switch (config) {

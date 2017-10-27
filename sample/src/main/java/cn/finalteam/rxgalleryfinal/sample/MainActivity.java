@@ -247,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .radio()
                 .cropAspectRatioOptions(0, new AspectRatio("3:3", 30, 10))
                 .crop()
+                .setTitle("你好")
                 .imageLoader(ImageLoaderType.FRESCO)
                 .subscribe(new RxBusResultDisposable<ImageRadioResultEvent>() {
                     @Override

@@ -239,7 +239,9 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         ft.show(mMediaGridFragment)
                 .commit();
 
-        if (mConfiguration.isImage()) {
+        if(mConfiguration.getTitle()!=null){
+            mTvToolbarTitle.setText(mConfiguration.getTitle());
+        }else if (mConfiguration.isImage()) {
             mTvToolbarTitle.setText(R.string.gallery_media_grid_image_title);
         } else {
             mTvToolbarTitle.setText(R.string.gallery_media_grid_video_title);
