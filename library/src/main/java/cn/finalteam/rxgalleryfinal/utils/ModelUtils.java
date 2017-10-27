@@ -26,7 +26,7 @@ public class ModelUtils {
      * @param f 是否打开
      */
     public static void setDebugModel(boolean f) {
-       // Logger.DEBUG = f;
+        Logger.DEBUG = f;
     }
 
 }
