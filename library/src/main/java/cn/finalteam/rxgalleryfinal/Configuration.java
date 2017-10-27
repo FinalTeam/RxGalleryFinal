@@ -48,15 +48,17 @@ public class Configuration implements Parcelable {
     private int imageLoaderType;
     private int imageConfig;
     private boolean hideCamera;
-    private boolean openCameraOnStart = false;
-    private boolean returnAfterShot = false;
+    private boolean isPlayGif;
+    private boolean hidePreview;
+    private boolean isVideoPreview;
+
     //==========UCrop START==========
     //是否隐藏裁剪页面底部控制栏,默认显示
     private boolean hideBottomControls;
     //图片压缩质量,默认不压缩
     private int compressionQuality = 90;
     //手势方式,默认all
-    private int []gestures;
+    private int[] gestures;
     //设置图片最大值,默认根据屏幕得出
     private int maxBitmapSize = CropImageView.DEFAULT_MAX_BITMAP_SIZE;
     //设置最大缩放值,默认10.f
@@ -74,15 +76,12 @@ public class Configuration implements Parcelable {
     private boolean ovalDimmedLayer = OverlayView.DEFAULT_CIRCLE_DIMMED_LAYER;//DEFAULT_OVAL_DIMMED_LAYER
     private int maxResultWidth;
     private int maxResultHeight;
-    private boolean isPlayGif;
-    private boolean hidePreview;
-    private boolean isVideoPreview;
+
     //==========UCrop END==========
-    //设置显示标题
-    private String title = null;
 
     protected Configuration() {
     }
+
     protected Configuration(Parcel in) {
         image = in.readByte() != 0;
         selectedList = in.createTypedArrayList(MediaBean.CREATOR);
@@ -105,9 +104,6 @@ public class Configuration implements Parcelable {
         imageLoaderType = in.readInt();
         imageConfig = in.readInt();
         hideCamera = in.readByte() != 0;
-        openCameraOnStart = in.readByte() != 0;
-        title = in.readString();
-        returnAfterShot = in.readByte() != 0;
         isPlayGif = in.readByte() != 0;
         hidePreview = in.readByte() != 0;
         isVideoPreview = in.readByte() != 0;
@@ -176,21 +172,7 @@ public class Configuration implements Parcelable {
     public void setHideCamera(boolean hideCamera) {
         this.hideCamera = hideCamera;
     }
-    public boolean isOpenCameraOnStart() {
-        return openCameraOnStart;
-    }
 
-    public void setOpenCameraOnStart(boolean openCameraOnStart) {
-        this.openCameraOnStart = openCameraOnStart;
-    }
-
-    public boolean isReturnAfterShot() {
-        return returnAfterShot;
-    }
-
-    public void setReturnAfterShot(boolean returnAfterShot) {
-        this.returnAfterShot = returnAfterShot;
-    }
     //#ADD
     public int getImageLoaderType() {
         return imageLoaderType;
@@ -256,20 +238,12 @@ public class Configuration implements Parcelable {
         this.compressionQuality = compressionQuality;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAllowedGestures(@UCropActivity.GestureTypes int []gestures) {
-        this.gestures = gestures;
-    }
-
     public int[] getAllowedGestures() {
         return gestures;
+    }
+
+    public void setAllowedGestures(@UCropActivity.GestureTypes int[] gestures) {
+        this.gestures = gestures;
     }
 
     public int getMaxBitmapSize() {
@@ -390,9 +364,6 @@ public class Configuration implements Parcelable {
         parcel.writeInt(imageLoaderType);
         parcel.writeInt(imageConfig);
         parcel.writeByte((byte) (hideCamera ? 1 : 0));
-        parcel.writeByte((byte) (openCameraOnStart ? 1 : 0));
-        parcel.writeString(title);
-        parcel.writeByte((byte) (returnAfterShot ? 1 : 0));
         parcel.writeByte((byte) (isPlayGif ? 1 : 0));
         parcel.writeByte((byte) (hidePreview ? 1 : 0));
         parcel.writeByte((byte) (isVideoPreview ? 1 : 0));

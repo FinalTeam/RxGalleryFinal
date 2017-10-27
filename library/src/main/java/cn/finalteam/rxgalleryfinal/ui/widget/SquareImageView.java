@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/7/9 上午12:53
  */
 public class SquareImageView extends FixImageView {
@@ -22,8 +22,8 @@ public class SquareImageView extends FixImageView {
     }
 
     @Override
-    protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec) {
-        super .onMeasure(widthMeasureSpec, heightMeasureSpec);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth()); //Snap to width
     }
 }

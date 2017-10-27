@@ -8,7 +8,7 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 /**
- * Created by pengjianbo on 2016/8/16 0016.
+ * Created by pengjianbo  Dujinyang on 2016/8/16 0016.
  */
 public class RotateTransformation extends BitmapTransformation {
 

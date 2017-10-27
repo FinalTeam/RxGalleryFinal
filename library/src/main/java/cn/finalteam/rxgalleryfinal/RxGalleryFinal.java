@@ -155,23 +155,6 @@ public class RxGalleryFinal {
     }
 
     /**
-     * 直接打开相机
-     * @return
-     */
-    public RxGalleryFinal openCameraOnStart() {
-        configuration.setOpenCameraOnStart(true);
-        return this;
-    }
-
-    /**
-     * 拍摄后，直接返回图片
-     * @return
-     */
-    public RxGalleryFinal returnAfterShot() {
-        configuration.setReturnAfterShot(true);
-        return this;
-    }
-    /**
      * set to true to hide the bottom controls (shown by default)
      */
     public RxGalleryFinal cropHideBottomControls(boolean hide) {

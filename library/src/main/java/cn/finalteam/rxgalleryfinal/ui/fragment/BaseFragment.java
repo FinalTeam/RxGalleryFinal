@@ -1,12 +1,16 @@
 package cn.finalteam.rxgalleryfinal.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Stack;
 
 import cn.finalteam.rxgalleryfinal.BuildConfig;
 import cn.finalteam.rxgalleryfinal.Configuration;
@@ -14,18 +18,17 @@ import cn.finalteam.rxgalleryfinal.utils.Logger;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/5/14 上午10:46
  */
 public abstract class BaseFragment extends Fragment {
 
-    private final String CLASS_NAME = getClass().getSimpleName();
     public static final String EXTRA_PREFIX = BuildConfig.APPLICATION_ID;
-    public static final String EXTRA_CONFIGURATION = EXTRA_PREFIX +".Configuration";
-
+    public static final String EXTRA_CONFIGURATION = EXTRA_PREFIX + ".Configuration";
+    private static Stack<BaseFragment> fragmentStack = new Stack<>();
+    private final String CLASS_NAME = getClass().getSimpleName();
     protected Bundle mSaveDataBundle;
     protected String BUNDLE_KEY = "KEY_" + CLASS_NAME;
-
     protected Configuration mConfiguration;
 
     @Override
@@ -47,28 +50,28 @@ public abstract class BaseFragment extends Fragment {
 
         Bundle argsBundle = getArguments();
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mConfiguration = savedInstanceState.getParcelable(EXTRA_CONFIGURATION);
         }
-        if(mConfiguration == null && argsBundle != null) {
+        if (mConfiguration == null && argsBundle != null) {
             mConfiguration = argsBundle.getParcelable(EXTRA_CONFIGURATION);
         }
 
-        if(mConfiguration != null){
-            if(argsBundle == null){
+        if (mConfiguration != null) {
+            if (argsBundle == null) {
                 argsBundle = savedInstanceState;
             }
             onViewCreatedOk(view, argsBundle);
             setTheme();
         } else {
-            if(getActivity() != null && !getActivity().isFinishing()) {
-                getActivity().finish();
+            FragmentActivity activity = getActivity();
+            if (activity != null && !activity.isFinishing()) {
+                activity.finish();
             }
         }
     }
 
     public abstract void onViewCreatedOk(View view, @Nullable Bundle savedInstanceState);
-
 
     @Nullable
     @Override
@@ -76,6 +79,30 @@ public abstract class BaseFragment extends Fragment {
         printFragmentLife("onCreateView");
         return inflater.inflate(getContentView(), container, false);
     }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        Logger.i("startActivityForResult");
+        Fragment parentFragment = getParentFragment();
+        if (null != parentFragment) {
+            fragmentStack.push(this);
+            parentFragment.startActivityForResult(intent, requestCode);
+        } else {
+            super.startActivityForResult(intent, requestCode);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Logger.i("onActivityResult");
+        BaseFragment fragment = fragmentStack.isEmpty() ? null : fragmentStack.pop();
+        if (null != fragment) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 
     @Override
     public void onStart() {
@@ -116,9 +143,10 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract int getContentView();
 
-    public void setTheme(){}
+    public void setTheme() {
+    }
 
-    private void printFragmentLife(String method){
+    private void printFragmentLife(String method) {
         Logger.i(String.format("Fragment:%s Method:%s", CLASS_NAME, method));
     }
 
@@ -147,7 +175,7 @@ public abstract class BaseFragment extends Fragment {
 
         if (mSaveDataBundle != null) {
             Bundle b = getArguments();
-            if(b != null) {
+            if (b != null) {
                 b.putBundle(BUNDLE_KEY, mSaveDataBundle);
             }
         }
@@ -155,7 +183,7 @@ public abstract class BaseFragment extends Fragment {
 
     private boolean restoreStateFromArguments() {
         Bundle b = getArguments();
-        if(b != null) {
+        if (b != null) {
             mSaveDataBundle = b.getBundle(BUNDLE_KEY);
             if (mSaveDataBundle != null) {
                 restoreState();
@@ -177,7 +205,6 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * 恢复数据
-     * @param savedInstanceState
      */
     protected abstract void onRestoreState(Bundle savedInstanceState);
 

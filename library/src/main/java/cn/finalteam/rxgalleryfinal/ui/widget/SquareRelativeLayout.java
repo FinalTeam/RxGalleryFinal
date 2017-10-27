@@ -6,7 +6,7 @@ import android.widget.RelativeLayout;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/8 下午4:07
  */
 public class SquareRelativeLayout extends RelativeLayout {
@@ -24,8 +24,8 @@ public class SquareRelativeLayout extends RelativeLayout {
     }
 
     @Override
-    protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec) {
-        super .onMeasure(widthMeasureSpec, heightMeasureSpec);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth()); //Snap to width
     }
 }

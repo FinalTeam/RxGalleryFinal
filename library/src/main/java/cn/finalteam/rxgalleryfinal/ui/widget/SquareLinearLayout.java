@@ -6,7 +6,7 @@ import android.widget.LinearLayout;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/17 下午1:48
  */
 public class SquareLinearLayout extends LinearLayout {
@@ -20,8 +20,8 @@ public class SquareLinearLayout extends LinearLayout {
     }
 
     @Override
-    protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec) {
-        super .onMeasure(widthMeasureSpec, heightMeasureSpec);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth()); //Snap to width
     }
 }

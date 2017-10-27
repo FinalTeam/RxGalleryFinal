@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 /**
  * Desction:文件夹信息
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:16/6/9 下午2:47
  */
 public class BucketBean {
@@ -40,7 +40,7 @@ public class BucketBean {
     }
 
     public String getCover() {
-        if(cover == null){
+        if (cover == null) {
             return "";
         }
         return cover;
@@ -60,7 +60,7 @@ public class BucketBean {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null || !(o instanceof BucketBean)) {
+        if (o == null || !(o instanceof BucketBean)) {
             return false;
         }
         BucketBean bucketBean = (BucketBean) o;

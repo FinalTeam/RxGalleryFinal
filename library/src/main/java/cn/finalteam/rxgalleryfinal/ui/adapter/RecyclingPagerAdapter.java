@@ -11,19 +11,19 @@ import android.widget.AdapterView;
  * Desction:
  * A {@link PagerAdapter} which behaves like an {@link android.widget.Adapter} with view types and
  * view recycling.
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:15/12/22 下午6:21
  */
-public abstract class RecyclingPagerAdapter extends PagerAdapter {
-    static final int IGNORE_ITEM_VIEW_TYPE = AdapterView.ITEM_VIEW_TYPE_IGNORE;
+abstract class RecyclingPagerAdapter extends PagerAdapter {
+    private static final int IGNORE_ITEM_VIEW_TYPE = AdapterView.ITEM_VIEW_TYPE_IGNORE;
 
     private final RecycleBin recycleBin;
 
-    public RecyclingPagerAdapter() {
+    RecyclingPagerAdapter() {
         this(new RecycleBin());
     }
 
-    RecyclingPagerAdapter(RecycleBin recycleBin) {
+    private RecyclingPagerAdapter(RecycleBin recycleBin) {
         this.recycleBin = recycleBin;
         recycleBin.setViewTypeCount(getViewTypeCount());
     }
@@ -75,7 +75,7 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
      *
      * @return The number of types of Views that will be created by this adapter
      */
-    public int getViewTypeCount() {
+    private int getViewTypeCount() {
         return 1;
     }
 
@@ -83,7 +83,7 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
      * Get the type of View that will be created by {@link #getView} for the specified item.
      *
      * @param position The position of the item within the adapter's data set whose view type we
-     * want.
+     *                 want.
      * @return An integer representing the type of View. Two views should share the same type if one
      * can be converted to the other in {@link #getView}. Note: Integers must be in the
      * range 0 to {@link #getViewTypeCount} - 1. {@link #IGNORE_ITEM_VIEW_TYPE} can
@@ -91,7 +91,7 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
      * @see #IGNORE_ITEM_VIEW_TYPE
      */
     @SuppressWarnings("UnusedParameters") // Argument potentially used by subclasses.
-    public int getItemViewType(int position) {
+    private int getItemViewType(int position) {
         return 0;
     }
 
@@ -102,18 +102,18 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
      * {@link android.view.LayoutInflater#inflate(int, ViewGroup, boolean)}
      * to specify a root view and to prevent attachment to the root.
      *
-     * @param position The position of the item within the adapter's data set of the item whose view
-     * we want.
+     * @param position    The position of the item within the adapter's data set of the item whose view
+     *                    we want.
      * @param convertView The old view to reuse, if possible. Note: You should check that this view
-     * is non-null and of an appropriate type before using. If it is not possible to convert
-     * this view to display the correct data, this method can create a new view.
-     * Heterogeneous lists can specify their number of view types, so that this View is
-     * always of the right type (see {@link #getViewTypeCount()} and
-     * {@link #getItemViewType(int)}).
-     * @param container The parent that this view will eventually be attached to
+     *                    is non-null and of an appropriate type before using. If it is not possible to convert
+     *                    this view to display the correct data, this method can create a new view.
+     *                    Heterogeneous lists can specify their number of view types, so that this View is
+     *                    always of the right type (see {@link #getViewTypeCount()} and
+     *                    {@link #getItemViewType(int)}).
+     * @param container   The parent that this view will eventually be attached to
      * @return A View corresponding to the data at the specified position.
      */
-    public abstract View getView(int position, View convertView, ViewGroup container);
+    protected abstract View getView(int position, View convertView, ViewGroup container);
 
     /**
      * The RecycleBin facilitates reuse of views across layouts. The RecycleBin has two levels of
@@ -132,15 +132,38 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
          * Views in activeViews represent a contiguous range of Views, with position of the first
          * view store in mFirstActivePosition.
          */
-        private View[] activeViews = new View[0];
-        private int[] activeViewTypes = new int[0];
+        private final View[] activeViews = new View[0];
+        private final int[] activeViewTypes = new int[0];
 
-        /** Unsorted views that can be used by the adapter as a convert view. */
+        /**
+         * Unsorted views that can be used by the adapter as a convert view.
+         */
         private SparseArray<View>[] scrapViews;
 
         private int viewTypeCount;
 
         private SparseArray<View> currentScrapViews;
+
+        static View retrieveFromScrap(SparseArray<View> scrapViews, int position) {
+            int size = scrapViews.size();
+            if (size > 0) {
+                // See if we still have a view for this position.
+                for (int i = 0; i < size; i++) {
+                    int fromPosition = scrapViews.keyAt(i);
+                    View view = scrapViews.get(fromPosition);
+                    if (fromPosition == position) {
+                        scrapViews.remove(fromPosition);
+                        return view;
+                    }
+                }
+                int index = size - 1;
+                View r = scrapViews.valueAt(index);
+                scrapViews.remove(scrapViews.keyAt(index));
+                return r;
+            } else {
+                return null;
+            }
+        }
 
         public void setViewTypeCount(int viewTypeCount) {
             if (viewTypeCount < 1) {
@@ -149,18 +172,20 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
             //noinspection unchecked
             SparseArray<View>[] scrapViews = new SparseArray[viewTypeCount];
             for (int i = 0; i < viewTypeCount; i++) {
-                scrapViews[i] = new SparseArray<View>();
+                scrapViews[i] = new SparseArray<>();
             }
             this.viewTypeCount = viewTypeCount;
             currentScrapViews = scrapViews[0];
             this.scrapViews = scrapViews;
         }
 
-        protected boolean shouldRecycleViewType(int viewType) {
+        boolean shouldRecycleViewType(int viewType) {
             return viewType >= 0;
         }
 
-        /** @return A view from the ScrapViews collection. These are unordered. */
+        /**
+         * @return A view from the ScrapViews collection. These are unordered.
+         */
         View getScrapView(int position, int viewType) {
             if (viewTypeCount == 1) {
                 return retrieveFromScrap(currentScrapViews, position);
@@ -187,7 +212,9 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
             }
         }
 
-        /** Move all views remaining in activeViews to scrapViews. */
+        /**
+         * Move all views remaining in activeViews to scrapViews.
+         */
         void scrapActiveViews() {
             final View[] activeViews = this.activeViews;
             final int[] activeViewTypes = this.activeViewTypes;
@@ -237,27 +264,6 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
                 for (int j = 0; j < extras; j++) {
                     scrapPile.remove(scrapPile.keyAt(size--));
                 }
-            }
-        }
-
-        static View retrieveFromScrap(SparseArray<View> scrapViews, int position) {
-            int size = scrapViews.size();
-            if (size > 0) {
-                // See if we still have a view for this position.
-                for (int i = 0; i < size; i++) {
-                    int fromPosition = scrapViews.keyAt(i);
-                    View view = scrapViews.get(fromPosition);
-                    if (fromPosition == position) {
-                        scrapViews.remove(fromPosition);
-                        return view;
-                    }
-                }
-                int index = size - 1;
-                View r = scrapViews.valueAt(index);
-                scrapViews.remove(scrapViews.keyAt(index));
-                return r;
-            } else {
-                return null;
             }
         }
     }

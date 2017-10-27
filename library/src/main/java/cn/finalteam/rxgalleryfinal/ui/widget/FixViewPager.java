@@ -7,10 +7,10 @@ import android.view.MotionEvent;
 
 /**
  * Desction:
- * Author:pengjianbo
+ * Author:pengjianbo  Dujinyang
  * Date:2015/12/29 0029 19:29
  */
-public class FixViewPager extends ViewPager{
+public class FixViewPager extends ViewPager {
     public FixViewPager(Context context) {
         super(context);
     }
@@ -22,11 +22,9 @@ public class FixViewPager extends ViewPager{
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         try {
-            return super .dispatchTouchEvent(ev);
+            return super.dispatchTouchEvent(ev);
         } catch (IllegalArgumentException ignored) {
-        } catch (ArrayIndexOutOfBoundsException e) {
         }
-
-        return false ;
+        return false;
     }
 }
