@@ -858,10 +858,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                             int bk = FileUtils.existImageDir(mediaBean.getOriginalPath());
                             if (bk != -1) {
                                 if(mConfiguration.isReturnAfterShot()){
-                                    ArrayList<MediaBean> list = new ArrayList<>();
-                                    list.add(mediaBean);
-                                    BaseResultEvent event = new ImageMultipleResultEvent(list);
-                                    RxBus.getDefault().post(event);
+                                    setPostMediaBean(mediaBean);
                                     getActivity().finish();
                                 }else{
                                     mMediaBeanList.add(1, mediaBean);
