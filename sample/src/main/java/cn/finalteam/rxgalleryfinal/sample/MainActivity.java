@@ -92,7 +92,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             @Override
                             public boolean isActivityFinish() {
-                                return false;
+
+                                return true;
                             }
                         });
 
@@ -247,10 +248,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .radio()
                 //.gif()
                 //.hidePreview()
-                //.cropAspectRatioOptions(0, new AspectRatio("3:3", 30, 10))
-                //.crop()
-                .openCameraOnStart()
-                .returnAfterShot()
+                .cropAspectRatioOptions(0, new AspectRatio("3:3", 30, 10))
+                .crop()
+                //.openCameraOnStart()
+                //.returnAfterShot()
                 .setTitle("你好")
                 .imageLoader(ImageLoaderType.FRESCO)
                 .subscribe(new RxBusResultDisposable<ImageRadioResultEvent>() {

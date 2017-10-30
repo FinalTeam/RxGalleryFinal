@@ -45,7 +45,9 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusDisposable;
+import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
@@ -404,7 +406,19 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     protected void onFirstTimeLaunched() {
+        if(mConfiguration.isOpenCameraOnStart()){
+            onLoadFile();
+            this.openCameraOnStart();
+        }
+    }
 
+    public void openCameraOnStart(){
+        if (!CameraUtils.hasCamera(getContext())) {
+            Toast.makeText(getContext(), R.string.gallery_device_no_camera_tips, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        openCamera(mMediaActivity);
     }
 
     @Override
@@ -843,8 +857,17 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                         if (!isDetached() && mediaBean != null) {
                             int bk = FileUtils.existImageDir(mediaBean.getOriginalPath());
                             if (bk != -1) {
-                                mMediaBeanList.add(1, mediaBean);
-                                mMediaGridAdapter.notifyDataSetChanged();
+                                if(mConfiguration.isReturnAfterShot()){
+                                    ArrayList<MediaBean> list = new ArrayList<>();
+                                    list.add(mediaBean);
+                                    BaseResultEvent event = new ImageMultipleResultEvent(list);
+                                    RxBus.getDefault().post(event);
+                                    getActivity().finish();
+                                }else{
+                                    mMediaBeanList.add(1, mediaBean);
+                                    mMediaGridAdapter.notifyDataSetChanged();
+                                }
+
                             } else {
                                 Logger.i("获取：无");
                             }
