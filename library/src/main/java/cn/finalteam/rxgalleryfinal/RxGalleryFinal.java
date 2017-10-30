@@ -119,6 +119,23 @@ public class RxGalleryFinal {
         configuration.setTitle(title);
         return this;
     }
+    /**
+     * 直接打开相机
+     * @return
+     */
+    public RxGalleryFinal openCameraOnStart() {
+        configuration.setOpenCameraOnStart(true);
+        return this;
+    }
+
+    /**
+     * 拍摄后，直接返回图片
+     * @return
+     */
+    public RxGalleryFinal returnAfterShot() {
+        configuration.setReturnAfterShot(true);
+        return this;
+    }
 
     public RxGalleryFinal imageConfig(@NonNull Bitmap.Config config) {
         int c = 3;

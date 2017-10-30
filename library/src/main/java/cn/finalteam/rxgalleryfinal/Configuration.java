@@ -80,6 +80,9 @@ public class Configuration implements Parcelable {
     //==========UCrop END==========
     //设置显示标题
     private String title = null;
+    private boolean openCameraOnStart = false;
+    private boolean returnAfterShot = false;
+
     protected Configuration() {
     }
 
@@ -109,6 +112,8 @@ public class Configuration implements Parcelable {
         hidePreview = in.readByte() != 0;
         isVideoPreview = in.readByte() != 0;
         title = in.readString();
+        openCameraOnStart = in.readByte() != 0;
+        returnAfterShot = in.readByte() != 0;
     }
 
     public boolean isHidePreview() {
@@ -182,6 +187,21 @@ public class Configuration implements Parcelable {
 
     protected void setImageLoaderType(int imageLoaderType) {
         this.imageLoaderType = imageLoaderType;
+    }
+    public boolean isOpenCameraOnStart() {
+        return openCameraOnStart;
+    }
+
+    public void setOpenCameraOnStart(boolean openCameraOnStart) {
+        this.openCameraOnStart = openCameraOnStart;
+    }
+
+    public boolean isReturnAfterShot() {
+        return returnAfterShot;
+    }
+
+    public void setReturnAfterShot(boolean returnAfterShot) {
+        this.returnAfterShot = returnAfterShot;
     }
 
     public AbsImageLoader getImageLoader() {
@@ -370,6 +390,8 @@ public class Configuration implements Parcelable {
         parcel.writeByte((byte) (hidePreview ? 1 : 0));
         parcel.writeByte((byte) (isVideoPreview ? 1 : 0));
         parcel.writeString(title);
+        parcel.writeByte((byte) (openCameraOnStart ? 1 : 0));
+        parcel.writeByte((byte) (returnAfterShot ? 1 : 0));
     }
 
     public String getTitle() {
