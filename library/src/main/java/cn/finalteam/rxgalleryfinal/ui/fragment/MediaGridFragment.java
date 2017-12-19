@@ -299,7 +299,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .build());
         mRvBucket.setLayoutManager(linearLayoutManager);
         mBucketBeanList = new ArrayList<>();
-        mBucketAdapter = new BucketAdapter(mBucketBeanList, mConfiguration, ContextCompat.getColor(getContext(), R.color.gallery_bucket_list_item_normal_color));
+        mBucketAdapter = new BucketAdapter(getContext(),mBucketBeanList, mConfiguration, ContextCompat.getColor(getContext(), R.color.gallery_bucket_list_item_normal_color));
         mRvBucket.setAdapter(mBucketAdapter);
         mRvMedia.setOnItemClickListener(this);
         mMediaGridPresenter.getBucketList();

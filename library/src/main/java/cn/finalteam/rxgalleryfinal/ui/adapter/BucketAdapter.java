@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -36,14 +37,17 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
 
     private final List<BucketBean> mBucketList;
     private final Drawable mDefaultImage;
+    private Context mContext;
     private final Configuration mConfiguration;
     private OnRecyclerViewItemClickListener mOnRecyclerViewItemClickListener;
     private BucketBean mSelectedBucket;
 
     public BucketAdapter(
+            Context mContex,
             List<BucketBean> bucketList,
             Configuration configuration,
             @ColorInt int color) {
+        this.mContext = mContex;
         this.mBucketList = bucketList;
         this.mConfiguration = configuration;
         this.mDefaultImage = new ColorDrawable(color);
@@ -60,7 +64,7 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
         BucketBean bucketBean = mBucketList.get(position);
         String bucketName = bucketBean.getBucketName();
         if (position != 0) {
-            SpannableString nameSpannable = new SpannableString(bucketName + "\n" + bucketBean.getImageCount() + R.string.gallery_image_unit);
+            SpannableString nameSpannable = new SpannableString(bucketName + "\n" + bucketBean.getImageCount() + this.mContext.getString(R.string.gallery_image_unit));
             nameSpannable.setSpan(new ForegroundColorSpan(Color.GRAY), bucketName.length(), nameSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             nameSpannable.setSpan(new RelativeSizeSpan(0.8f), bucketName.length(), nameSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.mTvBucketName.setText(nameSpannable);

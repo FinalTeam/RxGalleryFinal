@@ -1,0 +1,25 @@
+<resources>
+    <string name="gallery_loading_view_click_loading_more">Load more</string>
+    <string name="gallery_loading_view_no_more">No more</string>
+    <string name="gallery_loading_view_loading">Loading…</string>
+
+    <string name="gallery_over_button_text">Complete</string>
+    <string name="gallery_over_button_text_checked">Complete(%1$d/%2$d)</string>
+    <string name="gallery_image_max_size_tip">You can only choose %1$d photos</string>
+    <string name="gallery_page_title">%1$d/%2$d</string>
+    <string name="gallery_media_grid_image_title">photos</string>
+    <string name="gallery_media_grid_video_title">video</string>
+    <string name="gallery_default_request_storage_access_permission_tips">App request to read your album</string>
+    <string name="gallery_default_camera_access_permission_tips">>App request to Camera</string>
+    <string name="gallery_default_media_empty_tips">Absolutely empty</string>
+    <string name="gallery_device_no_camera_tips">The device has no camera</string>
+    <string name="gallery_device_camera_unable">Camera not available</string>
+    <string name="gallery_preview_title">preview</string>
+    <string name="gallery_all_image">All pictures</string>
+    <string name="gallery_all_video">All video</string>
+    <string name="gallery_take_image">Photograph</string>
+    <string name="gallery_image_selected">Selected</string>
+    <string name="gallery_image_unit">pictures</string>
+    <string name="gallery_title_cut">cut</string>
+    <string name="gallery_video">record video</string>
+</resources>
