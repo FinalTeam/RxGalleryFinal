@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_margin="2dp"
             android:checked="true"
-            android:text="选中" />
+            android:text="@string/gallery_image_selected" />
     </RelativeLayout>
 
 </RelativeLayout>
