@@ -438,7 +438,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     @Override
     public void onRequestMediaCallback(List<MediaBean> list) {
         if (!mConfiguration.isHideCamera()) {
-            if (mPage == 1 && TextUtils.equals(mBucketId, String.valueOf(Integer.MIN_VALUE))) {
+            if (mPage == 1 && TextUtils.equals(mBucketId, String.valueOf(Integer.MIN_VALUE))
+                    && mMediaBeanList.size()==0) {
                 MediaBean takePhotoBean = new MediaBean();
                 takePhotoBean.setId(Integer.MIN_VALUE);
                 takePhotoBean.setBucketId(String.valueOf(Integer.MIN_VALUE));
@@ -446,7 +447,19 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             }
         }
         if (list != null && list.size() > 0) {
-            mMediaBeanList.addAll(list);
+            //说明原来有图片，说明是从相机返回，增量添加
+            if(mMediaBeanList.size()>1 && mPage==1){
+                int size = (list.size()-mMediaBeanList.size()+1);
+                if(size>0){
+                    List subList = list.subList(0,size);
+                    mMediaBeanList.addAll(1,subList);
+                    checkMediaBean(subList);
+                    mMediaGridAdapter.notifyDataSetChanged();
+                }
+                return;
+            }else {
+                mMediaBeanList.addAll(list);
+            }
             Logger.i(String.format("得到:%s张图片", list.size()));
         } else {
             Logger.i("没有更多图片");
@@ -674,6 +687,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
         // video : 1: 高质量  0 低质量
 //        captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        if(mConfiguration.isMultipleShot() && image){
+            captureIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+        }
         startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
     }
 
@@ -690,6 +706,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Logger.i("裁剪成功");
             refreshUI();
             onCropFinished();
+        }else {
+            //重新加载图片
+            mPage = 1;
+            mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
         }
     }
 
@@ -862,6 +882,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                                     getActivity().finish();
                                 }else{
                                     mMediaBeanList.add(1, mediaBean);
+                                    checkMediaBean(mediaBean);
                                     mMediaGridAdapter.notifyDataSetChanged();
                                 }
 
@@ -900,6 +921,18 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 mImageStoreCropDir.mkdirs();
             }
             setImageStoreCropDir(mImageStoreCropDir);
+        }
+    }
+
+    public void checkMediaBean(MediaBean mediaBean){
+        if(!mConfiguration.isRadio() && mMediaActivity.getCheckedList().size()<mConfiguration.getMaxSize()) {
+            mMediaActivity.getCheckedList().add(mediaBean);
+        }
+    }
+
+    public void checkMediaBean(List<MediaBean> list){
+        for (MediaBean mediaBean:list){
+            checkMediaBean(mediaBean);
         }
     }
 }

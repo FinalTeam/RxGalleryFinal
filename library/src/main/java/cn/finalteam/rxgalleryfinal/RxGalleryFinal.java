@@ -136,6 +136,14 @@ public class RxGalleryFinal {
         configuration.setReturnAfterShot(true);
         return this;
     }
+    /**
+     * 打开相机后，多次拍摄图片
+     * @return
+     */
+    public RxGalleryFinal multipleShot() {
+        configuration.setMultipleShot(true);
+        return this;
+    }
 
     public RxGalleryFinal imageConfig(@NonNull Bitmap.Config config) {
         int c = 3;

@@ -82,7 +82,7 @@ public class Configuration implements Parcelable {
     private String title = null;
     private boolean openCameraOnStart = false;
     private boolean returnAfterShot = false;
-
+    private boolean multipleShot  = false;
     protected Configuration() {
     }
 
@@ -114,6 +114,7 @@ public class Configuration implements Parcelable {
         title = in.readString();
         openCameraOnStart = in.readByte() != 0;
         returnAfterShot = in.readByte() != 0;
+        multipleShot = in.readByte() != 0;
     }
 
     public boolean isHidePreview() {
@@ -202,6 +203,14 @@ public class Configuration implements Parcelable {
 
     public void setReturnAfterShot(boolean returnAfterShot) {
         this.returnAfterShot = returnAfterShot;
+    }
+
+    public boolean isMultipleShot() {
+        return multipleShot;
+    }
+
+    public void setMultipleShot(boolean multipleShot) {
+        this.multipleShot = multipleShot;
     }
 
     public AbsImageLoader getImageLoader() {
@@ -392,6 +401,7 @@ public class Configuration implements Parcelable {
         parcel.writeString(title);
         parcel.writeByte((byte) (openCameraOnStart ? 1 : 0));
         parcel.writeByte((byte) (returnAfterShot ? 1 : 0));
+        parcel.writeByte((byte) (multipleShot ? 1 : 0));
     }
 
     public String getTitle() {
