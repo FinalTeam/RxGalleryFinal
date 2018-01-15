@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        RxGalleryFinal.with(this).hidePreview();
         RxGalleryFinal rxGalleryFinal = RxGalleryFinal
                 .with(MainActivity.this)
-                .image()
+                .image().multipleShot()
                 .multiple();
         if (list != null && !list.isEmpty()) {
             rxGalleryFinal

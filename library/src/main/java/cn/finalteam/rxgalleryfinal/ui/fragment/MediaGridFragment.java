@@ -449,11 +449,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (list != null && list.size() > 0) {
             //说明原来有图片，说明是从相机返回，增量添加
             if(mMediaBeanList.size()>1 && mPage==1){
-                int size = (list.size()-mMediaBeanList.size()+1);
-                if(size>0){
-                    List subList = list.subList(0,size);
-                    mMediaBeanList.addAll(1,subList);
-                    checkMediaBean(subList);
+                list.removeAll(mMediaBeanList);
+                if(list!=null && list.size()>0){
+                    mMediaBeanList.addAll(1,list);
+                    checkMediaBean(list);
                     mMediaGridAdapter.notifyDataSetChanged();
                 }
                 return;
