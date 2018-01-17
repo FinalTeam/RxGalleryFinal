@@ -925,7 +925,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     public void checkMediaBean(MediaBean mediaBean){
         if(!mConfiguration.isRadio() && mMediaActivity.getCheckedList().size()<mConfiguration.getMaxSize()) {
-            mMediaActivity.getCheckedList().add(mediaBean);
+            RxBus.getDefault().post(new MediaCheckChangeEvent(mediaBean));
         }
     }
 
