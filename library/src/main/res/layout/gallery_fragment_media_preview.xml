@@ -18,16 +18,24 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/cb_check"
-            style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+        <TextView
+            android:id="@+id/tv_image_selected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_margin="2dp"
-            android:checked="true"
+            android:textColor="#FFFFFF"
             android:text="@string/gallery_image_selected" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/cb_check"
+            style="@style/gallery_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_image_selected"
+            android:layout_centerVertical="true"
+            android:layout_margin="2dp"
+            android:checked="true"/>
     </RelativeLayout>
 
 </RelativeLayout>

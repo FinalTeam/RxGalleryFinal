@@ -1,3 +1,6 @@
 <resources>
-
+    <style name="gallery_checkBox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:scaleX">1.5</item>
+        <item name="android:scaleY">1.5</item>
+    </style>
 </resources>

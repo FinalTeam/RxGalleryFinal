@@ -82,9 +82,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if (imageLoaderType != 3) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery_media_grid, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_item_media_grid, parent, false);
         } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery_media_grid_fresco, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_item_media_grid_fresco, parent, false);
         }
         return new GridViewHolder(view);
     }

@@ -1,0 +1,5 @@
+<resources>
+    <style name="gallery_checkBox" parent="@style/Widget.AppCompat.CompoundButton.CheckBox" >
+
+    </style>
+</resources>
