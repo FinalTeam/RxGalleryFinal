@@ -527,10 +527,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 return;
             }
 
-            boolean b = PermissionCheckUtils.checkCameraPermission(mMediaActivity, requestStorageAccessPermissionTips, MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION);
-            if (b) {
-                openCamera(mMediaActivity);
-            }
+            openCamera(mMediaActivity);
         } else {
             if (mConfiguration.isRadio()) {
                 if (mConfiguration.isImage()) {
@@ -659,37 +656,38 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
     }
 
-    public void openCamera(Context context) {
+    public void  openCamera(Context context) {
+        boolean b = PermissionCheckUtils.checkCameraPermission(mMediaActivity, requestStorageAccessPermissionTips, MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION);
+        if (b) {
+            boolean image = mConfiguration.isImage();
 
+            Intent captureIntent = image ? new Intent(MediaStore.ACTION_IMAGE_CAPTURE) : new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            if (captureIntent.resolveActivity(context.getPackageManager()) == null) {
+                Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        boolean image = mConfiguration.isImage();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+            String filename = String.format(image ? IMAGE_STORE_FILE_NAME : VIDEO_STORE_FILE_NAME, dateFormat.format(new Date()));
+            Logger.i("openCamera：" + mImageStoreDir.getAbsolutePath());
+            File fileImagePath = new File(mImageStoreDir, filename);
+            mImagePath = fileImagePath.getAbsolutePath();
 
-        Intent captureIntent = image ? new Intent(MediaStore.ACTION_IMAGE_CAPTURE) : new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        if (captureIntent.resolveActivity(context.getPackageManager()) == null) {
-            Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
-        String filename = String.format(image ? IMAGE_STORE_FILE_NAME : VIDEO_STORE_FILE_NAME, dateFormat.format(new Date()));
-        Logger.i("openCamera：" + mImageStoreDir.getAbsolutePath());
-        File fileImagePath = new File(mImageStoreDir, filename);
-        mImagePath = fileImagePath.getAbsolutePath();
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
-        } else {
-            ContentValues contentValues = new ContentValues(1);
-            contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
-            Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        }
-        // video : 1: 高质量  0 低质量
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
+            } else {
+                ContentValues contentValues = new ContentValues(1);
+                contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
+                Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            }
+            // video : 1: 高质量  0 低质量
 //        captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        if(mConfiguration.isMultipleShot() && image){
-            captureIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+            if(mConfiguration.isMultipleShot() && image){
+                captureIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+            }
+            startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
         }
-        startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
     }
 
     @Override
@@ -699,7 +697,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (requestCode == TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Logger.i(String.format("拍照成功,图片存储路径:%s", mImagePath));
             mMediaScanner.scanFile(mImagePath, mConfiguration.isImage() ? IMAGE_TYPE : "", this);
-        } else if (requestCode == 222) {
+        }else if (requestCode == TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
+            if(mConfiguration.isReturnAfterShot()){
+                getActivity().finish();
+            }
+        }  else if (requestCode == 222) {
             Toast.makeText(getActivity(), "摄像成功", Toast.LENGTH_SHORT).show();
         } else if (requestCode == CROP_IMAGE_REQUEST_CODE && data != null) {
             Logger.i("裁剪成功");
