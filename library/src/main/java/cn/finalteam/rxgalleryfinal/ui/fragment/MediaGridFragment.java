@@ -879,8 +879,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                             int bk = FileUtils.existImageDir(mediaBean.getOriginalPath());
                             if (bk != -1) {
                                 if(mConfiguration.isReturnAfterShot()){
-                                    setPostMediaBean(mediaBean);
-                                    getActivity().finish();
+                                    radioNext(mediaBean);
                                 }else{
                                     mMediaBeanList.add(1, mediaBean);
                                     checkMediaBean(mediaBean);
