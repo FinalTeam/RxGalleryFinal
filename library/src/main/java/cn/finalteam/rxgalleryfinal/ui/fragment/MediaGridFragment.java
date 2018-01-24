@@ -705,7 +705,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Toast.makeText(getActivity(), "摄像成功", Toast.LENGTH_SHORT).show();
         } else if (requestCode == CROP_IMAGE_REQUEST_CODE && data != null) {
             Logger.i("裁剪成功");
-            refreshUI();
             onCropFinished();
         }else {
             //重新加载图片
@@ -879,7 +878,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                             int bk = FileUtils.existImageDir(mediaBean.getOriginalPath());
                             if (bk != -1) {
                                 if(mConfiguration.isReturnAfterShot()){
-                                    radioNext(mediaBean);
+                                    if (mConfiguration.isImage()) {
+                                        radioNext(mediaBean);
+                                    } else {
+                                        videoRadioNext(mediaBean);
+                                    }
                                 }else{
                                     mMediaBeanList.add(1, mediaBean);
                                     checkMediaBean(mediaBean);
