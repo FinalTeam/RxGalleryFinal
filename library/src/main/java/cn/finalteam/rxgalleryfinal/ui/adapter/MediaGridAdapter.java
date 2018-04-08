@@ -63,7 +63,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             Configuration configuration) {
         this.mMediaActivity = mediaActivity;
         this.mMediaBeanList = list;
-        this.mImageSize = screenWidth / 3;
+        this.mImageSize = screenWidth / configuration.getSpanCount();
         int defaultResId = ThemeUtils.resolveDrawableRes(mediaActivity, R.attr.gallery_default_image, R.drawable.gallery_default_image);
         this.mDefaultImage = ContextCompat.getDrawable(mediaActivity, defaultResId);
         this.mConfiguration = configuration;

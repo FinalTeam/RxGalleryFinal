@@ -144,7 +144,10 @@ public class RxGalleryFinal {
         configuration.setMultipleShot(true);
         return this;
     }
-
+    public RxGalleryFinal spanCount(@IntRange(from = 1) int spanCount) {
+        configuration.setSpanCount(spanCount);
+        return this;
+    }
     public RxGalleryFinal imageConfig(@NonNull Bitmap.Config config) {
         int c = 3;
         switch (config) {

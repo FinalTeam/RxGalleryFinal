@@ -83,6 +83,8 @@ public class Configuration implements Parcelable {
     private boolean openCameraOnStart = false;
     private boolean returnAfterShot = false;
     private boolean multipleShot  = false;
+
+    private int spanCount = 3;
     protected Configuration() {
     }
 
@@ -115,6 +117,7 @@ public class Configuration implements Parcelable {
         openCameraOnStart = in.readByte() != 0;
         returnAfterShot = in.readByte() != 0;
         multipleShot = in.readByte() != 0;
+        spanCount = in.readInt();
     }
 
     public boolean isHidePreview() {
@@ -402,6 +405,7 @@ public class Configuration implements Parcelable {
         parcel.writeByte((byte) (openCameraOnStart ? 1 : 0));
         parcel.writeByte((byte) (returnAfterShot ? 1 : 0));
         parcel.writeByte((byte) (multipleShot ? 1 : 0));
+        parcel.writeInt(spanCount);
     }
 
     public String getTitle() {
@@ -414,6 +418,14 @@ public class Configuration implements Parcelable {
 
     public boolean isVideoPreview() {
         return isVideoPreview;
+    }
+
+    public int getSpanCount() {
+        return spanCount;
+    }
+
+    public void setSpanCount(int spanCount) {
+        this.spanCount = spanCount;
     }
 
     public void setVideoPreview(boolean videoPreview) {
