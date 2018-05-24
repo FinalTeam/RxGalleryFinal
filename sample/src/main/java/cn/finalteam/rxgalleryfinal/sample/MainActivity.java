@@ -1,3 +1,4 @@
+
 package cn.finalteam.rxgalleryfinal.sample;
 
 import android.app.Activity;
@@ -197,7 +198,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (mRbMutiIMG.isChecked()) {
             openImageSelectMultiMethod(1);
         } else {
-            if (PermissionCheckUtils.checkCameraPermission(this, "", MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION)) {
+            if (PermissionCheckUtils.checkCameraPermission(this, "", MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION)
+                    && PermissionCheckUtils.checkWriteExternalPermission(this, "", MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION)) {
                 RxGalleryFinalApi.openZKCamera(MainActivity.this);
             }
         }

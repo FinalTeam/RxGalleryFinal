@@ -1,21 +1,19 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: "com.jfrog.bintray"
-
-version = "1.1.3"
-
+apply plugin: 'com.novoda.bintray-release'
+publish {
+    userOrg = 'donald'
+    groupId = 'acom.github.DonaldDu'
+    artifactId = 'RxGalleryFinal'
+    publishVersion = '1.1.3.4'
+    artifacts
+}
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
-
-    // compileSdkVersion 24
-    // buildToolsVersion '24'
-
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
-        //  targetSdkVersion 24
+        targetSdkVersion 27
         versionCode 3
         versionName version
 
@@ -33,96 +31,18 @@ android {
     resourcePrefix "gallery_"
 }
 
-
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
-    compile 'com.yalantis:ucrop:2.2.0'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile "com.android.support:exifinterface:25.3.1"
-    /* compile 'com.android.support:recyclerview-v7:24.2.0'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile "com.android.support:exifinterface:25.1.0"*/
-    provided 'com.squareup.picasso:picasso:2.5.2'
-    provided 'com.facebook.fresco:fresco:1.3.0'
-    provided 'com.facebook.fresco:animated-gif:1.3.0'
-    provided 'com.github.bumptech.glide:glide:3.7.0'
-    provided 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-}
-
-//===================================upload jcenter=================================================
-def siteUrl = 'https://github.com/FinalTeam/RxGalleryFinal'
-def gitUrl = 'https://github.com/FinalTeam/RxGalleryFinal.git'
-group = "cn.finalteam.rxgalleryfinal"
-
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-
-                // Add your description here
-                name 'RxGalleryFinal'
-                description = 'dujinyang desc'
-                url siteUrl
-
-                // Set your license
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'dujinyang'
-                        name 'dujinyang'
-                        email '309933706@qq.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-
-                }
-            }
-        }
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-artifacts {
-    archives sourcesJar
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = "RxGalleryFinal"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-        version {
-            gpg {
-                passphrase = properties.getProperty("bintray.gpg.password")
-            }
-        }
-    }
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.9.0'
+    api 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    api 'com.github.yalantis:ucrop:2.2.2'
+    compileOnly 'com.android.support:appcompat-v7:27.1.1'
+    compileOnly 'com.android.support:recyclerview-v7:27.1.1'
+    compileOnly 'com.android.support:exifinterface:27.1.1'
+    compileOnly 'com.squareup.picasso:picasso:2.5.2'
+    compileOnly 'com.facebook.fresco:fresco:1.9.0'
+    compileOnly 'com.facebook.fresco:animated-gif:1.9.0'
+    compileOnly 'com.github.bumptech.glide:glide:3.7.0'
+    compileOnly 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }
