@@ -11,7 +11,7 @@ public interface MediaGridPresenter {
 
     void setMediaGridView(MediaGridView mediaGridView);
 
-    void getMediaList(String bucketId, int pageSize, int currentOffset);
+    void getMediaList(String bucketId, int pageSize, int currentOffset,boolean isImage);
 
     void getBucketList();
 }

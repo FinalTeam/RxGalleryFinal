@@ -141,6 +141,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private String uCropTitle;
     private String requestStorageAccessPermissionTips;
 
+    private boolean currShowType ;
+
     public static MediaGridFragment newInstance(Configuration configuration) {
         MediaGridFragment fragment = new MediaGridFragment();
         Bundle bundle = new Bundle();
@@ -268,6 +270,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mTvPreview = (TextView) view.findViewById(R.id.tv_preview);
         mTvPreview.setOnClickListener(this);
         mTvPreview.setEnabled(false);
+        currShowType = mConfiguration.isImage();
         if (mConfiguration.isRadio()) {
             view.findViewById(R.id.tv_preview_vr).setVisibility(View.GONE);
             mTvPreview.setVisibility(View.GONE);
@@ -334,9 +337,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         boolean success = PermissionCheckUtils.checkReadExternalPermission(activity, requestStorageAccessPermissionTips,
                 MediaActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION);
         if (success) {
-            mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+            mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
         }
-
 
     }
 
@@ -373,7 +375,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                     protected void onEvent(RequestStorageReadAccessPermissionEvent requestStorageReadAccessPermissionEvent) throws Exception {
                         if (requestStorageReadAccessPermissionEvent.getType() == RequestStorageReadAccessPermissionEvent.TYPE_WRITE) {
                             if (requestStorageReadAccessPermissionEvent.isSuccess()) {
-                                mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+                                mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
                             } else {
                                 getActivity().finish();
                             }
@@ -432,7 +434,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void loadMore() {
-        mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+        mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
     }
 
     @Override
@@ -448,7 +450,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
         if (list != null && list.size() > 0) {
             //说明原来有图片，说明是从相机返回，增量添加
-            if(mMediaBeanList.size()>1 && mPage==1){
+            if(mMediaBeanList.size()>1 && mPage==1 && currShowType== mConfiguration.isImage()){
                 list.removeAll(mMediaBeanList);
                 if(list!=null && list.size()>0){
                     mMediaBeanList.addAll(1,list);
@@ -467,9 +469,19 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
         mPage++;
 
-        if (list == null || list.size()==0) {
-            mRvMedia.setFooterViewHide(true);
-            mRvMedia.setHasLoadMore(false);
+        if (list == null || list.size()==0 || list.size() <= (LIMIT-3)) {
+            if(currShowType== mConfiguration.isImage() && mConfiguration.isSelectBoth()
+                    && TextUtils.equals(mBucketId, String.valueOf(Integer.MIN_VALUE))
+                    ){
+                mPage = 1;
+                currShowType = !currShowType;
+                mRvMedia.setFooterViewHide(false);
+                mRvMedia.setHasLoadMore(true);
+                this.loadMore();
+            }else {
+                mRvMedia.setFooterViewHide(true);
+                mRvMedia.setHasLoadMore(false);
+            }
         } else {
             mRvMedia.setFooterViewHide(false);
             mRvMedia.setHasLoadMore(true);
@@ -510,7 +522,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mBucketAdapter.setSelectedBucket(bucketBean);
         mRvMedia.setFooterViewHide(true);
         mPage = 1;
-        mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+        currShowType = mConfiguration.isImage();
+        mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
     }
 
     @Override
@@ -709,7 +722,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }else {
             //重新加载图片
             mPage = 1;
-            mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+            currShowType = mConfiguration.isImage();
+            mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
         }
     }
 

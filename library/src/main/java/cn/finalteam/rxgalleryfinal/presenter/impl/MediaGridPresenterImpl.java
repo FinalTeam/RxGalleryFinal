@@ -43,8 +43,8 @@ public class MediaGridPresenterImpl implements MediaGridPresenter, MediaSrcFacto
      * 分页获取media
      */
     @Override
-    public void getMediaList(String bucketId, int pageSize, int currentOffset) {
-        mediaSrcFactoryInteractor.generateMeidas(bucketId, pageSize, currentOffset);
+    public void getMediaList(String bucketId, int pageSize, int currentOffset,boolean isImage) {
+        mediaSrcFactoryInteractor.generateMeidas(bucketId, pageSize, currentOffset,isImage);
     }
 
     @Override

@@ -39,6 +39,7 @@ public class Configuration implements Parcelable {
         }
     };
     private boolean image = true;
+    private boolean isSelectBoth = false;
     private Context context;
     private List<MediaBean> selectedList;
     private boolean radio;
@@ -90,6 +91,7 @@ public class Configuration implements Parcelable {
 
     protected Configuration(Parcel in) {
         image = in.readByte() != 0;
+        isSelectBoth = in.readByte() != 0;
         selectedList = in.createTypedArrayList(MediaBean.CREATOR);
         radio = in.readByte() != 0;
         crop = in.readByte() != 0;
@@ -142,6 +144,14 @@ public class Configuration implements Parcelable {
 
     protected void setImage(boolean image) {
         this.image = image;
+    }
+
+    public boolean isSelectBoth() {
+        return isSelectBoth;
+    }
+
+    public void setSelectBoth(boolean selectBoth) {
+        isSelectBoth = selectBoth;
     }
 
     public Context getContext() {
@@ -231,8 +241,8 @@ public class Configuration implements Parcelable {
             case 4:
                 imageLoader = new UniversalImageLoader();
                 break;
-            case 5:
-
+            default:
+                imageLoader = new GlideImageLoader();
                 break;
         }
         return imageLoader;
@@ -421,6 +431,9 @@ public class Configuration implements Parcelable {
     }
 
     public int getSpanCount() {
+        if(spanCount <= 0){
+            return 3;
+        }
         return spanCount;
     }
 

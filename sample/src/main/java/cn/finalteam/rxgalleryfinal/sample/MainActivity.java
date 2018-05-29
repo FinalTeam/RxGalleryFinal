@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .with(MainActivity.this)
                 .image().multipleShot()
                 .spanCount(4)
+                .selectBoth()
                 .multiple();
         if (list != null && !list.isEmpty()) {
             rxGalleryFinal
@@ -248,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .image()
                 .radio()
                 .spanCount(4)
+                .selectBoth()
                 //.gif()
                 //.hidePreview()
                 .cropAspectRatioOptions(0, new AspectRatio("3:3", 30, 10))

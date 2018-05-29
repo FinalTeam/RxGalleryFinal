@@ -55,7 +55,10 @@ public class RxGalleryFinal {
         configuration.setImage(false);
         return this;
     }
-
+    public RxGalleryFinal selectBoth() {
+        configuration.setSelectBoth(true);
+        return this;
+    }
 //    public RxGalleryFinal filterMime(MediaType ...mediaTypes) {
 //        configuration.setFilterMimes(mediaTypes);
 //        return this;

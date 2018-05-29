@@ -132,6 +132,7 @@ public class RxGalleryFinalApi {
                 .image()
                 .radio()
                 .crop()
+                .selectBoth()
                 .imageLoader(ImageLoaderType.GLIDE)
                 .subscribe(rxBusResultDisposable)
                 .openGallery();

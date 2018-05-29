@@ -14,7 +14,7 @@ public interface MediaSrcFactoryInteractor {
     /**
      * 生产资源
      */
-    void generateMeidas(String bucketId, int page, int limit);
+    void generateMeidas(String bucketId, int page, int limit,boolean isImage);
 
     interface OnGenerateMediaListener {
         void onFinished(String bucketId, int pageSize, int currentOffset, List<MediaBean> list);
