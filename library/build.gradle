@@ -59,7 +59,7 @@ def siteUrl = 'https://github.com/liukefu2050/RxGalleryFinal'
 def gitUrl = 'https://github.com/liukefu2050/RxGalleryFinal.git'
 
 group = "com.mg.RxCustomizedImagePicker"
-version = "0.0.22"
+version = "0.0.23"
 project.archivesBaseName = "library"
 
 task sourcesJar(type: Jar) {
@@ -87,7 +87,7 @@ javadoc {
         author true
         version true
         links "https://androiddoc.qiniudn.com/reference/"
-        title "RxCustomizedImagePicker 0.0.22"
+        title "RxCustomizedImagePicker 0.0.23"
     }
 }
 
@@ -107,7 +107,7 @@ install {
             packaging 'aar'
             groupId "com.mg.RxCustomizedImagePicker"
             artifactId "library"
-            version "0.0.22"
+            version "0.0.23"
             licenses {
                 license {
                     name 'The Apache Software License, Version 2.0'
@@ -149,10 +149,10 @@ bintray {
         licenses = ["Apache-2.0"]
         publish = true
         version {
-            name = '0.0.22'
+            name = '0.0.23'
             desc = 'android gallery'
             released  = new Date()
-            vcsTag = '0.0.22'
+            vcsTag = '0.0.23'
             attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
             gpg {
                 passphrase = properties.getProperty("bintray.gpg.password")

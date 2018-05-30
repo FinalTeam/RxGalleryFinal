@@ -91,7 +91,6 @@ public class Configuration implements Parcelable {
 
     protected Configuration(Parcel in) {
         image = in.readByte() != 0;
-        isSelectBoth = in.readByte() != 0;
         selectedList = in.createTypedArrayList(MediaBean.CREATOR);
         radio = in.readByte() != 0;
         crop = in.readByte() != 0;
@@ -120,6 +119,7 @@ public class Configuration implements Parcelable {
         returnAfterShot = in.readByte() != 0;
         multipleShot = in.readByte() != 0;
         spanCount = in.readInt();
+        isSelectBoth = in.readByte() != 0;
     }
 
     public boolean isHidePreview() {
@@ -416,6 +416,7 @@ public class Configuration implements Parcelable {
         parcel.writeByte((byte) (returnAfterShot ? 1 : 0));
         parcel.writeByte((byte) (multipleShot ? 1 : 0));
         parcel.writeInt(spanCount);
+        parcel.writeByte((byte) (isSelectBoth ? 1 : 0));
     }
 
     public String getTitle() {
