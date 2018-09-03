@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.view.View;
 import android.widget.Toast;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
@@ -27,31 +26,11 @@ public class ImageLoaderActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imageloader);
-        appCompatCheckBox = (AppCompatCheckBox) findViewById(R.id.cb_gif);
-        findViewById(R.id.btn_glide).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start(ImageLoaderType.GLIDE);
-            }
-        });
-        findViewById(R.id.btn_picasso).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start(ImageLoaderType.PICASSO);
-            }
-        });
-        findViewById(R.id.btn_fresco).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start(ImageLoaderType.FRESCO);
-            }
-        });
-        findViewById(R.id.btn_universal).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start(ImageLoaderType.UNIVERSAL);
-            }
-        });
+        appCompatCheckBox = findViewById(R.id.cb_gif);
+        findViewById(R.id.btn_glide).setOnClickListener(v -> start(ImageLoaderType.GLIDE));
+        findViewById(R.id.btn_picasso).setOnClickListener(v -> start(ImageLoaderType.PICASSO));
+        findViewById(R.id.btn_fresco).setOnClickListener(v -> start(ImageLoaderType.FRESCO));
+        findViewById(R.id.btn_universal).setOnClickListener(v -> start(ImageLoaderType.UNIVERSAL));
     }
 
     private void start(ImageLoaderType imageLoaderType) {
@@ -69,7 +48,7 @@ public class ImageLoaderActivity extends AppCompatActivity {
                 .imageLoader(imageLoaderType)
                 .subscribe(new RxBusResultDisposable<ImageRadioResultEvent>() {
                     @Override
-                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
                         Toast.makeText(getBaseContext(), "选中了图片路径：" + imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
                     }
                 }).openGallery();
