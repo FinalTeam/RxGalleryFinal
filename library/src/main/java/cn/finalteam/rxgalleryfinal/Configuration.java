@@ -57,7 +57,7 @@ public class Configuration implements Parcelable {
     //是否隐藏裁剪页面底部控制栏,默认显示
     private boolean hideBottomControls;
     //图片压缩质量,默认不压缩
-    private int compressionQuality = 90;
+    private int compressionQuality = 100;
     //手势方式,默认all
     private int[] gestures;
     //设置图片最大值,默认根据屏幕得出
