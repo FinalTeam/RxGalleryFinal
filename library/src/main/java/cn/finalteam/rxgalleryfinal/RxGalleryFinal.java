@@ -210,6 +210,11 @@ public class RxGalleryFinal {
         return this;
     }
 
+    public RxGalleryFinal setVideoQuality(int videoQuality){
+        configuration.setVideoQuality(videoQuality);
+        return this;
+    }
+
     /**
      * Choose what set of gestures will be enabled on each tab - if any.
      */
