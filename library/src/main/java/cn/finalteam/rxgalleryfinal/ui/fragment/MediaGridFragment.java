@@ -695,7 +695,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             }
             // video : 1: 高质量  0 低质量
-//        captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+            if(!image){
+                captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, mConfiguration.getVideoQuality());
+            }
+
             if(mConfiguration.isMultipleShot() && image){
                 captureIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
             }
