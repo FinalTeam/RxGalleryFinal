@@ -50,16 +50,19 @@
 ## 使用
 ### 下载或添加依赖
 
-    compile 'cn.finalteam.rxgalleryfinal:library:1.0.9'
-    compile 'com.android.support:recyclerview-v7:24.2.0'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.exifinterface:exifinterface:1.1.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.15'
+    implementation 'com.github.yalantis:ucrop:2.2.4'
+    
     //支持以下主流图片加载器，开发者自行选择
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.facebook.fresco:fresco:0.12.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.facebook.fresco:fresco:2.0.0'
+    implementation 'com.facebook.fresco:animated-gif:2.0.0'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
 
 ### 配置manifest
