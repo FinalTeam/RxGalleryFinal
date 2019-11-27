@@ -20,10 +20,9 @@ import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
  */
 public class PicassoImageLoader implements AbsImageLoader {
 
-
     @Override
     public void displayImage(Context context, String path, FixImageView imageView, Drawable defaultDrawable, Bitmap.Config config, boolean resize, boolean isGif, int width, int height, int rotate) {
-        RequestCreator creator = Picasso.with(context)
+        RequestCreator creator = Picasso.get()
                 .load(new File(path))
                 .placeholder(defaultDrawable)
                 .error(defaultDrawable)

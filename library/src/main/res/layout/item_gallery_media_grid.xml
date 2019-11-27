@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:ignore="ResourceName">
 
     <cn.finalteam.rxgalleryfinal.ui.widget.SquareLinearLayout
         android:id="@+id/ll_camera"
@@ -30,13 +32,13 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/cb_check"
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:layout_margin="2dp" />
 </cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout>
