@@ -611,14 +611,14 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Logger.i("--->isCrop:" + mImageStoreCropDir);
             Logger.i("--->mediaBean.getOriginalPath():" + mediaBean.getOriginalPath());
             mCropPath = new File(mImageStoreCropDir, outName);
-            Uri outUri = Uri.fromFile(mCropPath);
+            Uri outUri = FileUtils.fromFile(getActivity(),mCropPath);
             if (!mImageStoreCropDir.exists()) {
                 mImageStoreCropDir.mkdirs();
             }
             if (!file.exists()) {
                 file.mkdirs();
             }
-            Uri inputUri = Uri.fromFile(new File(mediaBean.getOriginalPath()));
+            Uri inputUri = FileUtils.fromFile(getActivity(),new File(mediaBean.getOriginalPath()));
             Intent intent = new Intent(getContext(), UCropActivity.class);
 
 
@@ -686,14 +686,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             File fileImagePath = new File(mImageStoreDir, filename);
             mImagePath = fileImagePath.getAbsolutePath();
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
-            } else {
-                ContentValues contentValues = new ContentValues(1);
-                contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
-                Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            }
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileUtils.fromFile(getActivity(),fileImagePath));
             // video : 1: 高质量  0 低质量
             if(!image){
                 captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, mConfiguration.getVideoQuality());

@@ -29,6 +29,7 @@ import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
+import cn.finalteam.rxgalleryfinal.utils.FileUtils;
 import cn.finalteam.rxgalleryfinal.utils.Logger;
 import cn.finalteam.rxgalleryfinal.utils.MediaScanner;
 import cn.finalteam.rxgalleryfinal.utils.SimpleDateUtils;
@@ -289,15 +290,7 @@ public class RxGalleryFinalApi {
             fileImagePath = new File(mImageStoreDir, filename);
             String mImagePath = fileImagePath.getAbsolutePath();
             Logger.i("->mImagePath:" + mImagePath);
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
-            } else {
-                ContentValues contentValues = new ContentValues(1);
-                contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
-                contentValues.put(MediaStore.Images.Media.MIME_TYPE, IMG_TYPE);
-                Uri uri = cameraActivity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            }
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileUtils.fromFile(cameraActivity,fileImagePath));
             if (activity instanceof Activity) {
                 cameraActivity.startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
             }
@@ -378,8 +371,8 @@ public class RxGalleryFinalApi {
             Logger.e("-裁剪没有图片-");
             return;
         }
-        Uri outUri = Uri.fromFile(new File(outPPath));
-        Uri inputUri = Uri.fromFile(new File(inputPath));
+        Uri outUri = FileUtils.fromFile(context,new File(outPPath));
+        Uri inputUri = FileUtils.fromFile(context,new File(inputPath));
         Intent intent = new Intent(context, UCropActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(UCrop.EXTRA_OUTPUT_URI, outUri);

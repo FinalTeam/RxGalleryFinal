@@ -16,6 +16,8 @@ import com.yalantis.ucrop.UCrop;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import cn.finalteam.rxgalleryfinal.utils.FileUtils;
+
 /**
  * by y on 17/07/2017.
  * <p>
@@ -49,16 +51,8 @@ public class SimpleRxGalleryFinal {
 
     public void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        imagePath = Uri.fromFile(getDiskCacheDir());
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
-        } else {
-            ContentValues contentValues = new ContentValues(1);
-            contentValues.put(MediaStore.Images.Media.DATA, imagePath.getPath());
-            contentValues.put(MediaStore.Images.Media.MIME_TYPE, IMAGE_TYPE);
-            Uri uri = listener.getSimpleActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        }
+        imagePath = FileUtils.fromFile(listener.getSimpleActivity(),getDiskCacheDir());
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
         listener
                 .getSimpleActivity()
                 .startActivityForResult(intent, TYPE_CAMERA);
@@ -88,7 +82,7 @@ public class SimpleRxGalleryFinal {
                 switch (requestCode) {
                     case TYPE_CAMERA:
                         notifyImageToCamera(listener.getSimpleActivity(), imagePath);
-                        UCrop of = UCrop.of(imagePath, Uri.fromFile(getDiskCacheDir()));
+                        UCrop of = UCrop.of(imagePath, FileUtils.fromFile(listener.getSimpleActivity(),getDiskCacheDir()));
                         of.start(listener.getSimpleActivity());
                         break;
                     case UCrop.REQUEST_CROP:
