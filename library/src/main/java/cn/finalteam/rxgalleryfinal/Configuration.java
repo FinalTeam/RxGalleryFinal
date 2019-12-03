@@ -49,6 +49,7 @@ public class Configuration implements Parcelable {
     private int imageLoaderType;
     private int imageConfig;
     private boolean hideCamera;
+    private int videoQuality = 1;
     private boolean isPlayGif;
     private boolean hidePreview;
     private boolean isVideoPreview;
@@ -95,6 +96,7 @@ public class Configuration implements Parcelable {
         radio = in.readByte() != 0;
         crop = in.readByte() != 0;
         maxSize = in.readInt();
+        videoQuality = in.readInt();
         hideBottomControls = in.readByte() != 0;
         compressionQuality = in.readInt();
         gestures = in.createIntArray();
@@ -184,6 +186,14 @@ public class Configuration implements Parcelable {
 
     protected void setMaxSize(int maxSize) {
         this.maxSize = maxSize;
+    }
+
+    public int getVideoQuality() {
+        return videoQuality;
+    }
+
+    public void setVideoQuality(int videoQuality) {
+        this.videoQuality = videoQuality;
     }
 
     public boolean isHideCamera() {
@@ -392,6 +402,7 @@ public class Configuration implements Parcelable {
         parcel.writeByte((byte) (radio ? 1 : 0));
         parcel.writeByte((byte) (crop ? 1 : 0));
         parcel.writeInt(maxSize);
+        parcel.writeInt(videoQuality);
         parcel.writeByte((byte) (hideBottomControls ? 1 : 0));
         parcel.writeInt(compressionQuality);
         parcel.writeIntArray(gestures);
