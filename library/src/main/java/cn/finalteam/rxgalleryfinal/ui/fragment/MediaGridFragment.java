@@ -722,12 +722,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         } else if (requestCode == CROP_IMAGE_REQUEST_CODE && data != null) {
             Logger.i("裁剪成功");
             onCropFinished();
-        }else {
-            //重新加载图片
-            mPage = 1;
-            currShowType = mConfiguration.isImage();
-            mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
         }
+        //重新加载图片
+        mPage = 1;
+        currShowType = mConfiguration.isImage();
+        mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
     }
 
     /**

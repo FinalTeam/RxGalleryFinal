@@ -9,7 +9,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.5.2'
         classpath 'me.tatarka:gradle-retrolambda:3.7.0'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
