@@ -26,7 +26,7 @@
         android:textColor="#2A2A2A"
         android:textSize="16sp" />
 
-    <android.support.v7.widget.AppCompatRadioButton
+    <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/rb_selected"
         style="@style/Widget.AppCompat.CompoundButton.RadioButton"
         android:layout_width="wrap_content"

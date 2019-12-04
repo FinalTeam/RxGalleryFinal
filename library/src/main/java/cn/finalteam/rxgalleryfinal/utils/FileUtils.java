@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 
 import java.io.File;
 
@@ -33,6 +31,9 @@ public class FileUtils {
             ContentValues contentValues = new ContentValues(1);
             contentValues.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
 
+            //Uri uri = MediaStore.Images.Media.getContentUri(file.getAbsolutePath());
+            //System.out.println("fromFile uri: " + uri);
+            //activity.getContentResolver().delete(uri, null, null);
 
             imageUri = activity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
         }

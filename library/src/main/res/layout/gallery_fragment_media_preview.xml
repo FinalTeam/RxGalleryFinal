@@ -27,7 +27,7 @@
             android:textColor="#FFFFFF"
             android:text="@string/gallery_image_selected" />
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_check"
             style="@style/gallery_checkBox"
             android:layout_width="wrap_content"

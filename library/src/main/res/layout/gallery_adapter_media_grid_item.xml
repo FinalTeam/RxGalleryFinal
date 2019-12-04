@@ -29,7 +29,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/cb_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

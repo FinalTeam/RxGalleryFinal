@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.media.ExifInterface;
+import androidx.annotation.Nullable;
+import androidx.exifinterface.media.ExifInterface;
 import android.text.TextUtils;
 
 import java.io.File;

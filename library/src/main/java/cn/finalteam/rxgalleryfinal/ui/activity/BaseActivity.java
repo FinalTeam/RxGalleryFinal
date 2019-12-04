@@ -2,9 +2,9 @@ package cn.finalteam.rxgalleryfinal.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import cn.finalteam.rxgalleryfinal.BuildConfig;
 import cn.finalteam.rxgalleryfinal.Configuration;
@@ -46,22 +46,24 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         //申请权限
-        String requestStorageAccessPermissionTips = ThemeUtils.resolveString(this,
+/*        String requestStorageAccessPermissionTips = ThemeUtils.resolveString(this,
                 R.attr.gallery_request_storage_access_permission_tips,
                 R.string.gallery_default_request_storage_access_permission_tips);
         if (PermissionCheckUtils.checkWriteExternalPermission(this, requestStorageAccessPermissionTips, MediaActivity.REQUEST_STORAGE_WRITE_ACCESS_PERMISSION)
                 && PermissionCheckUtils.checkReadExternalPermission(this, requestStorageAccessPermissionTips, MediaActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION)) {
-            if (mConfiguration == null) {
-                finish();
-            } else {
-                if (bundle == null) {
-                    bundle = savedInstanceState;
-                }
-                setContentView(getContentView());
-                findViews();
-                setTheme();
-                onCreateOk(bundle);
+
+        }*/
+
+        if (mConfiguration == null) {
+            finish();
+        } else {
+            if (bundle == null) {
+                bundle = savedInstanceState;
             }
+            setContentView(getContentView());
+            findViews();
+            setTheme();
+            onCreateOk(bundle);
         }
 
     }
