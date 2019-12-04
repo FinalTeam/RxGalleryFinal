@@ -6,8 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 
-import androidx.core.content.FileProvider;
-
 import com.zhy.base.fileprovider.FileProvider7;
 
 import java.io.File;
