@@ -371,8 +371,8 @@ public class RxGalleryFinalApi {
             Logger.e("-裁剪没有图片-");
             return;
         }
-        Uri outUri = FileUtils.fromFile(context,new File(outPPath));
-        Uri inputUri = FileUtils.fromFile(context,new File(inputPath));
+        Uri outUri = FileUtils.fromFile7(context,new File(outPPath));
+        Uri inputUri = FileUtils.fromFile7(context,new File(inputPath));
         Intent intent = new Intent(context, UCropActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(UCrop.EXTRA_OUTPUT_URI, outUri);

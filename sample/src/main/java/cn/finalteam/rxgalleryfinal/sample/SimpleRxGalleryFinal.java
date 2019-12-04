@@ -80,7 +80,7 @@ public class SimpleRxGalleryFinal {
                 switch (requestCode) {
                     case TYPE_CAMERA:
                         notifyImageToCamera(listener.getSimpleActivity(), imagePath);
-                        UCrop of = UCrop.of(imagePath, FileUtils.fromFile(listener.getSimpleActivity(),getDiskCacheDir()));
+                        UCrop of = UCrop.of(imagePath, FileUtils.fromFile7(listener.getSimpleActivity(),getDiskCacheDir()));
                         of.start(listener.getSimpleActivity());
                         break;
                     case UCrop.REQUEST_CROP:

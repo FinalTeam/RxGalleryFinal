@@ -607,14 +607,14 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Logger.i("--->isCrop:" + mImageStoreCropDir);
             Logger.i("--->mediaBean.getOriginalPath():" + mediaBean.getOriginalPath());
             mCropPath = new File(mImageStoreCropDir, outName);
-            Uri outUri = FileUtils.fromFile(getActivity(),mCropPath);
+            Uri outUri = FileUtils.fromFile7(getActivity(),mCropPath);
             if (!mImageStoreCropDir.exists()) {
                 mImageStoreCropDir.mkdirs();
             }
             if (!file.exists()) {
                 file.mkdirs();
             }
-            Uri inputUri = FileUtils.fromFile(getActivity(),new File(mediaBean.getOriginalPath()));
+            Uri inputUri = FileUtils.fromFile7(getActivity(),new File(mediaBean.getOriginalPath()));
             Intent intent = new Intent(getContext(), UCropActivity.class);
 
 

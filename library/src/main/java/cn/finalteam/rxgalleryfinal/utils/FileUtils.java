@@ -6,6 +6,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 
+import androidx.core.content.FileProvider;
+
+import com.zhy.base.fileprovider.FileProvider7;
+
 import java.io.File;
 
 /**
@@ -31,13 +35,12 @@ public class FileUtils {
             ContentValues contentValues = new ContentValues(1);
             contentValues.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
 
-            //Uri uri = MediaStore.Images.Media.getContentUri(file.getAbsolutePath());
-            //System.out.println("fromFile uri: " + uri);
-            //activity.getContentResolver().delete(uri, null, null);
-
             imageUri = activity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
         }
-
         return imageUri;
+    }
+
+    public static Uri fromFile7(Activity activity, File file) {
+        return  FileProvider7.getUriForFile(activity, file);
     }
 }
