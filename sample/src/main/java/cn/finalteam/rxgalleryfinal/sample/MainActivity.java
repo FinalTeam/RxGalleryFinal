@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new SimpleRxGalleryFinal.RxGalleryFinalCropListener() {
                         @NonNull
                         @Override
-                        public Activity getSimpleActivity() {
+                        public AppCompatActivity getSimpleActivity() {
                             return MainActivity.this;
                         }
 

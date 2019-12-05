@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.yalantis.ucrop.UCrop;
 
@@ -80,7 +81,8 @@ public class SimpleRxGalleryFinal {
                 switch (requestCode) {
                     case TYPE_CAMERA:
                         notifyImageToCamera(listener.getSimpleActivity(), imagePath);
-                        UCrop of = UCrop.of(imagePath, FileUtils.fromFile7(listener.getSimpleActivity(),getDiskCacheDir()));
+                        UCrop of = UCrop.of(imagePath, Uri.fromFile(getDiskCacheDir()));
+
                         of.start(listener.getSimpleActivity());
                         break;
                     case UCrop.REQUEST_CROP:
@@ -124,7 +126,7 @@ public class SimpleRxGalleryFinal {
     public interface RxGalleryFinalCropListener {
 
         @NonNull
-        Activity getSimpleActivity();
+        AppCompatActivity getSimpleActivity();
 
 
         /**
