@@ -618,7 +618,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             if (!file.exists()) {
                 file.mkdirs();
             }
-            Uri inputUri = FileUtils.fromFile7(getActivity(),new File(mediaBean.getOriginalPath()));
+            Uri inputUri = Uri.fromFile(new File(mediaBean.getOriginalPath()));
             Intent intent = new Intent(getContext(), UCropActivity.class);
 
             FileProvider7.grantPermissions(getActivity(),intent,outUri,true);
