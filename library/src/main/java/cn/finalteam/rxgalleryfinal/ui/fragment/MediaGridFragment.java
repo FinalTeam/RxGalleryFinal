@@ -631,7 +631,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             bundle.putInt(UCrop.Options.EXTRA_STATUS_BAR_COLOR, uCropStatusColor);
             bundle.putInt(UCrop.Options.EXTRA_TOOL_BAR_COLOR, uCropToolbarColor);
             bundle.putString(UCrop.Options.EXTRA_UCROP_TITLE_TEXT_TOOLBAR, uCropTitle);
-            bundle.putInt(UCrop.Options.EXTRA_UCROP_COLOR_WIDGET_ACTIVE, uCropActivityWidgetColor);
+            bundle.putInt(UCrop.Options.EXTRA_UCROP_COLOR_CONTROLS_WIDGET_ACTIVE, uCropActivityWidgetColor);
             bundle.putInt(UCrop.Options.EXTRA_UCROP_WIDGET_COLOR_TOOLBAR, uCropToolbarWidgetColor);
             bundle.putBoolean(UCrop.Options.EXTRA_HIDE_BOTTOM_CONTROLS, mConfiguration.isHideBottomControls());
             bundle.putIntArray(UCrop.Options.EXTRA_ALLOWED_GESTURES, mConfiguration.getAllowedGestures());
@@ -691,9 +691,15 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
             } else {
                 ContentValues contentValues = new ContentValues(1);
-                contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
-                Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                if(image){
+                    contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
+                    Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                }else{
+                    contentValues.put(MediaStore.Video.Media.DATA, mImagePath);
+                    Uri uri = getContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
+                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                }
             }
             // video : 1: 高质量  0 低质量
             if(!image){
