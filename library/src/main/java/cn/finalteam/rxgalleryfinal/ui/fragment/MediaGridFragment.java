@@ -212,7 +212,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     /**
      * 设置裁剪路径
      */
-    public static void setImageStoreCropDir(File imgFile) {
+    public  void setImageStoreCropDir(File imgFile) {
         mImageStoreCropDir = imgFile;
         Logger.i("设置图片裁剪保存路径为：" + mImageStoreCropDir.getAbsolutePath());
     }
@@ -222,8 +222,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
      *
      * @param imgFile 裁剪
      */
-    public static void setImageStoreCropDir(String imgFile) {
-        mImageStoreCropDir = new File(Environment.getExternalStorageDirectory(), "/DCIM" + File.separator + imgFile + File.separator);
+    public  void setImageStoreCropDir(String imgFile) {
+        mImageStoreCropDir = new File(getActivity().getCacheDir(), "/DCIM" + File.separator + imgFile + File.separator);
         if (!mImageStoreCropDir.exists()) {
             mImageStoreCropDir.mkdirs();
         }
