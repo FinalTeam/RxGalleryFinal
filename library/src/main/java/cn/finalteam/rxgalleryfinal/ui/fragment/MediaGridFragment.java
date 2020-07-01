@@ -151,85 +151,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         return fragment;
     }
 
-    /**
-     * getImageStoreDir
-     *
-     * @return 存储路径
-     */
-    public static File getImageStoreDirByFile() {
-        return mImageStoreDir;
-    }
-
-    /**
-     * getImageStoreDir
-     *
-     * @return 存储路径
-     */
-    public static String getImageStoreDirByStr() {
-        if (mImageStoreDir != null)
-            return mImageStoreDir.getPath();
-        else
-            return null;
-    }
-
-    /**
-     * 设置路径
-     */
-    public static void setImageStoreDir(File imgFile) {
-        Logger.i("设置图片保存路径为：" + imgFile.getAbsolutePath());
-        mImageStoreDir = imgFile;
-    }
-
-    /**
-     * 设置路径
-     */
-    public static void setImageStoreDir(String imgFile) {
-        mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM" + File.separator + imgFile + File.separator);
-        Logger.i("设置图片保存路径为：" + mImageStoreDir.getAbsolutePath());
-    }
-
-    /**
-     * getImageStoreDir裁剪
-     *
-     * @return 裁剪存储路径
-     */
-    public static File getImageStoreCropDirByFile() {
-        return mImageStoreCropDir;
-    }
-
-    /**
-     * getImageStoreDir
-     *
-     * @return 存储路径
-     */
-    public static String getImageStoreCropDirByStr() {
-        if (mImageStoreCropDir != null)
-            return mImageStoreCropDir.getPath();
-        else
-            return null;
-    }
-
-    /**
-     * 设置裁剪路径
-     */
-    public  void setImageStoreCropDir(File imgFile) {
-        mImageStoreCropDir = imgFile;
-        Logger.i("设置图片裁剪保存路径为：" + mImageStoreCropDir.getAbsolutePath());
-    }
-
-    /**
-     * 设置裁剪路径
-     *
-     * @param imgFile 裁剪
-     */
-    public  void setImageStoreCropDir(String imgFile) {
-        mImageStoreCropDir = new File(getActivity().getCacheDir(), "/DCIM" + File.separator + imgFile + File.separator);
-        if (!mImageStoreCropDir.exists()) {
-            mImageStoreCropDir.mkdirs();
-        }
-        Logger.i("设置图片裁剪保存路径为：" + mImageStoreCropDir.getAbsolutePath());
-    }
-
     public static void setRadioListener(IRadioImageCheckedListener radioListener) {
         MediaGridFragment.iListenerRadio = radioListener;
     }
@@ -849,24 +770,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .animate();
     }
 
-    /**
-     * Observable刷新图库
-     */
-    public void refreshUI() {
-        try {
-            Logger.i("->getImageStoreDirByFile().getPath().toString()：" + getImageStoreDirByFile().getPath());
-            Logger.i("->getImageStoreCropDirByStr ().toString()：" + getImageStoreCropDirByStr());
-            if (!TextUtils.isEmpty(mImagePath))
-                mMediaScanner.scanFile(mImagePath, IMAGE_TYPE, this);
-            if (mCropPath != null) {
-                Logger.i("->mCropPath:" + mCropPath.getPath() + " " + IMAGE_TYPE);
-                mMediaScanner.scanFile(mCropPath.getPath(), IMAGE_TYPE, this);
-            }
-        } catch (Exception e) {
-            Logger.e(e.getMessage());
-        }
-    }
-
     @Override
     public void onScanCompleted(String[] images) {
         if (images == null || images.length == 0) {
@@ -934,19 +837,17 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
      */
     public void onLoadFile() {
         //没有的话就默认路径
-        if (getImageStoreDirByFile() == null && getImageStoreDirByStr() == null) {
-            mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/IMMQY/");
-            setImageStoreCropDir(mImageStoreDir);
+        if (mImageStoreDir == null) {
+            mImageStoreDir = new File(this.getActivity().getCacheDir(), "/rxgalleryfinal/");
         }
         if (!mImageStoreDir.exists()) {
             mImageStoreDir.mkdirs();
         }
-        if (getImageStoreCropDirByFile() == null && getImageStoreCropDirByStr() == null) {
+        if (mImageStoreCropDir== null) {
             mImageStoreCropDir = new File(mImageStoreDir, "crop");
             if (!mImageStoreCropDir.exists()) {
                 mImageStoreCropDir.mkdirs();
             }
-            setImageStoreCropDir(mImageStoreCropDir);
         }
     }
 
