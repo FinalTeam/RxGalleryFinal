@@ -159,28 +159,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 视频多选回调
      */
     private void openVideoSelectMultiMethod(int type) {
-        switch (type) {
-            case 0:
-                //使用默认的参数
-
-                break;
-            case 1:
-                //使用自定义的参数
-
-                break;
-            case 2:
-                //直接打开
-
-
-                break;
-        }
+        RxGalleryFinal
+                .with(MainActivity.this)
+                .video()
+                .radio()
+                .imageLoader(ImageLoaderType.GLIDE)
+                .subscribe(new RxBusResultDisposable<ImageRadioResultEvent>() {
+                    @Override
+                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+                        Logger.i("只要选择图片就会触发");
+                    }
+                })
+                .openGallery();
     }
 
     /**
      * 视频单选回调
      */
     private void openVideoSelectRadioMethod() {
-
+        RxGalleryFinal
+                .with(MainActivity.this)
+                .video()
+                .radio()
+                .imageLoader(ImageLoaderType.GLIDE)
+                .subscribe(new RxBusResultDisposable<ImageRadioResultEvent>() {
+                    @Override
+                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+                        Logger.i("只要选择图片就会触发");
+                    }
+                })
+                .openGallery();
     }
 
     /**

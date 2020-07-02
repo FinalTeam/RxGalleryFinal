@@ -601,6 +601,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
                 return;
             }
+            if(mConfiguration.isMultipleShot() && image){
+                captureIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+            }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
             String filename = String.format(image ? IMAGE_STORE_FILE_NAME : VIDEO_STORE_FILE_NAME, dateFormat.format(new Date()));
@@ -608,7 +611,18 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             File fileImagePath = new File(mImageStoreDir, filename);
             mImagePath = fileImagePath.getAbsolutePath();
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            Uri pictureUri = null;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                //这一句非常重要
+                captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                //""中的内容是随意的，但最好用package名.provider名的形式，清晰明了
+                pictureUri = FileProvider7.getUriForFile(this.getActivity(), fileImagePath);
+            } else {
+                pictureUri = Uri.fromFile(fileImagePath);
+            }
+
+/*            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
             } else {
                 ContentValues contentValues = new ContentValues(1);
@@ -621,15 +635,14 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                     Uri uri = getContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
                     captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 }
-            }
+            }*/
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
             // video : 1: 高质量  0 低质量
             if(!image){
                 captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, mConfiguration.getVideoQuality());
             }
 
-            if(mConfiguration.isMultipleShot() && image){
-                captureIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
-            }
+
             startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
         }
     }
@@ -838,7 +851,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     public void onLoadFile() {
         //没有的话就默认路径
         if (mImageStoreDir == null) {
-            mImageStoreDir = new File(this.getActivity().getCacheDir(), "/rxgalleryfinal/");
+            mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/myrxgalleryfinal/");
         }
         if (!mImageStoreDir.exists()) {
             mImageStoreDir.mkdirs();
