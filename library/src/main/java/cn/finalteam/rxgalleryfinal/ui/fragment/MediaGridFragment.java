@@ -1,7 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui.fragment;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -844,7 +843,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     public void onLoadFile() {
         //没有的话就默认路径
         if (mImageStoreDir == null) {
-            mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/myrxgalleryfinal/");
+            mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "myrxgalleryfinal");
         }
         if (!mImageStoreDir.exists()) {
             mImageStoreDir.mkdirs();
