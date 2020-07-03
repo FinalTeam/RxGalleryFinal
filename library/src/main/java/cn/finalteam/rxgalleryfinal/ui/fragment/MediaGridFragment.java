@@ -155,6 +155,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         MediaGridFragment.iListenerRadio = radioListener;
     }
 
+    public static String getImageStoreDirByStr() {
+        if (mImageStoreDir != null)
+            return mImageStoreDir.getPath();
+        else
+            return null;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -622,20 +629,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 pictureUri = Uri.fromFile(fileImagePath);
             }
 
-/*            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
-            } else {
-                ContentValues contentValues = new ContentValues(1);
-                if(image){
-                    contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
-                    Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                }else{
-                    contentValues.put(MediaStore.Video.Media.DATA, mImagePath);
-                    Uri uri = getContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
-                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                }
-            }*/
             captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
             // video : 1: 高质量  0 低质量
             if(!image){
