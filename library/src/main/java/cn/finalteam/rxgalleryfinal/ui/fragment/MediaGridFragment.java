@@ -266,7 +266,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (success) {
             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
         }
-
+        boolean c = PermissionCheckUtils.checkWriteExternalPermission(mMediaActivity, requestStorageAccessPermissionTips, MediaActivity.REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
+        Logger.i("checkWriteExternalPermission--->" + c);
     }
 
     /**
@@ -620,8 +621,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Uri pictureUri = null;
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                //这一句非常重要
-                captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 //""中的内容是随意的，但最好用package名.provider名的形式，清晰明了
                 pictureUri = FileProvider7.getUriForFile(this.getActivity(), fileImagePath);
             } else {
@@ -633,7 +632,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             if(!image){
                 captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, mConfiguration.getVideoQuality());
             }
-
+            //这一句非常重要
+            captureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
         }
