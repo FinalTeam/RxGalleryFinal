@@ -63,25 +63,27 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
     public void onBindViewHolder(BucketViewHolder holder, int position) {
         BucketBean bucketBean = mBucketList.get(position);
         String bucketName = bucketBean.getBucketName();
-        if (position != 0) {
-            SpannableString nameSpannable = new SpannableString(bucketName + "\n" + bucketBean.getImageCount() + this.mContext.getString(R.string.gallery_image_unit));
-            nameSpannable.setSpan(new ForegroundColorSpan(Color.GRAY), bucketName.length(), nameSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            nameSpannable.setSpan(new RelativeSizeSpan(0.8f), bucketName.length(), nameSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            holder.mTvBucketName.setText(nameSpannable);
-        } else {
-            holder.mTvBucketName.setText(bucketName);
-        }
-        if (mSelectedBucket != null && TextUtils.equals(mSelectedBucket.getBucketId(), bucketBean.getBucketId())) {
-            holder.mRbSelected.setVisibility(View.VISIBLE);
-            holder.mRbSelected.setChecked(true);
-        } else {
-            holder.mRbSelected.setVisibility(View.GONE);
-        }
+        if(bucketName!=null){
+            if (position != 0) {
+                SpannableString nameSpannable = new SpannableString(bucketName + "\n" + bucketBean.getImageCount() + this.mContext.getString(R.string.gallery_image_unit));
+                nameSpannable.setSpan(new ForegroundColorSpan(Color.GRAY), bucketName.length(), nameSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                nameSpannable.setSpan(new RelativeSizeSpan(0.8f), bucketName.length(), nameSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.mTvBucketName.setText(nameSpannable);
+            } else {
+                holder.mTvBucketName.setText(bucketName);
+            }
+            if (mSelectedBucket != null && TextUtils.equals(mSelectedBucket.getBucketId(), bucketBean.getBucketId())) {
+                holder.mRbSelected.setVisibility(View.VISIBLE);
+                holder.mRbSelected.setChecked(true);
+            } else {
+                holder.mRbSelected.setVisibility(View.GONE);
+            }
 
-        String path = bucketBean.getCover();
-        mConfiguration.getImageLoader()
-                .displayImage(holder.itemView.getContext(), path, holder.mIvBucketCover, mDefaultImage, mConfiguration.getImageConfig(),
-                        true, mConfiguration.isPlayGif(), 100, 100, bucketBean.getOrientation());
+            String path = bucketBean.getCover();
+            mConfiguration.getImageLoader()
+                    .displayImage(holder.itemView.getContext(), path, holder.mIvBucketCover, mDefaultImage, mConfiguration.getImageConfig(),
+                            true, mConfiguration.isPlayGif(), 100, 100, bucketBean.getOrientation());
+        }
     }
 
     public void setSelectedBucket(BucketBean bucketBean) {

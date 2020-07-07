@@ -92,54 +92,56 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
         MediaBean mediaBean = mMediaBeanList.get(position);
-        if (mediaBean.getId() == Integer.MIN_VALUE) {
-            holder.mCbCheck.setVisibility(View.GONE);
-            holder.mIvMediaImage.setVisibility(View.GONE);
-            holder.mLlCamera.setVisibility(View.VISIBLE);
-            holder.mIvCameraImage.setImageDrawable(mCameraImage);
-            holder.mTvCameraTxt.setTextColor(mCameraTextColor);
-            holder.mTvCameraTxt.setText(mConfiguration.isImage() ? mMediaActivity.getString(R.string.gallery_take_image) : mMediaActivity.getString(R.string.gallery_video));
-            holder.mIvCameraImage.setBackgroundColor(mCameraImageBgColor);
-        } else {
-            if (mConfiguration.isRadio()) {
+        if(mediaBean!=null){
+            if (mediaBean.getId() == Integer.MIN_VALUE) {
                 holder.mCbCheck.setVisibility(View.GONE);
+                holder.mIvMediaImage.setVisibility(View.GONE);
+                holder.mLlCamera.setVisibility(View.VISIBLE);
+                holder.mIvCameraImage.setImageDrawable(mCameraImage);
+                holder.mTvCameraTxt.setTextColor(mCameraTextColor);
+                holder.mTvCameraTxt.setText(mConfiguration.isImage() ? mMediaActivity.getString(R.string.gallery_take_image) : mMediaActivity.getString(R.string.gallery_video));
+                holder.mIvCameraImage.setBackgroundColor(mCameraImageBgColor);
             } else {
-                holder.mCbCheck.setVisibility(View.VISIBLE);
-                holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
-                holder.mCbCheck.setOnCheckedChangeListener(new OnCheckBoxCheckListener(mediaBean));
-            }
-            holder.mIvMediaImage.setVisibility(View.VISIBLE);
-            holder.mLlCamera.setVisibility(View.GONE);
-            holder.mCbCheck.setChecked(mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean));
-            String bitPath = mediaBean.getThumbnailBigPath();
-            String smallPath = mediaBean.getThumbnailSmallPath();
+                if (mConfiguration.isRadio()) {
+                    holder.mCbCheck.setVisibility(View.GONE);
+                } else {
+                    holder.mCbCheck.setVisibility(View.VISIBLE);
+                    holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
+                    holder.mCbCheck.setOnCheckedChangeListener(new OnCheckBoxCheckListener(mediaBean));
+                }
+                holder.mIvMediaImage.setVisibility(View.VISIBLE);
+                holder.mLlCamera.setVisibility(View.GONE);
+                holder.mCbCheck.setChecked(mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean));
+                String bitPath = mediaBean.getThumbnailBigPath();
+                String smallPath = mediaBean.getThumbnailSmallPath();
 
-            if (!new File(bitPath).exists() || !new File(smallPath).exists()) {
-                Job job = new ImageThmbnailJobCreate(mMediaActivity, mediaBean).create();
-                RxJob.getDefault().addJob(job);
-            }
-            String path;
-            if (mConfiguration.isPlayGif() && (imageLoaderType == 3 || imageLoaderType == 2)) {
-                path = mediaBean.getOriginalPath();
-            } else {
-                path = mediaBean.getThumbnailSmallPath();
-                if (TextUtils.isEmpty(path)) {
-                    path = mediaBean.getThumbnailBigPath();
+                if (!new File(bitPath).exists() || !new File(smallPath).exists()) {
+                    Job job = new ImageThmbnailJobCreate(mMediaActivity, mediaBean).create();
+                    RxJob.getDefault().addJob(job);
                 }
-                if (TextUtils.isEmpty(path)) {
+                String path;
+                if (mConfiguration.isPlayGif() && (imageLoaderType == 3 || imageLoaderType == 2)) {
                     path = mediaBean.getOriginalPath();
+                } else {
+                    path = mediaBean.getThumbnailSmallPath();
+                    if (TextUtils.isEmpty(path)) {
+                        path = mediaBean.getThumbnailBigPath();
+                    }
+                    if (TextUtils.isEmpty(path)) {
+                        path = mediaBean.getOriginalPath();
+                    }
                 }
-            }
-            Logger.w("提示path：" + path);
-            if (imageLoaderType != 3) {
-                OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
-                mConfiguration.getImageLoader()
-                        .displayImage(mMediaActivity, path, (FixImageView) holder.mIvMediaImage, mDefaultImage, mConfiguration.getImageConfig(),
-                                true, mConfiguration.isPlayGif(), mImageSize, mImageSize, mediaBean.getOrientation());
-            } else {
-                OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
-                FrescoImageLoader.setImageSmall("file://" + path, (SimpleDraweeView) holder.mIvMediaImage,
-                        mImageSize, mImageSize, holder.relativeLayout, mConfiguration.isPlayGif());
+                Logger.w("提示path：" + path);
+                if (imageLoaderType != 3) {
+                    OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
+                    mConfiguration.getImageLoader()
+                            .displayImage(mMediaActivity, path, (FixImageView) holder.mIvMediaImage, mDefaultImage, mConfiguration.getImageConfig(),
+                                    true, mConfiguration.isPlayGif(), mImageSize, mImageSize, mediaBean.getOrientation());
+                } else {
+                    OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
+                    FrescoImageLoader.setImageSmall("file://" + path, (SimpleDraweeView) holder.mIvMediaImage,
+                            mImageSize, mImageSize, holder.relativeLayout, mConfiguration.isPlayGif());
+                }
             }
         }
     }
