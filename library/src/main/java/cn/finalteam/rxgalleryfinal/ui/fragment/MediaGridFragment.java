@@ -261,13 +261,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         String requestStorageAccessPermissionTips = ThemeUtils.resolveString(getContext(),
                 R.attr.gallery_request_storage_access_permission_tips,
                 R.string.gallery_default_request_storage_access_permission_tips);
-        boolean success = PermissionCheckUtils.checkReadExternalPermission(activity, requestStorageAccessPermissionTips,
-                MediaActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION);
+        boolean success = PermissionCheckUtils.checkWriteExternalPermission(activity, requestStorageAccessPermissionTips,
+                MediaActivity.REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
         if (success) {
             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
         }
-        boolean c = PermissionCheckUtils.checkWriteExternalPermission(mMediaActivity, requestStorageAccessPermissionTips, MediaActivity.REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
-        Logger.i("checkWriteExternalPermission--->" + c);
+        //boolean c = PermissionCheckUtils.checkWriteExternalPermission(mMediaActivity, requestStorageAccessPermissionTips, MediaActivity.REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
+        //Logger.i("checkWriteExternalPermission--->" + c);
     }
 
     /**
