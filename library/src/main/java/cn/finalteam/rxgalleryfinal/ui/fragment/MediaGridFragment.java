@@ -266,8 +266,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (success) {
             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
         }
-        //boolean c = PermissionCheckUtils.checkWriteExternalPermission(mMediaActivity, requestStorageAccessPermissionTips, MediaActivity.REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
-        //Logger.i("checkWriteExternalPermission--->" + c);
     }
 
     /**
