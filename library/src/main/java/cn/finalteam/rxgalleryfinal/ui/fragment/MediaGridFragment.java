@@ -142,6 +142,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     private boolean currShowType ;
 
+    private static String rootPath = "myrxgalleryfinal";
+
     public static MediaGridFragment newInstance(Configuration configuration) {
         MediaGridFragment fragment = new MediaGridFragment();
         Bundle bundle = new Bundle();
@@ -157,8 +159,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     public static String getImageStoreDirByStr() {
         if (mImageStoreDir != null)
             return mImageStoreDir.getPath();
-        else
-            return null;
+        else{
+            mImageStoreDir = new File(Environment.getExternalStorageDirectory(), rootPath);
+            if (!mImageStoreDir.exists()) {
+                mImageStoreDir.mkdirs();
+            }
+        }
+        return mImageStoreDir.getPath();
     }
 
     @Override
@@ -842,7 +849,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     public void onLoadFile() {
         //没有的话就默认路径
         if (mImageStoreDir == null) {
-            mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "myrxgalleryfinal");
+            mImageStoreDir = new File(Environment.getExternalStorageDirectory(), rootPath);
         }
         if (!mImageStoreDir.exists()) {
             mImageStoreDir.mkdirs();
