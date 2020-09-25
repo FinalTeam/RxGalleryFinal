@@ -380,11 +380,13 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        RxBus.getDefault().removeAllStickyEvents();
-        RxBus.getDefault().clear();
-        RxJob.getDefault().clearJob();
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing()) {
+            RxBus.getDefault().removeAllStickyEvents();
+            RxBus.getDefault().clear();
+            RxJob.getDefault().clearJob();
+        }
     }
 
     private StateListDrawable createDefaultOverButtonBgDrawable() {
