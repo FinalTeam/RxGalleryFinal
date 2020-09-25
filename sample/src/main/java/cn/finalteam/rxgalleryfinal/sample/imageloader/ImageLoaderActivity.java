@@ -1,11 +1,12 @@
 package cn.finalteam.rxgalleryfinal.sample.imageloader;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatCheckBox;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
@@ -27,31 +28,11 @@ public class ImageLoaderActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imageloader);
-        appCompatCheckBox = (AppCompatCheckBox) findViewById(R.id.cb_gif);
-        findViewById(R.id.btn_glide).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start(ImageLoaderType.GLIDE);
-            }
-        });
-        findViewById(R.id.btn_picasso).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start(ImageLoaderType.PICASSO);
-            }
-        });
-        findViewById(R.id.btn_fresco).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start(ImageLoaderType.FRESCO);
-            }
-        });
-        findViewById(R.id.btn_universal).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start(ImageLoaderType.UNIVERSAL);
-            }
-        });
+        appCompatCheckBox = findViewById(R.id.cb_gif);
+        findViewById(R.id.btn_glide).setOnClickListener(v -> start(ImageLoaderType.GLIDE));
+        findViewById(R.id.btn_picasso).setOnClickListener(v -> start(ImageLoaderType.PICASSO));
+        findViewById(R.id.btn_fresco).setOnClickListener(v -> start(ImageLoaderType.FRESCO));
+        findViewById(R.id.btn_universal).setOnClickListener(v -> start(ImageLoaderType.UNIVERSAL));
     }
 
     private void start(ImageLoaderType imageLoaderType) {

@@ -18,7 +18,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_check"
             style="@style/Widget.AppCompat.CompoundButton.CheckBox"
             android:layout_width="wrap_content"

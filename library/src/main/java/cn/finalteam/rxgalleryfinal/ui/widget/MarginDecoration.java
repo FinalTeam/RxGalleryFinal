@@ -2,8 +2,10 @@ package cn.finalteam.rxgalleryfinal.ui.widget;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import cn.finalteam.rxgalleryfinal.R;
 
@@ -15,8 +17,7 @@ public class MarginDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(
-            Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         outRect.set(margin, margin, margin, margin);
     }
 }

@@ -17,26 +17,6 @@ public class GlideImageLoader implements AbsImageLoader {
 
     @Override
     public void displayImage(Context context, String path, FixImageView imageView, Drawable defaultDrawable, Bitmap.Config config, boolean resize, boolean isGif, int width, int height, int rotate) {
-//        DrawableRequestBuilder builder;
-//        if (path != null) {
-//            builder = Glide.with(context)
-//                    .load(new File(path)).
-//                    .placeholder(defaultDrawable);
-//
-//        } else {
-//            builder = Glide.with(context)
-//                    .load(new File("/sdcard"))
-//                    .placeholder(defaultDrawable);
-//        }
-//        if (resize) {
-//            builder = builder.override(width, height);
-//        }
-//        builder
-//                .crossFade()
-//                .transform(new RotateTransformation(context, rotate))
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .into(imageView);
-
         if (isGif) {
             Glide
                     .with(context)
@@ -44,19 +24,18 @@ public class GlideImageLoader implements AbsImageLoader {
                     .placeholder(defaultDrawable)
                     .error(defaultDrawable)
                     .override(width, height)
-                    .crossFade()
-                    .transform(new RotateTransformation(context, rotate))
+                    .transform(new RotateTransformation(rotate))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(imageView);
         } else {
             Glide
                     .with(context)
-                    .load(path)
                     .asBitmap()
+                    .load(path)
                     .placeholder(defaultDrawable)
                     .error(defaultDrawable)
                     .override(width, height)
-                    .transform(new RotateTransformation(context, rotate))
+                    .transform(new RotateTransformation(rotate))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(imageView);
         }

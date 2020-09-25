@@ -1,15 +1,15 @@
 package cn.finalteam.rxgalleryfinal.sample;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.yalantis.ucrop.model.AspectRatio;
 
@@ -34,14 +34,14 @@ import cn.finalteam.rxgalleryfinal.utils.PermissionCheckUtils;
  * 示例
  *
  * @author KARL-dujinyang
- *         <p>
- *         openGallery 返回 void,如果想使用RxGalleryFinal对象，请在 openGallery() 之前返回 RxGalleryFinal 对象
- *         <p>
- *         <p>
- *         RxGalleryFinal radio = RxGalleryFinal
- *         with(MainActivity.this)
- *         image()
- *         radio();
+ * <p>
+ * openGallery 返回 void,如果想使用RxGalleryFinal对象，请在 openGallery() 之前返回 RxGalleryFinal 对象
+ * <p>
+ * <p>
+ * RxGalleryFinal radio = RxGalleryFinal
+ * with(MainActivity.this)
+ * image()
+ * radio();
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -58,13 +58,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_open_vd).setOnClickListener(this);
         findViewById(R.id.btn_open_crop).setOnClickListener(this);
         findViewById(R.id.btn_open_set_path).setOnClickListener(this);
-        mRbRadioIMG = (RadioButton) findViewById(R.id.rb_radio_img);
-        mRbMutiIMG = (RadioButton) findViewById(R.id.rb_muti_img);
-        mRbRadioVD = (RadioButton) findViewById(R.id.rb_radio_vd);
-        mRbMutiVD = (RadioButton) findViewById(R.id.rb_muti_vd);
-        mRbOpenC = (RadioButton) findViewById(R.id.rb_openC);
-        mRbCropZD = (RadioButton) findViewById(R.id.rb_radio_crop_z);
-        mRbCropZVD = (RadioButton) findViewById(R.id.rb_radio_crop_vz);
+        mRbRadioIMG = findViewById(R.id.rb_radio_img);
+        mRbMutiIMG = findViewById(R.id.rb_muti_img);
+        mRbRadioVD = findViewById(R.id.rb_radio_vd);
+        mRbMutiVD = findViewById(R.id.rb_muti_vd);
+        mRbOpenC = findViewById(R.id.rb_openC);
+        mRbCropZD = findViewById(R.id.rb_radio_crop_z);
+        mRbCropZVD = findViewById(R.id.rb_radio_crop_vz);
         //多选事件的回调
         RxGalleryListener
                 .getInstance()
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new SimpleRxGalleryFinal.RxGalleryFinalCropListener() {
                         @NonNull
                         @Override
-                        public Activity getSimpleActivity() {
+                        public AppCompatActivity getSimpleActivity() {
                             return MainActivity.this;
                         }
 
