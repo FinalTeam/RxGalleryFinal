@@ -469,7 +469,7 @@ public class FilenameUtils {
      * @param fullFilenameToAdd the filename (or path) to attach to the base
      * @return the concatenated path, or null if invalid
      */
-    public static String concat(String basePath, String fullFilenameToAdd) {
+    public static String addBasePath(String basePath, String fullFilenameToAdd) {
         int prefix = getPrefixLength(fullFilenameToAdd);
         if (prefix < 0) {
             return null;
