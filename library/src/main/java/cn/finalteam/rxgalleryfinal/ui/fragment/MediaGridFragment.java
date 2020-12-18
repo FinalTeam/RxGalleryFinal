@@ -847,6 +847,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                             if (bk != -1) {
                                 mMediaBeanList.add(1, mediaBean);
                                 mMediaGridAdapter.notifyDataSetChanged();
+                                if (mConfiguration.isTakePicCrop()) {
+                                    onObItemClick(1);
+                                }
                             } else {
                                 Logger.i("获取：无");
                             }

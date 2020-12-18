@@ -49,6 +49,7 @@ public class Configuration implements Parcelable {
     private int imageLoaderType;
     private int imageConfig;
     private boolean hideCamera;
+    private boolean takePicCrop;//画廊中选择相机拍摄照片后直接打开裁剪
     private boolean isPlayGif;
     private boolean hidePreview;
     private boolean isVideoPreview;
@@ -105,6 +106,7 @@ public class Configuration implements Parcelable {
         imageLoaderType = in.readInt();
         imageConfig = in.readInt();
         hideCamera = in.readByte() != 0;
+        takePicCrop = in.readByte() != 0;
         isPlayGif = in.readByte() != 0;
         hidePreview = in.readByte() != 0;
         isVideoPreview = in.readByte() != 0;
@@ -172,6 +174,13 @@ public class Configuration implements Parcelable {
 
     public void setHideCamera(boolean hideCamera) {
         this.hideCamera = hideCamera;
+    }
+    public boolean isTakePicCrop() {
+        return takePicCrop;
+    }
+
+    public void setTakePicCrop(boolean takePicCrop) {
+        this.takePicCrop = takePicCrop;
     }
 
     //#ADD
@@ -365,6 +374,7 @@ public class Configuration implements Parcelable {
         parcel.writeInt(imageLoaderType);
         parcel.writeInt(imageConfig);
         parcel.writeByte((byte) (hideCamera ? 1 : 0));
+        parcel.writeByte((byte) (takePicCrop ? 1 : 0));
         parcel.writeByte((byte) (isPlayGif ? 1 : 0));
         parcel.writeByte((byte) (hidePreview ? 1 : 0));
         parcel.writeByte((byte) (isVideoPreview ? 1 : 0));

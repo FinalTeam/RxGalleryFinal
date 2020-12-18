@@ -156,6 +156,16 @@ public class RxGalleryFinal {
     }
 
     /**
+     * 相册中选择拍摄照片后直接打开裁剪
+     * 如果不调用该方法，默认回到相册
+     */
+    public RxGalleryFinal takePicCrop() {
+        configuration.setHideCamera(false);
+        configuration.setTakePicCrop(true);
+        return this;
+    }
+
+    /**
      * set to true to hide the bottom controls (shown by default)
      */
     public RxGalleryFinal cropHideBottomControls(boolean hide) {
