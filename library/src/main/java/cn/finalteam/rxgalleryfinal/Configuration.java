@@ -45,6 +45,7 @@ public class Configuration implements Parcelable {
     private boolean radio;
     private boolean crop;
     private int maxSize = 1;
+    private boolean multiple = false;
 
     private int imageLoaderType;
     private int imageConfig;
@@ -96,6 +97,7 @@ public class Configuration implements Parcelable {
         radio = in.readByte() != 0;
         crop = in.readByte() != 0;
         maxSize = in.readInt();
+        multiple = in.readByte() != 0;
         videoQuality = in.readInt();
         hideBottomControls = in.readByte() != 0;
         compressionQuality = in.readInt();
@@ -186,6 +188,14 @@ public class Configuration implements Parcelable {
 
     protected void setMaxSize(int maxSize) {
         this.maxSize = maxSize;
+    }
+
+    public boolean isMultiple() {
+        return multiple;
+    }
+
+    public void setMultiple(boolean multiple) {
+        this.multiple = multiple;
     }
 
     public int getVideoQuality() {
@@ -402,6 +412,7 @@ public class Configuration implements Parcelable {
         parcel.writeByte((byte) (radio ? 1 : 0));
         parcel.writeByte((byte) (crop ? 1 : 0));
         parcel.writeInt(maxSize);
+        parcel.writeByte((byte) (multiple ? 1 : 0));
         parcel.writeInt(videoQuality);
         parcel.writeByte((byte) (hideBottomControls ? 1 : 0));
         parcel.writeInt(compressionQuality);

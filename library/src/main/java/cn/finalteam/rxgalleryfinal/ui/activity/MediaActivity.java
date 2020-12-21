@@ -371,14 +371,14 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
             return;
         }
         //cancel return []
-        if(mConfiguration.isImage()){
+        if(!mConfiguration.isMultiple()){
             BaseResultEvent event = new ImageRadioResultEvent(null);
             RxBus.getDefault().post(event);
         }else{
             BaseResultEvent event = new ImageMultipleResultEvent(new ArrayList<>());
             RxBus.getDefault().post(event);
         }
-        
+
 
         onBackPressed();
     }
