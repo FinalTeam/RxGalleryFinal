@@ -28,6 +28,7 @@ import cn.finalteam.rxgalleryfinal.rxbus.RxBusDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseRxMediaGridPageEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaViewPagerChangedEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
@@ -369,6 +370,16 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
             showMediaGridFragment();
             return;
         }
+        //cancel return []
+        if(mConfiguration.isImage()){
+            BaseResultEvent event = new ImageRadioResultEvent(null);
+            RxBus.getDefault().post(event);
+        }else{
+            BaseResultEvent event = new ImageMultipleResultEvent(new ArrayList<>());
+            RxBus.getDefault().post(event);
+        }
+        
+
         onBackPressed();
     }
 
