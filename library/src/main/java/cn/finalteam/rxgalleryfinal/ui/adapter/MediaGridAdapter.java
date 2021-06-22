@@ -1,7 +1,10 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
+import android.content.ContentUris;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,34 +115,37 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mIvMediaImage.setVisibility(View.VISIBLE);
             holder.mLlCamera.setVisibility(View.GONE);
             holder.mCbCheck.setChecked(mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean));
-            String bitPath = mediaBean.getThumbnailBigPath();
+            String bigPath = mediaBean.getThumbnailBigPath();
             String smallPath = mediaBean.getThumbnailSmallPath();
 
-            if (!new File(bitPath).exists() || !new File(smallPath).exists()) {
+            if (!new File(bigPath).exists() || !new File(smallPath).exists()) {
                 Job job = new ImageThmbnailJobCreate(mMediaActivity, mediaBean).create();
                 RxJob.getDefault().addJob(job);
             }
-            String path;
+
+            Uri uri;
             if (mConfiguration.isPlayGif() && (imageLoaderType == 3 || imageLoaderType == 2)) {
-                path = mediaBean.getOriginalPath();
+                uri = mediaBean.toUri();
+//                path = mediaBean.getOriginalPath();
             } else {
-                path = mediaBean.getThumbnailSmallPath();
+                String path = mediaBean.getThumbnailSmallPath();
                 if (TextUtils.isEmpty(path)) {
                     path = mediaBean.getThumbnailBigPath();
                 }
+                uri = Uri.fromFile(new File(path));
                 if (TextUtils.isEmpty(path)) {
-                    path = mediaBean.getOriginalPath();
+                    uri = mediaBean.toUri();
                 }
             }
-            Logger.w("提示path：" + path);
+            Logger.w("提示path：" + uri);
             if (imageLoaderType != 3) {
                 OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
                 mConfiguration.getImageLoader()
-                        .displayImage(mMediaActivity, path, (FixImageView) holder.mIvMediaImage, mDefaultImage, mConfiguration.getImageConfig(),
+                        .displayImage(mMediaActivity, uri, (FixImageView) holder.mIvMediaImage, mDefaultImage, mConfiguration.getImageConfig(),
                                 true, mConfiguration.isPlayGif(), mImageSize, mImageSize, mediaBean.getOrientation());
             } else {
                 OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
-                FrescoImageLoader.setImageSmall("file://" + path, (SimpleDraweeView) holder.mIvMediaImage,
+                FrescoImageLoader.setImageSmall(uri, (SimpleDraweeView) holder.mIvMediaImage,
                         mImageSize, mImageSize, holder.relativeLayout, mConfiguration.isPlayGif());
             }
         }

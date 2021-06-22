@@ -25,7 +25,7 @@ import cn.finalteam.rxgalleryfinal.utils.Logger;
  */
 public abstract class BaseFragment extends Fragment {
 
-    public static final String EXTRA_PREFIX = BuildConfig.APPLICATION_ID;
+    public static final String EXTRA_PREFIX = BuildConfig.LIBRARY_PACKAGE_NAME;
     public static final String EXTRA_CONFIGURATION = EXTRA_PREFIX + ".Configuration";
     private static Stack<BaseFragment> fragmentStack = new Stack<>();
     private final String CLASS_NAME = getClass().getSimpleName();

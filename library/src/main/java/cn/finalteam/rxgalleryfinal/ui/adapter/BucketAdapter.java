@@ -4,6 +4,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -77,9 +78,9 @@ public class BucketAdapter extends RecyclerView.Adapter<BucketAdapter.BucketView
             holder.mRbSelected.setVisibility(View.GONE);
         }
 
-        String path = bucketBean.getCover();
+        Uri coverUri = bucketBean.getCoverUri();
         mConfiguration.getImageLoader()
-                .displayImage(holder.itemView.getContext(), path, holder.mIvBucketCover, mDefaultImage, mConfiguration.getImageConfig(),
+                .displayImage(holder.itemView.getContext(), coverUri, holder.mIvBucketCover, mDefaultImage, mConfiguration.getImageConfig(),
                         true, mConfiguration.isPlayGif(), 100, 100, bucketBean.getOrientation());
     }
 

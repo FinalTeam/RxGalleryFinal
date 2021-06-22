@@ -1,7 +1,10 @@
 package cn.finalteam.rxgalleryfinal.bean;
 
+import android.content.ContentUris;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 
 import java.io.File;
 
@@ -11,6 +14,10 @@ import java.io.File;
  * Date:16/5/4 下午4:14
  */
 public class MediaBean implements Parcelable {
+
+    public static int MEDIA_TYPE_IMAGE = 0;
+
+    public static int MEDIA_TYPE_VIDEO = 1;
 
     public static final Creator<MediaBean> CREATOR = new Creator<MediaBean>() {
         @Override
@@ -54,6 +61,8 @@ public class MediaBean implements Parcelable {
     //小缩略图
     private String thumbnailSmallPath;
 
+    private int mediaType;//0 mage, 1 video
+
     public MediaBean() {
     }
 
@@ -74,6 +83,7 @@ public class MediaBean implements Parcelable {
         longitude = in.readDouble();
         orientation = in.readInt();
         length = in.readLong();
+        mediaType = in.readInt();
     }
 
     @Override
@@ -94,6 +104,7 @@ public class MediaBean implements Parcelable {
         dest.writeDouble(longitude);
         dest.writeInt(orientation);
         dest.writeLong(length);
+        dest.writeInt(mediaType);
     }
 
     @Override
@@ -235,6 +246,14 @@ public class MediaBean implements Parcelable {
         this.length = length;
     }
 
+    public Uri toUri(){
+        if (mediaType == MEDIA_TYPE_IMAGE) {
+            return ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+        } else {
+            return ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof MediaBean)) {
@@ -243,7 +262,6 @@ public class MediaBean implements Parcelable {
 
         MediaBean bean = (MediaBean) obj;
         return bean.getId() == getId();
-
     }
 
     @Override
@@ -265,6 +283,15 @@ public class MediaBean implements Parcelable {
                 ", bucketDisplayName='" + bucketDisplayName + '\'' +
                 ", thumbnailBigPath='" + thumbnailBigPath + '\'' +
                 ", thumbnailSmallPath='" + thumbnailSmallPath + '\'' +
+                ", mediaType='" + mediaType + '\'' +
                 '}';
+    }
+
+    public int getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(int mediaType) {
+        this.mediaType = mediaType;
     }
 }

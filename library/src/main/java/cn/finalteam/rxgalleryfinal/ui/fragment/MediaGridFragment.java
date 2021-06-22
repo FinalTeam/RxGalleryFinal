@@ -89,7 +89,7 @@ import io.reactivex.schedulers.Schedulers;
  * Date:2017.
  */
 public class MediaGridFragment extends BaseFragment implements MediaGridView, RecyclerViewFinal.OnLoadMoreListener,
-        FooterAdapter.OnItemClickListener, View.OnClickListener, MediaScanner.ScanCallback, BucketAdapter.OnRecyclerViewItemClickListener {
+        FooterAdapter.OnItemClickListener, View.OnClickListener, BucketAdapter.OnRecyclerViewItemClickListener {
 
     private static final String IMAGE_TYPE = "image/jpeg";
     //接口-单选-是否裁剪
@@ -516,8 +516,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 }
             } else {
                 MediaBean firstBean = mMediaBeanList.get(0);
-                ArrayList<MediaBean> gridMediaList = new ArrayList<>();
-                gridMediaList.addAll(mMediaBeanList);
+                ArrayList<MediaBean> gridMediaList = new ArrayList<>(mMediaBeanList);
                 int pos = position;
                 if (firstBean.getId() == Integer.MIN_VALUE) {
                     pos = position - 1;
@@ -636,8 +635,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     public void openCamera(Context context) {
-
-
         boolean image = mConfiguration.isImage();
 
         Intent captureIntent = image ? new Intent(MediaStore.ACTION_IMAGE_CAPTURE) : new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -649,16 +646,19 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
         String filename = String.format(image ? IMAGE_STORE_FILE_NAME : VIDEO_STORE_FILE_NAME, dateFormat.format(new Date()));
         Logger.i("openCamera：" + mImageStoreDir.getAbsolutePath());
-        File fileImagePath = new File(mImageStoreDir, filename);
-        mImagePath = fileImagePath.getAbsolutePath();
+        File imageFile = new File(mImageStoreDir, filename);
+        mImagePath = imageFile.getAbsolutePath();
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
         } else {
             ContentValues contentValues = new ContentValues(1);
             contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
             Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+//            Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".fileProvider", imageFile);
             captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
         // video : 1: 高质量  0 低质量
 //        captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
@@ -671,7 +671,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         Logger.i("onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
         if (requestCode == TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Logger.i(String.format("拍照成功,图片存储路径:%s", mImagePath));
-            mMediaScanner.scanFile(mImagePath, mConfiguration.isImage() ? IMAGE_TYPE : "", this);
+//            ContentValues contentValues = new ContentValues(1);
+//            contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
+//            getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            mMediaScanner.scanFile(mImagePath, mConfiguration.isImage() ? IMAGE_TYPE : "", scanCallback);
         } else if (requestCode == 222) {
             Toast.makeText(getActivity(), "摄像成功", Toast.LENGTH_SHORT).show();
         } else if (requestCode == CROP_IMAGE_REQUEST_CODE && data != null) {
@@ -794,6 +797,52 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .animate();
     }
 
+    private final MediaScanner.ScanCallback scanCallback = new MediaScanner.ScanCallback() {
+        @Override
+        public void onScanCompleted(String image, Uri uri) {
+            if (image == null) {
+                Logger.i("images empty");
+                return;
+            }
+            if (getContext() == null) return;
+
+            // mediaBean 有可能为Null，onNext 做了处理，在 getMediaBeanWithImage 时候就不处理Null了
+            Observable.create((ObservableOnSubscribe<MediaBean>) subscriber -> {
+                MediaBean mediaBean =
+                        mConfiguration.isImage() ? MediaUtils.getMediaBeanWithImage(getContext(), image)
+                                : MediaUtils.getMediaBeanWithVideo(getContext(), image);
+                subscriber.onNext(mediaBean);
+                subscriber.onComplete();
+            })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new DisposableObserver<MediaBean>() {
+                        @Override
+                        public void onComplete() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Logger.i("获取MediaBean异常" + e.toString());
+                        }
+
+                        @Override
+                        public void onNext(MediaBean mediaBean) {
+                            if (!isDetached() && mediaBean != null) {
+                                int bk = FileUtils.existImageDir(mediaBean.getOriginalPath());
+                                if (bk != -1) {
+                                    mMediaBeanList.add(1, mediaBean);
+                                    mMediaGridAdapter.notifyDataSetChanged();
+                                } else {
+                                    Logger.i("获取：无");
+                                }
+                            }
+
+                        }
+                    });
+        }
+    };
+
     /**
      * Observable刷新图库
      */
@@ -802,58 +851,14 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Logger.i("->getImageStoreDirByFile().getPath().toString()：" + getImageStoreDirByFile().getPath());
             Logger.i("->getImageStoreCropDirByStr ().toString()：" + getImageStoreCropDirByStr());
             if (!TextUtils.isEmpty(mImagePath))
-                mMediaScanner.scanFile(mImagePath, IMAGE_TYPE, this);
+                mMediaScanner.scanFile(mImagePath, IMAGE_TYPE, scanCallback);
             if (mCropPath != null) {
                 Logger.i("->mCropPath:" + mCropPath.getPath() + " " + IMAGE_TYPE);
-                mMediaScanner.scanFile(mCropPath.getPath(), IMAGE_TYPE, this);
+                mMediaScanner.scanFile(mCropPath.getPath(), IMAGE_TYPE, scanCallback);
             }
         } catch (Exception e) {
             Logger.e(e.getMessage());
         }
-    }
-
-    @Override
-    public void onScanCompleted(String[] images) {
-        if (images == null || images.length == 0) {
-            Logger.i("images empty");
-            return;
-        }
-
-        // mediaBean 有可能为Null，onNext 做了处理，在 getMediaBeanWithImage 时候就不处理Null了
-        Observable.create((ObservableOnSubscribe<MediaBean>) subscriber -> {
-            MediaBean mediaBean =
-                    mConfiguration.isImage() ? MediaUtils.getMediaBeanWithImage(getContext(), images[0])
-                            :
-                            MediaUtils.getMediaBeanWithVideo(getContext(), images[0]);
-            subscriber.onNext(mediaBean);
-            subscriber.onComplete();
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<MediaBean>() {
-                    @Override
-                    public void onComplete() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Logger.i("获取MediaBean异常" + e.toString());
-                    }
-
-                    @Override
-                    public void onNext(MediaBean mediaBean) {
-                        if (!isDetached() && mediaBean != null) {
-                            int bk = FileUtils.existImageDir(mediaBean.getOriginalPath());
-                            if (bk != -1) {
-                                mMediaBeanList.add(1, mediaBean);
-                                mMediaGridAdapter.notifyDataSetChanged();
-                            } else {
-                                Logger.i("获取：无");
-                            }
-                        }
-
-                    }
-                });
     }
 
     @Override

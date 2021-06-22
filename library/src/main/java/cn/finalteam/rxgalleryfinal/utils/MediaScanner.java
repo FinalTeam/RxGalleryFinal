@@ -12,15 +12,15 @@ import android.net.Uri;
 public class MediaScanner {
     private MediaScannerConnection mediaScanConn = null;
     private String fileType = null;
-    private String[] filePaths = null;
+    private String filePath = null;
     private ScanCallback scanCallback;
 
     /**
      * 然后调用MediaScanner.scanFile("/sdcard/2.mp3");
      */
     public MediaScanner(Context context) {
-        MusicSannerClient client;
-        client = new MusicSannerClient();
+        MusicScannerClient client;
+        client = new MusicScannerClient();
 
         if (mediaScanConn == null) {
             mediaScanConn = new MediaScannerConnection(context, client);
@@ -35,52 +35,38 @@ public class MediaScanner {
      */
 
     public void scanFile(String filePath, String fileType, ScanCallback callback) {
-        this.filePaths = new String[]{filePath};
+        this.filePath = filePath;
         this.fileType = fileType;
         this.scanCallback = callback;
         //连接之后调用MusicSannerClient的onMediaScannerConnected()方法
         mediaScanConn.connect();
     }
 
-    /**
-     * @param filePaths 文件路径
-     * @param fileType  文件类型
-     */
-    public void scanFile(String[] filePaths, String fileType, ScanCallback callback) {
-        this.filePaths = filePaths;
-        this.fileType = fileType;
-        this.scanCallback = callback;
-        mediaScanConn.connect();
-    }
-
     public void unScanFile() {
         mediaScanConn.disconnect();
+        scanCallback = null;
     }
 
     public interface ScanCallback {
-        void onScanCompleted(String[] images);
+        void onScanCompleted(String image, Uri uri);
     }
 
-    private class MusicSannerClient implements MediaScannerConnection.MediaScannerConnectionClient {
+    private class MusicScannerClient implements MediaScannerConnection.MediaScannerConnectionClient {
         @Override
         public void onMediaScannerConnected() {
             Logger.i("onMediaScannerConnected");
-            if (filePaths != null) {
-                for (String file : filePaths) {
-                    mediaScanConn.scanFile(file, fileType);
-                }
-            }
+            mediaScanConn.scanFile(filePath, fileType);
         }
 
         @Override
         public void onScanCompleted(String path, Uri uri) {
-            Logger.i("onScanCompleted");
+            Logger.i("onScanCompleted path=" + path + ", uri=" + uri);
             mediaScanConn.disconnect();
             if (scanCallback != null) {
-                scanCallback.onScanCompleted(filePaths);
+                scanCallback.onScanCompleted(path, uri);
             }
             fileType = null;
-            filePaths = null;
+            filePath = null;
         }
     }
 }

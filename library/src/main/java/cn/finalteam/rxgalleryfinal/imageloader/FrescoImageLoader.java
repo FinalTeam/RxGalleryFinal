@@ -31,13 +31,12 @@ public class FrescoImageLoader implements AbsImageLoader {
 
     private DraweeHolder<GenericDraweeHierarchy> draweeHolder;
 
-    public static void setImageSmall(String url,
+    public static void setImageSmall(Uri uri,
                                      SimpleDraweeView simpleDraweeView,
                                      int width,
                                      int height,
                                      SquareRelativeLayout relativeLayout, boolean playGif) {
 
-        Uri uri = Uri.parse(url);
         ImageRequest request = ImageRequestBuilder
                 .newBuilderWithSource(uri)
                 .setRotationOptions(RotationOptions.autoRotate())
@@ -67,7 +66,7 @@ public class FrescoImageLoader implements AbsImageLoader {
 
     @Override
     public void displayImage(Context context,
-                             String path,
+                             Uri uri,
                              FixImageView imageView,
                              Drawable defaultDrawable,
                              Bitmap.Config config,
@@ -108,10 +107,10 @@ public class FrescoImageLoader implements AbsImageLoader {
                 return draweeHolder.onTouchEvent(event);
             }
         });
-        Uri uri = new Uri.Builder()
-                .scheme(UriUtil.LOCAL_FILE_SCHEME)
-                .path(path)
-                .build();
+//        Uri uri = new Uri.Builder()
+//                .scheme(UriUtil.LOCAL_FILE_SCHEME)
+//                .path(path)
+//                .build();
         ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setAutoRotateEnabled(true);
         if (resize) {

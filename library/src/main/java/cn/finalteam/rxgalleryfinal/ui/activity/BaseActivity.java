@@ -18,7 +18,7 @@ import cn.finalteam.rxgalleryfinal.utils.Logger;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    public static final String EXTRA_PREFIX = BuildConfig.APPLICATION_ID;
+    public static final String EXTRA_PREFIX = BuildConfig.LIBRARY_PACKAGE_NAME;
     public static final String EXTRA_CONFIGURATION = EXTRA_PREFIX + ".Configuration";
 
     private final String CLASS_NAME = getClass().getSimpleName();

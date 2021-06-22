@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.utils;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
@@ -22,9 +24,12 @@ import com.yalantis.ucrop.util.BitmapLoadUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Desction:Bitmap处理工具类,图片压缩、裁剪、选择、存储
@@ -116,6 +121,10 @@ public class BitmapUtils {
         compressAndSaveImage(targetFile, originalPath, THUMBNAIL_BIG);
     }
 
+    public static void createThumbnailBig(Context context, File targetFile, String originalPath, Uri originalUri) {
+        compressAndSaveImage(context, targetFile, originalPath, originalUri, THUMBNAIL_BIG);
+    }
+
     /**
      * 创建小缩略图
      *
@@ -124,6 +133,113 @@ public class BitmapUtils {
      */
     public static void createThumbnailSmall(File targetFile, String originalPath) {
         compressAndSaveImage(targetFile, originalPath, THUMBNAIL_SMALL);
+    }
+
+    public static void createThumbnailSmall(Context context, File targetFile, String originalPath, Uri originalUri) {
+        compressAndSaveImage(context, targetFile, originalPath, originalUri, THUMBNAIL_SMALL);
+    }
+
+    private static FileDescriptor openFileDescriptor(Context context, Uri originalUri) throws FileNotFoundException {
+        ContentResolver contentResolver = context.getContentResolver();
+        ParcelFileDescriptor parcelFileDescriptor = contentResolver.openFileDescriptor(originalUri, "r");
+        return parcelFileDescriptor.getFileDescriptor();
+    }
+
+    private static void compressAndSaveImage(Context context, File targetFile, String originalPath, Uri originalUri, int scale) {
+        Bitmap bitmap = null;
+        InputStream bufferedInputStream = null;
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            FileDescriptor fileDescriptor = openFileDescriptor(context, originalUri);
+            //1、得到图片的宽、高
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            bufferedInputStream = new BufferedInputStream(new FileInputStream(fileDescriptor));
+            bitmap = BitmapFactory.decodeStream(bufferedInputStream, null, options);
+            if (bitmap != null) {
+                bitmap.recycle();
+            }
+            bufferedInputStream.close();
+
+            int originalImageWidth = options.outWidth;
+            int originalImageHeight = options.outHeight;
+
+            //2、获取图片方向
+            int orientation = getImageOrientation(openFileDescriptor(context, originalUri));
+            int rotate = 0;
+            switch (orientation) {//判断是否需要旋转
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotate = -90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotate = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotate = 90;
+                    break;
+            }
+
+            BitmapFactory.Options outOptions = new BitmapFactory.Options();
+            //3、计算图片压缩inSampleSize
+            int maxValue = Math.max(originalImageWidth, originalImageHeight);
+            if (maxValue > 3000) {
+                outOptions.inSampleSize = scale * 5;
+            } else if (maxValue > 2000 && maxValue <= 3000) {
+                outOptions.inSampleSize = scale * 4;
+            } else if (maxValue > 1500 && maxValue <= 2000) {
+                outOptions.inSampleSize = (int) (scale * 2.5);
+            } else if (maxValue > 1000 && maxValue <= 1500) {
+                outOptions.inSampleSize = (int) (scale * 1.3);
+//            } else if (maxValue > 400 && maxValue <= 1000) {
+//                options.inSampleSize = scale * 2;
+            } else {
+                outOptions.inSampleSize = scale;
+            }
+            outOptions.inJustDecodeBounds = false;
+
+            //4、图片方向纠正和压缩(生成缩略图)
+            bufferedInputStream = new BufferedInputStream(new FileInputStream(openFileDescriptor(context, originalUri)));
+            bitmap = BitmapFactory.decodeStream(bufferedInputStream, null, outOptions);
+            bufferedInputStream.close();
+
+            if (bitmap == null) {
+                return;
+            }
+            String extension = FilenameUtils.getExtension(originalPath);
+
+            targetFile.getParentFile().mkdirs();
+
+            fileOutputStream = new FileOutputStream(targetFile);
+            if (rotate != 0) {
+                Matrix matrix = new Matrix();
+                matrix.setRotate(rotate);
+                Bitmap bitmapOld = bitmap;
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                        bitmap.getHeight(), matrix, false);
+                bitmapOld.recycle();
+            }
+
+            //5、保存图片
+            if (TextUtils.equals(extension.toLowerCase(), "jpg")
+                    || TextUtils.equals(extension.toLowerCase(), "jpeg")) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            } else if (TextUtils.equals(extension.toLowerCase(), "webp")
+                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                bitmap.compress(Bitmap.CompressFormat.WEBP, 100, fileOutputStream);
+            } else {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.close(bufferedInputStream);
+            IOUtils.flush(fileOutputStream);
+            IOUtils.close(fileOutputStream);
+            if (bitmap != null && bitmap.isRecycled()) {
+                bitmap.recycle();
+            }
+        }
     }
 
     /**
@@ -237,6 +353,10 @@ public class BitmapUtils {
             return 0;
         }
         return new ExifInterface(uri).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+    }
+
+    private static int getImageOrientation(FileDescriptor fileDescriptor) throws IOException {
+        return new ExifInterface(fileDescriptor).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
     }
 
     /**

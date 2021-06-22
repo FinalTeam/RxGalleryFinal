@@ -53,7 +53,7 @@ public final class StorageUtils {
         File appCacheDir = null;
 
         if (preferExternal && existSDcard() && hasExternalStoragePermission(context)) {
-            appCacheDir = getExternalCacheDir(context);
+            appCacheDir = context.getExternalCacheDir();
         }
         if (appCacheDir == null) {
             appCacheDir = context.getCacheDir();

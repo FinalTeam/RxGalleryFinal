@@ -1,5 +1,6 @@
 package cn.finalteam.rxgalleryfinal.bean;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 /**
@@ -14,6 +15,8 @@ public class BucketBean {
     private String cover;
     //图片方向
     private int orientation;
+
+    private Uri coverUri;
 
     public String getBucketId() {
         return bucketId;
@@ -65,5 +68,13 @@ public class BucketBean {
         }
         BucketBean bucketBean = (BucketBean) o;
         return TextUtils.equals(bucketBean.getBucketId(), getBucketId());
+    }
+
+    public Uri getCoverUri() {
+        return coverUri;
+    }
+
+    public void setCoverUri(Uri coverUri) {
+        this.coverUri = coverUri;
     }
 }

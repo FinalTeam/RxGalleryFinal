@@ -1,10 +1,14 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
+import android.content.ContentUris;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.Configuration;
@@ -47,15 +51,16 @@ public class MediaPreviewAdapter extends RecyclingPagerAdapter {
             convertView = View.inflate(container.getContext(), R.layout.gallery_media_image_preview_item, null);
         }
         PhotoView ivImage = (PhotoView) convertView.findViewById(R.id.iv_media_image);
-        String path = null;
+        Uri uri = null;
         if (mediaBean.getWidth() > 1200 || mediaBean.getHeight() > 1200) {
-            path = mediaBean.getThumbnailBigPath();
+            String path = mediaBean.getThumbnailBigPath();
+            uri = Uri.fromFile(new File(path));
         }
-        if (TextUtils.isEmpty(path)) {
-            path = mediaBean.getOriginalPath();
+        if (uri == null) {
+            uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mediaBean.getId());
         }
         ivImage.setBackgroundColor(mPageColor);
-        mConfiguration.getImageLoader().displayImage(container.getContext(), path, ivImage, mDefaultImage, mConfiguration.getImageConfig(),
+        mConfiguration.getImageLoader().displayImage(container.getContext(), uri, ivImage, mDefaultImage, mConfiguration.getImageConfig(),
                 false, mConfiguration.isPlayGif(), mScreenWidth, mScreenHeight, mediaBean.getOrientation());
         return convertView;
     }

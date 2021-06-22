@@ -1,6 +1,8 @@
 package cn.finalteam.rxgalleryfinal.rxjob.job;
 
+import android.content.ContentUris;
 import android.content.Context;
+import android.provider.MediaStore;
 
 import java.io.File;
 
@@ -30,10 +32,14 @@ public class ImageThmbnailJob implements Job {
         File bigThumFile = MediaUtils.createThumbnailBigFileName(context, originalPath);
         File smallThumFile = MediaUtils.createThumbnailSmallFileName(context, originalPath);
         if (!bigThumFile.exists()) {
-            BitmapUtils.createThumbnailBig(bigThumFile, originalPath);
+//            BitmapUtils.createThumbnailBig(bigThumFile, originalPath);
+            BitmapUtils.createThumbnailBig(context, bigThumFile, originalPath,
+                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mediaBean.getId()));
         }
         if (!smallThumFile.exists()) {
-            BitmapUtils.createThumbnailSmall(smallThumFile, originalPath);
+//            BitmapUtils.createThumbnailSmall(smallThumFile, originalPath);
+            BitmapUtils.createThumbnailSmall(context, bigThumFile, originalPath,
+                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mediaBean.getId()));
         }
         Result result = Result.SUCCESS;
         result.setResultData(mediaBean);
