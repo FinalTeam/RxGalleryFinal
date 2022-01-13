@@ -18,10 +18,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hjq.permissions.OnPermissionCallback;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 import com.yalantis.ucrop.model.AspectRatio;
@@ -268,11 +270,20 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         String requestStorageAccessPermissionTips = ThemeUtils.resolveString(getContext(),
                 R.attr.gallery_request_storage_access_permission_tips,
                 R.string.gallery_default_request_storage_access_permission_tips);
-        boolean success = PermissionCheckUtils.checkWriteExternalPermission(activity, requestStorageAccessPermissionTips,
-                MediaActivity.REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
-        if (success) {
-            mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
-        }
+         PermissionCheckUtils.checkWriteExternalPermission(activity, requestStorageAccessPermissionTips,
+                MediaActivity.REQUEST_STORAGE_WRITE_ACCESS_PERMISSION,new  OnPermissionCallback() {
+
+                    @Override
+                    public void onGranted(List<String> permissions, boolean all) {
+                        mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT,currShowType);
+                    }
+
+                    @Override
+                    public void onDenied(List<String> permissions, boolean never) {
+
+                    }
+                });
+
     }
 
     /**
@@ -604,45 +615,56 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     public void  openCamera(Context context) {
-        boolean b = PermissionCheckUtils.checkCameraPermission(mMediaActivity, requestStorageAccessPermissionTips, MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION);
-        if (b) {
-            boolean image = mConfiguration.isImage();
+        FragmentActivity activity = this.getActivity();
+        PermissionCheckUtils.checkCameraPermission(mMediaActivity, requestStorageAccessPermissionTips, MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION,new  OnPermissionCallback() {
 
-            Intent captureIntent = image ? new Intent(MediaStore.ACTION_IMAGE_CAPTURE) : new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            if (captureIntent.resolveActivity(context.getPackageManager()) == null) {
-                Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
-                return;
+            @Override
+            public void onGranted(List<String> permissions, boolean all) {
+
+                boolean image = mConfiguration.isImage();
+
+                Intent captureIntent = image ? new Intent(MediaStore.ACTION_IMAGE_CAPTURE) : new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                if (captureIntent.resolveActivity(context.getPackageManager()) == null) {
+                    Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(mConfiguration.isMultipleShot() && image){
+                    captureIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+                }
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+                String filename = String.format(image ? IMAGE_STORE_FILE_NAME : VIDEO_STORE_FILE_NAME, dateFormat.format(new Date()));
+                Logger.i("openCamera：" + mImageStoreDir.getAbsolutePath());
+                File fileImagePath = new File(mImageStoreDir, filename);
+                mImagePath = fileImagePath.getAbsolutePath();
+
+                Uri pictureUri = null;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    //""中的内容是随意的，但最好用package名.provider名的形式，清晰明了
+                    pictureUri = FileProvider7.getUriForFile(activity, fileImagePath);
+                } else {
+                    pictureUri = Uri.fromFile(fileImagePath);
+                }
+
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
+                // video : 1: 高质量  0 低质量
+                if(!image){
+                    captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, mConfiguration.getVideoQuality());
+                }
+                //这一句非常重要
+                captureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
             }
-            if(mConfiguration.isMultipleShot() && image){
-                captureIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+
             }
+        });
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
-            String filename = String.format(image ? IMAGE_STORE_FILE_NAME : VIDEO_STORE_FILE_NAME, dateFormat.format(new Date()));
-            Logger.i("openCamera：" + mImageStoreDir.getAbsolutePath());
-            File fileImagePath = new File(mImageStoreDir, filename);
-            mImagePath = fileImagePath.getAbsolutePath();
-
-            Uri pictureUri = null;
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                //""中的内容是随意的，但最好用package名.provider名的形式，清晰明了
-                pictureUri = FileProvider7.getUriForFile(this.getActivity(), fileImagePath);
-            } else {
-                pictureUri = Uri.fromFile(fileImagePath);
-            }
-
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
-            // video : 1: 高质量  0 低质量
-            if(!image){
-                captureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, mConfiguration.getVideoQuality());
-            }
-            //这一句非常重要
-            captureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-            startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
-        }
     }
 
     @Override

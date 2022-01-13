@@ -145,11 +145,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     })
                     .openGallery();
         } else {
-            if (PermissionCheckUtils.checkCameraPermission(this, "", MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION)
-                    && PermissionCheckUtils.checkWriteExternalPermission(this, "", MediaActivity.REQUEST_STORAGE_WRITE_ACCESS_PERMISSION)
-                    && PermissionCheckUtils.checkReadExternalPermission(this, "", MediaActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION)) {
+            //if (PermissionCheckUtils.checkCameraPermission(this, "", MediaActivity.REQUEST_CAMERA_ACCESS_PERMISSION)
+             //       && PermissionCheckUtils.checkWriteExternalPermission(this, "", MediaActivity.REQUEST_STORAGE_WRITE_ACCESS_PERMISSION)
+             //       && PermissionCheckUtils.checkReadExternalPermission(this, "", MediaActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION)) {
               //  RxGalleryFinalApi.openZKCamera(MainActivity.this);
-            }
+           // }
         }
     }
 

@@ -6,12 +6,12 @@ apply plugin: "com.jfrog.bintray"
 
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 30
+    buildToolsVersion '30.0.3'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 3
         versionName version
 
@@ -50,6 +50,8 @@ dependencies {
     api 'com.github.bumptech.glide:glide:3.7.0'
     api 'com.mg.RxCustomizedImagePicker:fileprovider:1.0.0'
     api 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
+    implementation 'com.github.getActivity:XXPermissions:13.2'
 }
 
 //===================================upload jcenter=================================================
