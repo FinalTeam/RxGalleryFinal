@@ -25,15 +25,21 @@ RxGalleryFinal是一个android图片/视频文件选择器。其支持多选、�
 * 添加权限
   
 ```xml
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
 ```
 * 注册activity
   
 ```xml
 <application
     ...
+    android:requestLegacyExternalStorage="true"
     android:theme="@style/Theme_Light">
+<meta-data android:name="ScopedStorage" android:value="true" />
 <activity
     android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
     android:screenOrientation="portrait"
