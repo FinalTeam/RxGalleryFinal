@@ -1,9 +1,10 @@
 apply plugin: 'com.android.library'
 //apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: "com.jfrog.bintray"
+//apply plugin: "com.jfrog.bintray"
 
-
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 android {
     compileSdkVersion 30
@@ -54,7 +55,77 @@ dependencies {
     implementation 'com.github.getActivity:XXPermissions:13.2'
 }
 
+//===================================upload maven===================================================
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def ossrhUsername = properties.getProperty("ossrhUsername")    //在SonaType上申请的账号
+def ossrhPassword = properties.getProperty("ossrhPassword")    //在SonaType上申请的密码
+
+def PUBLISH_GROUP_ID = 'com.github.shijingsh' //这里可以不是直接申请时候的groupId只要开头是就可以
+
+def PUBLISH_ARTIFACT_ID = "RxCustomizedImagePicker"      //引用库的artifactId
+
+def PUBLISH_VERSION = "1.3.0" //这个是直接获取的库gradle里配置好的版本号，不用到处修改版本号，只需要维护一份就可以。
+
+//签名
+signing {
+    required { gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.groupId = PUBLISH_GROUP_ID
+            pom.artifactId = PUBLISH_ARTIFACT_ID
+            pom.version = PUBLISH_VERSION
+
+            pom.project {
+                name 'RxCustomizedImagePicker'
+                packaging 'aar' //我这里发布的是安卓的包，所以写的aar
+                // optionally artifactId can be defined here
+                description 'Android image picker with support for camera, video compression, multiple images and cropping'
+                url 'https://github.com/shijingsh/RxGalleryFinal'
+
+                scm {
+                    connection 'https://github.com/shijingsh/RxGalleryFinal'
+                    developerConnection 'scm:git:git@github.com:shijingsh/RxGalleryFinal.git'
+                    url 'https://github.com/shijingsh'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'liukefu'
+                        name 'liukefu'
+                        email 'liukefu2050@sina.com'
+                    }
+                }
+            }
+        }
+    }
+}
 //===================================upload jcenter=================================================
+/*
 def siteUrl = 'https://github.com/liukefu2050/RxGalleryFinal'
 def gitUrl = 'https://github.com/liukefu2050/RxGalleryFinal.git'
 
@@ -159,4 +230,4 @@ bintray {
             }
         }
     }
-}/**/
+}*/
