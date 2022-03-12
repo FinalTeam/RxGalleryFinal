@@ -68,7 +68,7 @@ def PUBLISH_GROUP_ID = 'com.github.shijingsh' //这里可以不是直接申请�
 
 def PUBLISH_ARTIFACT_ID = "RxCustomizedImagePicker"      //引用库的artifactId
 
-def PUBLISH_VERSION = "1.3.0" //这个是直接获取的库gradle里配置好的版本号，不用到处修改版本号，只需要维护一份就可以。
+def PUBLISH_VERSION = "1.3.1" //这个是直接获取的库gradle里配置好的版本号，不用到处修改版本号，只需要维护一份就可以。
 
 //签名
 signing {
